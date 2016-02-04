@@ -1,20 +1,23 @@
-import java.util.ArrayList;
+
 import java.util.Arrays;
 
 
+//Initial version of string compression - naive
 public class First {
 
+	//O(|S|*|R|^2) :Iterate through string S and foreach character use indexOf
 	public static void encode(String S, String R){
 		char[] SA = S.toCharArray(); 
 		char[] RA = R.toCharArray();
-		
+
+
 		int indexR = -1; 
 		int indexTemp = -1; 
 		int counter = 0; 
 		char c = SA[counter];
 		char[] C = {};
 		
-		
+		//O(|S|) : every char is considered in S
 		while (c != '$'){
 			indexTemp = indexR; 
 			C = Arrays.copyOf(C, C.length+1);
@@ -36,7 +39,7 @@ public class First {
 				counter += 1; 
 				c = SA[counter]; 
 				if (c == '$'){
-				System.out.println("(" + indexTemp + "," + (C.length) + ")");
+					System.out.println("(" + indexR + "," + (C.length) + ")");
 				}
 			}
 			
@@ -44,6 +47,7 @@ public class First {
 	}
 	
 // Return index of beginning of C in R. If not found return -1
+// O(|R|^2) : C might be the length of R
 	public static int indexOf(char[] C, char[] R){
 		int index = -1; 
 		
@@ -63,11 +67,8 @@ public class First {
 	}
 	
     public static void main(String[] args) {
-//        char[] C = {'a', 'c'};
-//        char[] R = {'a','b','a', 'a', 'b', 'c', 'd'};
-    	
-    	String C = "abcaasccabcc$";
-    	String R = "aagfbbcc$";
+    	String C = "acbcbbcabbababcbsacbababaaaabcbbebcbcccabbabcababbabgaaabsacbcaaadsabbbbccccbabaafbacbcabbbcbcacbbabca$";
+    	String R = "aaabbbcccabc$";
         encode(C,R);
     }
 
