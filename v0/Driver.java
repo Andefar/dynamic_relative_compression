@@ -1,15 +1,18 @@
+import java.util.ArrayList;
 
 public class Driver {
 
     public static void main(String[] args) {
 
 
-        String S = "acbcbbcabbababcbsacbababaaaabcbbebcbcccabbabcababbabgaaabsacbcaaadsabbbbccccbabaafbacbcabbbcbcacbbabca";
-        String R = "aaabbbcccabc";
+        String S = "acbcbbcabbababcbsacbababaaaabcbbebcbcccabbabcababbabgaaabsacbcaaadsabbbbccccbabaafbacbcabbbcbcacbbabca$";
+        String R = "aaabbbcccabc$";
 
         Compressor cmp = new Compressor(R);
 
-        cmp.encode(S);
+        ArrayList<Block> encodedS = cmp.encode(S);
+        String decodedS = cmp.decode(encodedS);
+        System.out.print(decodedS);
     }
 
 }

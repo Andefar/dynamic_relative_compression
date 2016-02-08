@@ -7,26 +7,19 @@ import java.util.List;
 //Initial version of string compression - naive
 public class Compressor {
 
-    List compressed;
+
     char[] RA;
-    char[] SA;
 
-    public Compressor(String R,String S) {
-        this.compressed = new ArrayList<Block>();
+    public Compressor(String R) {
         this.RA = (R+"$").toCharArray();
-        this.SA = (S+"$").toCharArray();
     }
 
-    private void addBlock(int p, int l) {
-        Block b = new Block(p,l);
-        this.compressed.add(b);
-        System.out.println(b.toString());
-    }
+
 
     //O(|S|^2*|R|) :Iterate through string S and foreach character use indexOf
-    public void encode(String S, String R){
+    public ArrayList<Block> encode(String S){
         char[] SA = S.toCharArray();
-        char[] RA = R.toCharArray();
+        ArrayList compressed = new ArrayList<Block>();
 
         int indexR = -1;
         int indexTemp = -1;
@@ -49,18 +42,22 @@ public class Compressor {
                     counter += 1;
                     c = SA[counter];
                 } else {
-                    addBlock(indexTemp,C.length-1);
+                    compressed.add((new Block(indexTemp, C.length-1)));
+
                     C = new char[0];
                 }
             } else {
                 counter += 1;
                 c = SA[counter];
                 if (c == '$'){
-                    addBlock(indexR,C.length);
+                    compressed.add((new Block(indexR, C.length)));
+
                 }
             }
 
         }
+
+        return compressed;
     }
 
     // Return index of beginning of C in R. If not found return -1
@@ -83,5 +80,22 @@ public class Compressor {
         return -1;
     }
 
+
+
+    // Decode a compressed representation, D,  of string S with reference to R
+    // Evt ikke
+    public String decode(ArrayList<Block> D){
+            String S = "";
+            int p;
+            int l;
+
+            for (int i = 0; i < D.size(); i++){
+                p = D.get(i).getPos();
+                l = D.get(i).getLength();
+                S += (Arrays.copyOfRange(RA, p, p+l)).toString();
+            }
+
+            return S;
+    }
 
 }
