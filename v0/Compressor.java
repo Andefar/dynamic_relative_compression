@@ -71,10 +71,5 @@ public class Compressor {
         return -1;
     }
 
-    public static void main(String[] args) {
-        String C = "acbcbbcabbababcbsacbababaaaabcbbebcbcccabbabcababbabgaaabsacbcaaadsabbbbccccbabaafbacbcabbbcbcacbbabca$";
-        String R = "aaabbbcccabc$";
-        encode(C,R);
-    }
 
 }
