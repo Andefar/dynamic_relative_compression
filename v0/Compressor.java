@@ -9,7 +9,6 @@ public class Compressor {
 
     }
 
-    //O(|S|*|R|^2) :Iterate through string S and foreach character use indexOf
     //O(|S|^2*|R|) :Iterate through string S and foreach character use indexOf
     public static void encode(String S, String R){
         char[] SA = S.toCharArray();
