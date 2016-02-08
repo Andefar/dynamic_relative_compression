@@ -92,7 +92,9 @@ public class Compressor {
             for (int i = 0; i < D.size(); i++){
                 p = D.get(i).getPos();
                 l = D.get(i).getLength();
-                S += (Arrays.copyOfRange(RA, p, p+l)).toString();
+                S += new String((Arrays.copyOfRange(RA, p, p+l)));
+                //S += (Arrays.copyOfRange(RA, p, p+l)).toString();
+                //System.out.println((Arrays.copyOfRange(RA, p, p+l)));
             }
 
             return S;
