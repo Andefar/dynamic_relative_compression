@@ -12,8 +12,8 @@ import java.util.List;
 
 public class Block {
 
-    int pos;
-    int len;
+    private int pos;
+    private int len;
 
     public Block(int pos, int len) {
         this.pos = pos;
@@ -50,12 +50,12 @@ public class Block {
         return "(" + this.pos + "," + this.len + ")";
     }
 
-    public String toStringCompact() {
+    private String toStringCompact() {
         //format="p l"
         return "" + this.pos + " " + this.len;
     }
 
-    public Block fromString(String line) {
+    private Block fromString(String line) {
         //format="p l"
         String[] s = line.split(" ");
         int p = Integer.parseInt(s[0]);
