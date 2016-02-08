@@ -2,12 +2,14 @@
 public class Driver {
 
     public static void main(String[] args) {
-        Compressor cmp = new Compressor();
 
-        String C = "acbcbbcabbababcbsacbababaaaabcbbebcbcccabbabcababbabgaaabsacbcaaadsabbbbccccbabaafbacbcabbbcbcacbbabca$";
-        String R = "aaabbbcccabc$";
 
-        cmp.encode(C,R);
+        String S = "acbcbbcabbababcbsacbababaaaabcbbebcbcccabbabcababbabgaaabsacbcaaadsabbbbccccbabaafbacbcabbbcbcacbbabca";
+        String R = "aaabbbcccabc";
+
+        Compressor cmp = new Compressor(R);
+
+        cmp.encode(S);
     }
 
 }
