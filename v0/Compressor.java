@@ -1,19 +1,32 @@
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 
 //Initial version of string compression - naive
 public class Compressor {
 
-    public Compressor() {
+    List compressed;
+    char[] RA;
+    char[] SA;
 
+    public Compressor(String R,String S) {
+        this.compressed = new ArrayList<Block>();
+        this.RA = (R+"$").toCharArray();
+        this.SA = (S+"$").toCharArray();
+    }
+
+    private void addBlock(int p, int l) {
+        Block b = new Block(p,l);
+        this.compressed.add(b);
+        System.out.println(b.toString());
     }
 
     //O(|S|^2*|R|) :Iterate through string S and foreach character use indexOf
-    public static void encode(String S, String R){
+    public void encode(String S, String R){
         char[] SA = S.toCharArray();
         char[] RA = R.toCharArray();
-
 
         int indexR = -1;
         int indexTemp = -1;
@@ -31,19 +44,19 @@ public class Compressor {
 
             if (indexR == -1 || c == '$'){
                 if (C.length == 1){
-                    System.out.println("("+ c + ")");
+
                     C = new char[0];
                     counter += 1;
                     c = SA[counter];
                 } else {
-                    System.out.println("(" + indexTemp + "," + (C.length - 1) + ")");
+                    addBlock(indexTemp,C.length-1);
                     C = new char[0];
                 }
             } else {
                 counter += 1;
                 c = SA[counter];
                 if (c == '$'){
-                    System.out.println("(" + indexR + "," + (C.length) + ")");
+                    addBlock(indexR,C.length);
                 }
             }
 
