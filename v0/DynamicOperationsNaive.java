@@ -4,18 +4,16 @@ import java.util.ArrayList;
  * Created by andl on 08/02/2016.
  */
 
-public class DynamicOperationsNaive {
+public class DynamicOperationsNaive extends DynamicOperations {
 
     private ArrayList<Block> C;
     private char[] RA;
 
     public DynamicOperationsNaive(ArrayList<Block> C, char[] RA){
-        this.C = (ArrayList<Block>) C.clone();
-        this.RA = RA.clone();
+        super(C,RA);
     }
 
     public ArrayList<Block> getC() { return this.C; }
-
 
     // Return character S[i]
     // Index out of bound exception

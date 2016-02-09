@@ -81,11 +81,9 @@ public class Driver {
 
 
 
-        System.out.println("delete test");
-        for (int m = 0; m <= 9; m++) {
-            ops9.delete(0);
-            System.out.println(cmp.decode(ops9.getC()));
-        }
+        System.out.println("\nSave test");
+        ops9.replace(3,'c');
+
 
 
     }
