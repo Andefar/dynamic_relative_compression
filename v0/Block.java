@@ -24,43 +24,8 @@ public class Block {
 
     public int getLength() {return this.len;}
 
-    public void toFile(ArrayList<Block> blocks, String name) {
-        List lines = new ArrayList<String>();
-        for(int i = 0; i < blocks.size();i++) {
-            lines.add(blocks.get(i).toStringCompact());
-        }
-        Path file = Paths.get(name);
-        try {
-            Files.write(file, lines, Charset.forName("UTF-8"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    public List<Block> read(String name) throws IOException {
-        List out = new ArrayList<Block>();
-        for (String line : Files.readAllLines(Paths.get(name))) {
-            out.add(fromString(line));
-        }
-        return out;
-    }
-
     public String toString() {
         return "(" + this.pos + "," + this.len + ")";
-    }
-
-    private String toStringCompact() {
-        //format="p l"
-        return "" + this.pos + " " + this.len;
-    }
-
-    private Block fromString(String line) {
-        //format="p l"
-        String[] s = line.split(" ");
-        int p = Integer.parseInt(s[0]);
-        int l = Integer.parseInt(s[1]);
-        return new Block(p,l);
     }
 
 
