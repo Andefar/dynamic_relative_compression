@@ -24,24 +24,15 @@ public class DynamicOperationsNaive {
     // Return character S[i]
     // Index out of bound exception
     public char access(int index) {
-        if (index >=0) {
-            int start = 0;
 
-            // loop through all blocks to find the block containing the specified index
-            for (Block b : this.C) {
+        int[] BS = this.getBlockandStartPos(index);
 
-                if (index <= (start + b.getLength() - 1)) { // current block contains the element to be accessed
-                    return RA[b.getPos() + (index - start)];
-                }
+        int p = this.C.get(BS[0]).getPos(); //BS[0] is the block holding the index - p is the start position of that block in R
+        int start = BS[1]; //B[1] is the starting position of block BS[0] in S (the original string)
 
-                start += b.getLength();
-            }
-        }
+        return this.RA[p + (index - start)];
 
-        throw new IndexOutOfBoundsException("Index must be positive and may not exceed the number of elements in S");
     }
-
-
 
     // Return the block which contains the specified position and the start position of that block in the original string
     public int[] getBlockandStartPos(int index) {
@@ -107,7 +98,47 @@ public class DynamicOperationsNaive {
         }
 
     }
-    public void insert(int i, char c) {}
+    public void insert(int index, char c) {
+
+        int[] BS = this.getBlockandStartPos(index);
+        int blockNo = BS[0];
+        int startPosInR = this.C.get(blockNo).getPos();
+        int length = this.C.get(blockNo).getLength();
+        int startPosInS = BS[1];
+        int indexOfR = -1;
+
+        for (int i = 0; i < RA.length; i++){
+            if (RA[i] == c) {
+                indexOfR = i;
+                break;
+            }
+        }
+
+        if ( index == startPosInS) { //insert in beginning of block
+
+            this.C.remove(blockNo);
+            this.C.add(blockNo, new Block(startPosInR, length));
+            this.C.add(blockNo, new Block(indexOfR, 1));
+
+        } else if ( index == startPosInS + length - 1){ //insert at the end of block
+
+            this.C.remove(blockNo);
+            this.C.add(blockNo, new Block(indexOfR, 1));
+            this.C.add(blockNo, new Block(startPosInR, length));
+
+        } else { //middle of block
+            int endPosInS = startPosInS + length - 1;
+            int firstBlockLength = index - startPosInS;
+            int lastBlockLength = endPosInS - index + 1;
+
+            this.C.remove(blockNo);
+
+            this.C.add(blockNo, new Block(startPosInR + firstBlockLength, lastBlockLength));
+            this.C.add(blockNo, new Block(indexOfR, 1));
+            this.C.add(blockNo, new Block(startPosInR, firstBlockLength));
+        }
+
+    }
     public void delete(int i) {}
 
 }
