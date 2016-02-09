@@ -12,9 +12,19 @@ public class Driver {
 
         ArrayList<Block> encodedS = cmp.encode(S);
 
+        System.out.println("BEFORE REPLACE:");
         for (Block b : encodedS) {
             System.out.println(b.toString());
         }
+
+        DynamicOperationsNaive ops = new DynamicOperationsNaive(encodedS,R.toCharArray());
+
+        System.out.println(ops.access(6));
+
+        //System.out.println("AFTER REPLACE");
+        //for (Block b : ops.getC()) {
+        //    System.out.println(b.toString());
+        //}
 
         //String decodedS = cmp.decode(encodedS);
         //System.out.print(decodedS);

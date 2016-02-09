@@ -10,13 +10,16 @@ import java.util.List;
 
 public class DynamicOperationsNaive {
 
-    ArrayList<Block> C;
-    char[] RA;
+    private ArrayList<Block> C;
+    private char[] RA;
 
     public DynamicOperationsNaive(ArrayList<Block> C, char[] RA){
         this.C = C;
         this.RA = RA;
     }
+
+    public ArrayList<Block> getC() { return this.C; }
+
 
     // Return character S[i]
     // Index out of bound exception
@@ -38,6 +41,8 @@ public class DynamicOperationsNaive {
         throw new IndexOutOfBoundsException("Index must be positive and may not exceed the number of elements in S");
     }
 
+
+
     // Return the block which contains the specified position and the start position of that block in the original string
     public int[] getBlockandStartPos(int index) {
         if (index >=0) {
@@ -57,7 +62,43 @@ public class DynamicOperationsNaive {
 
         throw new IndexOutOfBoundsException("Index must be positive and may not exceed the number of elements in S");
     }
-    public void replace(int i, char sub) {}
+
+
+
+
+    public void replace(int i, char sub) {
+        int pos = 0;
+
+        for (int j = 0; j < this.C.size(); j++) {
+
+            Block b = this.C.get(j);
+            int l = b.getLength();
+            int p = b.getPos();
+            int curLen = pos + l;
+
+            if (curLen < i) { continue;}
+            else {
+
+
+                int distPosToChar = l - (curLen - i);
+                int subPosInRA = -1;
+                for (int k = 0; k < RA.length; k++) {
+                    if (RA[k] == sub) {
+                        subPosInRA = k;
+                    }
+                }
+                Block first = new Block(p,distPosToChar - 1);
+                Block replace = new Block(subPosInRA,1);
+                Block last = new Block(p+distPosToChar,curLen - i);
+                this.C.remove(j);
+                this.C.add(j,last);
+                this.C.add(j,replace);
+                this.C.add(j,first);
+
+            }
+        }
+
+    }
     public void insert(int i, char c) {}
     public void delete(int i) {}
 

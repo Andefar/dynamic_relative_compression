@@ -15,7 +15,6 @@ public class Compressor {
     }
 
 
-
     //O(|S|^2*|R|) :Iterate through string S and foreach character use indexOf
     public ArrayList<Block> encode(String S){
         char[] SA = S.toCharArray();
