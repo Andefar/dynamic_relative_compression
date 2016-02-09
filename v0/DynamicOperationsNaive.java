@@ -132,6 +132,50 @@ public class DynamicOperationsNaive {
 
     }
     public void insert(int i, char c) {}
-    public void delete(int i) {}
+
+    public void delete(int i) {
+
+        int[] t = this.getBlockandStartPos(i);
+        int blockNum = t[0];
+        int blockPosInS = t[1];
+        Block b = this.C.get(blockNum);
+        int l = b.getLength();
+        int p = b.getPos();
+        int offsetInRA = i - blockPosInS;
+
+        //remove the old block
+        this.C.remove(blockNum);
+
+        //when block can be split in 3, i is in the middle
+        //i not first in block, i not the last in block, length is 3 or more
+        if (offsetInRA > 0 && offsetInRA != (l-1)  && l >= 3) {
+
+            Block first = new Block(p,offsetInRA);
+            Block last = new Block(p+offsetInRA+1,l-(offsetInRA+1));
+            this.C.add(blockNum,last);
+            this.C.add(blockNum,first);
+
+        }
+        //i is the first in the block and length is at least 2
+        else if (offsetInRA == 0 && l >= 2) {
+
+            Block rest = new Block(p+1,l-1);
+            this.C.add(blockNum,rest);
+
+        }
+        //i is the last index and length is at least 2
+        else if (offsetInRA == (l-1) && l >= 2) {
+
+            Block preBlock = new Block(p,l-1);
+            this.C.add(blockNum,preBlock);
+        }
+        //replace with a single char
+        else if (l == 1) {
+            return;
+        } else {
+            throw new IllegalArgumentException("Case not covered");
+        }
+
+    }
 
 }
