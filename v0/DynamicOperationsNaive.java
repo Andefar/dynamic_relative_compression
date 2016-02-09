@@ -67,35 +67,43 @@ public class DynamicOperationsNaive {
 
 
     public void replace(int i, char sub) {
-        int pos = 0;
 
-        for (int j = 0; j < this.C.size(); j++) {
+        int[] t = this.getBlockandStartPos(i);
+        int blockNum = t[0];
+        int blockPosInS = t[1];
 
-            Block b = this.C.get(j);
-            int l = b.getLength();
-            int p = b.getPos();
-            int curLen = pos + l;
+        Block b = this.C.get(blockNum);
+        int l = b.getLength();
+        int p = b.getPos();
 
-            if (curLen < i) { continue;}
-            else {
+        int offsetInRA = i - blockPosInS;
+        int indexInRA = p+offsetInRA;
+        int charToReplace = RA[indexInRA];
 
+        //when block can be split in 3
+        //i not first in block, i not the last in block, length is 3 or more
+        if (offsetInRA > 0 && offsetInRA != (l-1)  && l >= 3) {
 
-                int distPosToChar = l - (curLen - i);
+            if(charToReplace == sub) {
+                //replace with same char
+                return;
+            } else {
                 int subPosInRA = -1;
                 for (int k = 0; k < RA.length; k++) {
                     if (RA[k] == sub) {
                         subPosInRA = k;
                     }
                 }
-                Block first = new Block(p,distPosToChar - 1);
+                Block first = new Block(p,offsetInRA);
                 Block replace = new Block(subPosInRA,1);
-                Block last = new Block(p+distPosToChar,curLen - i);
-                this.C.remove(j);
-                this.C.add(j,last);
-                this.C.add(j,replace);
-                this.C.add(j,first);
+                Block last = new Block(p+offsetInRA+1,l-(offsetInRA+1));
+                this.C.remove(blockNum);
+                this.C.add(blockNum,last);
+                this.C.add(blockNum,replace);
+                this.C.add(blockNum,first);
 
             }
+
         }
 
     }
