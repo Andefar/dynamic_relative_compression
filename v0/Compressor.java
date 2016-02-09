@@ -84,14 +84,14 @@ public class Compressor {
 
     // Decode a compressed representation, D,  of string S with reference to R
     // Evt ikke
-    public String decode(ArrayList<Block> D){
+    public String decode(ArrayList<Block> C){
             String S = "";
             int p;
             int l;
 
-            for (int i = 0; i < D.size(); i++){
-                p = D.get(i).getPos();
-                l = D.get(i).getLength();
+            for (Block b : C ){
+                p = b.getPos();
+                l = b.getLength();
                 S += new String((Arrays.copyOfRange(RA, p, p+l)));
                 //S += (Arrays.copyOfRange(RA, p, p+l)).toString();
                 //System.out.println((Arrays.copyOfRange(RA, p, p+l)));
