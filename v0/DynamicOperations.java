@@ -14,7 +14,7 @@ abstract class DynamicOperations {
     }
 
     public abstract ArrayList<Block> getC();
-    public abstract char access(int index);
+    public abstract char access(int index) throws IndexOutOfBoundsException;
     public abstract void replace(int i, char sub);
     public abstract void delete(int i);
     public abstract void insert(int i, char c);

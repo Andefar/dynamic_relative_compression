@@ -15,7 +15,7 @@ public class DynamicOperationsNaive extends DynamicOperations {
 
     // Return character S[i]
     // Index out of bound exception
-    public char access(int index) {
+    public char access(int index) throws IndexOutOfBoundsException {
 
         int[] BS = this.getBlockandStartPos(index);
 
@@ -23,8 +23,6 @@ public class DynamicOperationsNaive extends DynamicOperations {
         int start = BS[1]; //B[1] is the starting position of block BS[0] in S (the original string)
 
         return this.RA[p + (index - start)];
-
-        throw new IndexOutOfBoundsException("Index must be positive and may not exceed the number of elements in S");
     }
 
 
@@ -117,7 +115,7 @@ public class DynamicOperationsNaive extends DynamicOperations {
         }
 
     }
-    public void insert(int i, char c) {
+    public void insert(int index, char c) {
         int[] BS = this.getBlockandStartPos(index);
         int blockNo = BS[0];
         int startPosInR = this.C.get(blockNo).getPos();
