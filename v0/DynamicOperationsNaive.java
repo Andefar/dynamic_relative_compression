@@ -6,9 +6,6 @@ import java.util.ArrayList;
 
 public class DynamicOperationsNaive extends DynamicOperations {
 
-    private ArrayList<Block> C;
-    private char[] RA;
-
     public DynamicOperationsNaive(ArrayList<Block> C, char[] RA){
         super(C,RA);
     }

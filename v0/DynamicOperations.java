@@ -5,8 +5,8 @@ import java.util.ArrayList;
  */
 abstract class DynamicOperations {
 
-    private ArrayList<Block> C;
-    private char[] RA;
+    protected ArrayList<Block> C;
+    protected char[] RA;
 
     public DynamicOperations(ArrayList<Block> C, char[] RA){
         this.C = (ArrayList<Block>) C.clone();
