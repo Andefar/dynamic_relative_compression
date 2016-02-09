@@ -27,6 +27,7 @@ public class Driver {
         DynamicOperationsNaive ops6 = new DynamicOperationsNaive(encodedS,R.toCharArray());
         DynamicOperationsNaive ops7 = new DynamicOperationsNaive(encodedS,R.toCharArray());
         DynamicOperationsNaive ops8 = new DynamicOperationsNaive(encodedS,R.toCharArray());
+        DynamicOperationsNaive ops9 = new DynamicOperationsNaive(encodedS,R.toCharArray());
 
         ops1.replace(3,'c');
         ops2.replace(5,'b');
@@ -77,6 +78,16 @@ public class Driver {
         System.out.println("6: " + "bacaabcbc".equals(decodedS6));
         System.out.println("7: " + "bacaaabcb".equals(decodedS7));
         System.out.println("9: " + "bcaaabcbc".equals(decodedS8));
+
+
+
+        System.out.println("delete test");
+        for (int m = 0; m <= 9; m++) {
+            ops9.delete(0);
+            System.out.println(cmp.decode(ops9.getC()));
+        }
+
+
     }
 
 }
