@@ -4,10 +4,6 @@ import java.util.ArrayList;
  * Created by andl on 08/02/2016.
  */
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 public class DynamicOperationsNaive {
 
     private ArrayList<Block> C;
