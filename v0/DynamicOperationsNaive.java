@@ -1,10 +1,16 @@
+import java.util.ArrayList;
+
 /**
  * Created by andl on 08/02/2016.
  */
 public class DynamicOperationsNaive {
 
-    public DynamicOperationsNaive() {
+    ArrayList<Block> C;
+    char[] RA;
 
+    public DynamicOperationsNaive(ArrayList<Block> C, char[] RA){
+        this.C = C;
+        this.RA = RA;
     }
 
     public void access(int i) {}
