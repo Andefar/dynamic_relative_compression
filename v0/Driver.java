@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Driver {
@@ -82,7 +83,25 @@ public class Driver {
 
 
         System.out.println("\nSave test");
+
+
         ops9.replace(3,'c');
+        ArrayList<Block> toSave = ops9.getC();
+
+        FileHandler fh = new FileHandler();
+        System.out.println("Saving...");
+        fh.toFile(toSave,"compressed.cmp");
+        ArrayList<Block> fromFile = new ArrayList<>();
+        try {
+            System.out.println("Reading...");
+            fromFile = fh.read("compressed.cmp");
+        } catch (IOException e) {
+            System.out.println("Failed!");
+            e.printStackTrace();
+        }
+        System.out.println("Did it succed?");
+        System.out.println(cmp.decode(fromFile).equals(cmp.decode(toSave)));
+
 
 
     }

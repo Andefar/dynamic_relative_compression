@@ -48,8 +48,6 @@ public class DynamicOperationsNaive extends DynamicOperations {
     }
 
 
-
-
     public void replace(int i, char sub) {
         //get all positions and distances
         int[] t = this.getBlockandStartPos(i);
