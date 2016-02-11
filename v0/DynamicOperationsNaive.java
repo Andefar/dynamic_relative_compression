@@ -6,8 +6,8 @@ import java.util.ArrayList;
 
 public class DynamicOperationsNaive extends DynamicOperations {
 
-    public DynamicOperationsNaive(ArrayList<Block> C, char[] RA){
-        super(C,RA);
+    public DynamicOperationsNaive(ArrayList<Block> C, char[] RA, Compressor cmp){
+        super(C,RA, cmp);
     }
 
     public ArrayList<Block> getC() { return this.C; }
@@ -198,5 +198,7 @@ public class DynamicOperationsNaive extends DynamicOperations {
         }
 
     }
+
+
 
 }
