@@ -1,5 +1,9 @@
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -10,6 +14,10 @@ import java.util.List;
  * Created by andl on 09/02/2016.
  */
 public class FileHandler {
+
+    public FileHandler () {
+
+    }
 
     public void toFile(ArrayList<Block> blocks, String name) {
         List lines = new ArrayList<String>();
@@ -25,8 +33,27 @@ public class FileHandler {
 
     }
 
-    public List<Block> read(String name) throws IOException {
-        List out = new ArrayList<Block>();
+    public void toFileBinary(ArrayList<Block> blocks, String name) {
+        String output = "";
+        for(int i = 0; i < blocks.size();i++) {
+            output += toStringCompact(blocks.get(i));
+        }
+
+        byte[] bOut = output.getBytes();
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(name);
+            fos.write(bOut);
+            fos.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public ArrayList<Block> read(String name) throws IOException {
+        ArrayList<Block> out = new ArrayList<Block>();
         for (String line : Files.readAllLines(Paths.get(name))) {
             out.add(fromString(line));
         }
@@ -35,15 +62,16 @@ public class FileHandler {
 
     private Block fromString(String line) {
         //format="p l"
-        String[] s = line.split(" ");
+        String[] s = line.split(",");
         int p = Integer.parseInt(s[0]);
         int l = Integer.parseInt(s[1]);
         return new Block(p,l);
     }
 
+
     private String toStringCompact(Block b) {
         //format="p l"
-        return "" + b.getPos() + " " + b.getLength();
+        return "" + b.getPos()+ "," + b.getLength();
     }
 
 }
