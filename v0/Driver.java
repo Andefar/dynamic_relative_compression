@@ -1,109 +1,52 @@
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Driver {
 
     public static void main(String[] args) {
 
 
-        String S = "bacaaabcbc$";
-        String R = "abcaa";
+        String S = "bacaaabcbc";
+        String S1 = "bacaaababc";
+        String R = "abacaabc";
 
         Compressor cmp = new Compressor(R);
 
         ArrayList<Block> encodedS = cmp.encode(S);
+        ArrayList<Block> encodedS1 = cmp.encode(S1);
 
-//        System.out.println("BEFORE REPLACE:");
-//        for (Block b : encodedS) {
-//            System.out.println(b.toString());
-//        }
-        System.out.println("0: " + S);
+        System.out.println(encodedS1);
 
-        DynamicOperationsNaive ops1 = new DynamicOperationsNaive(encodedS,R.toCharArray());
-        DynamicOperationsNaive ops2 = new DynamicOperationsNaive(encodedS,R.toCharArray());
-        DynamicOperationsNaive ops3 = new DynamicOperationsNaive(encodedS,R.toCharArray());
-        DynamicOperationsNaive ops4 = new DynamicOperationsNaive(encodedS,R.toCharArray());
+        DynamicOperationsMerge don = new DynamicOperationsMerge(encodedS, (R + "$").toCharArray(), cmp);
+        DynamicOperationsNaive donN = new DynamicOperationsNaive(encodedS, (R + "$").toCharArray(), cmp);
 
-        DynamicOperationsNaive ops5 = new DynamicOperationsNaive(encodedS,R.toCharArray());
-        DynamicOperationsNaive ops6 = new DynamicOperationsNaive(encodedS,R.toCharArray());
-        DynamicOperationsNaive ops7 = new DynamicOperationsNaive(encodedS,R.toCharArray());
-        DynamicOperationsNaive ops8 = new DynamicOperationsNaive(encodedS,R.toCharArray());
-        DynamicOperationsNaive ops9 = new DynamicOperationsNaive(encodedS,R.toCharArray());
+        System.out.println(don.getC());
+        System.out.println(cmp.decode(don.getC()));
 
-        ops1.replace(3,'c');
-        ops2.replace(5,'b');
-        ops3.replace(9,'a');
-        ops4.replace(1,'c');
+        don.replace(7, 'a');
+        donN.replace(7, 'a');
 
-        ops5.delete(3);
-        ops6.delete(5);
-        ops7.delete(9);
-        ops8.delete(1);
+        System.out.println(don.getC());
+        System.out.println(cmp.decode(don.getC()));
 
-//        System.out.println("AFTER REPLACE");
-//        for (Block b : ops.getC()) {
-//            System.out.println(b.toString());
-//        }
-
-
-        String decodedS1 = cmp.decode(ops1.getC());
-        String decodedS2 = cmp.decode(ops2.getC());
-        String decodedS3 = cmp.decode(ops3.getC());
-        String decodedS4 = cmp.decode(ops4.getC());
-
-        String decodedS5 = cmp.decode(ops5.getC());
-        String decodedS6 = cmp.decode(ops6.getC());
-        String decodedS7 = cmp.decode(ops7.getC());
-        String decodedS8 = cmp.decode(ops8.getC());
-
-        System.out.println("1: " + decodedS1);
-        System.out.println("2: " + decodedS2);
-        System.out.println("3: " + decodedS3);
-        System.out.println("4: " + decodedS4);
-        System.out.println("5: " + decodedS5);
-        System.out.println("6: " + decodedS6);
-        System.out.println("7: " + decodedS7);
-        System.out.println("8: " + decodedS8);
+        System.out.println(donN.getC());
+        System.out.println(cmp.decode(donN.getC()));
 
 
 
-                                 //"bacaaabcbc"
-        //replace tests
-        System.out.println("1: " + "baccaabcbc".equals(decodedS1));
-        System.out.println("2: " + "bacaabbcbc".equals(decodedS2));
-        System.out.println("3: " + "bacaaabcba".equals(decodedS3));
-        System.out.println("4: " + "bccaaabcbc".equals(decodedS4));
-
-        //delete tests
-        System.out.println("5: " + "bacaabcbc".equals(decodedS5));
-        System.out.println("6: " + "bacaabcbc".equals(decodedS6));
-        System.out.println("7: " + "bacaaabcb".equals(decodedS7));
-        System.out.println("9: " + "bcaaabcbc".equals(decodedS8));
-
-
-
-        System.out.println("\nSave test");
-
-
-        ops9.replace(3,'c');
-        ArrayList<Block> toSave = ops9.getC();
-
-        FileHandler fh = new FileHandler();
-        System.out.println("Saving...");
-        fh.toFile(toSave,"compressed.cmp");
-        ArrayList<Block> fromFile = new ArrayList<>();
-        try {
-            System.out.println("Reading...");
-            fromFile = fh.read("compressed.cmp");
-        } catch (IOException e) {
-            System.out.println("Failed!");
-            e.printStackTrace();
+        /*
+        for (int i = 0; i < 10; i++) {
+            System.out.println(don.access(i));
         }
-        System.out.println("Did it succed?");
-        System.out.println(cmp.decode(fromFile).equals(cmp.decode(toSave)));
 
+        for (Block b : encodedS) {
+            System.out.println(b.toString());
+        }
 
+        String decodedS = cmp.decode(encodedS);
+        System.out.print(decodedS);
+        System.out.print(S.equals(decodedS + "$"));
+        */
 
     }
-
 }
