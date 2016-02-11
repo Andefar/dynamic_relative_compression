@@ -7,10 +7,12 @@ abstract class DynamicOperations {
 
     protected ArrayList<Block> C;
     protected char[] RA;
+    protected Compressor cmp;
 
-    public DynamicOperations(ArrayList<Block> C, char[] RA){
+    public DynamicOperations(ArrayList<Block> C, char[] RA, Compressor cmp){
         this.C = (ArrayList<Block>) C.clone();
         this.RA = RA.clone();
+        this.cmp = cmp;
     }
 
     public abstract ArrayList<Block> getC();
