@@ -21,4 +21,13 @@ abstract class DynamicOperations {
     public abstract void delete(int i);
     public abstract void insert(int i, char c);
 
+    public int getSLength(){
+        int len = 0;
+
+        for (Block b : this.C){
+            len += b.getLength();
+        }
+
+        return len;
+    }
 }

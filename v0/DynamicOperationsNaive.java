@@ -114,13 +114,7 @@ public class DynamicOperationsNaive extends DynamicOperations {
 
     }
     public void insert(int index, char c) {
-        int[] BS = this.getBlockandStartPos(index);
-        int blockNo = BS[0];
-        int startPosInR = this.C.get(blockNo).getPos();
-        int length = this.C.get(blockNo).getLength();
-        int startPosInS = BS[1];
         int indexOfR = -1;
-
         for (int i = 0; i < RA.length; i++){
             if (RA[i] == c) {
                 indexOfR = i;
@@ -128,17 +122,31 @@ public class DynamicOperationsNaive extends DynamicOperations {
             }
         }
 
+        // insert at the end of string
+        if (index == super.getSLength()){
+            this.C.add(new Block(indexOfR, 1));
+            return;
+        }
+
+        int[] BS = this.getBlockandStartPos(index);
+        int blockNo = BS[0];
+        int startPosInR = this.C.get(blockNo).getPos();
+        int length = this.C.get(blockNo).getLength();
+        int startPosInS = BS[1];
+
         if ( index == startPosInS) { //insert in beginning of block
 
             this.C.remove(blockNo);
             this.C.add(blockNo, new Block(startPosInR, length));
             this.C.add(blockNo, new Block(indexOfR, 1));
 
-        } else if ( index == startPosInS + length - 1){ //insert at the end of block
+        } else if ( index == startPosInS + length){ //insert at the end of block
 
             this.C.remove(blockNo);
+
             this.C.add(blockNo, new Block(indexOfR, 1));
             this.C.add(blockNo, new Block(startPosInR, length));
+
 
         } else { //middle of block
             int endPosInS = startPosInS + length - 1;
