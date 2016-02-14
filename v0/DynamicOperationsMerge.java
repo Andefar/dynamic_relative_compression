@@ -134,6 +134,7 @@ public class DynamicOperationsMerge extends DynamicOperations {
         // insert at the end of string
         if (index == super.getSLength()){
             this.C.add(new Block(indexOfR, 1));
+            restoreMax( (this.C.size() - 2), (this.C.size()-1));
             return;
         }
 
@@ -208,6 +209,7 @@ public class DynamicOperationsMerge extends DynamicOperations {
         }
         //replace with a single char
         else if (l == 1) {
+            restoreMax( (Math.max(blockNum - 1, 0)), (Math.min(blockNum + 4, (this.C.size() - 1))) );
             return;
         } else {
             throw new IllegalArgumentException("Case not covered");
