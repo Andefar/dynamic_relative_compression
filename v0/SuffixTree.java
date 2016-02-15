@@ -12,52 +12,41 @@ public class SuffixTree {
 
     public SuffixTree (String S) {
         //create root node.
-        this.root = new Node(null,new char['$'],-1);
+        this.root = new Node(null,(new char[0]),-1);
 
         char[] SA = S.toCharArray();
         for(int i = 0; i < SA.length; i++) {
             char[] s = Arrays.copyOfRange(SA, i,SA.length);
-            System.out.println(new String(s));
+            //System.out.println(new String(s));
             addSuffixNaive(this.root,s,i);
         }
-        //System.out.println(prettyPrint(this.root,""));
+        prettyPrint(this.root,0);
     }
 
+    public void prettyPrint (Node start,int depth) {
+        ArrayList<Node> children = start.getChildren();
 
-//    public void addSuffixNaive2(int index, char[] suffix) {
-//
-//        /*ALgorithm:
-//        insert the entire string S into the tree
-//        start at the root
-//
-//
-//
-//        */
-//        Node parent = findRecursive(this.root,suffix,0);
-//
-//        if(parent == null) { throw new IllegalArgumentException("Something disastrous happened \\[O.o]/"); }
-//
-//        insert(parent,suffix,index);
-//
-//    }
-
-    public String prettyPrint (Node start,String prev) {
-        if(start.getChildren().isEmpty()) {
-            return prev;
+        if(children.size() == 0) {
+            System.out.println("No children here");
+            String repeated = new String(new char[depth*5]).replace("\0"," ");
+            System.out.println(repeated + new String(start.getEdge().getLabel()));
+            return;
         }
 
-        prev += (new String (start.getEdge().getLabel())) + "\n";
-        for(Node c : start.getChildren()) {
-            prev += "   " + prettyPrint(c,prev);
+        for( Node child : children) {
+
+            String repeated = new String(new char[depth*5]).replace("\0"," ");
+            System.out.println(repeated + new String(child.getEdge().getLabel()));
+            prettyPrint(child,depth+1);
         }
-        return prev;
+
     }
 
     public void addSuffixNaive(Node start, char[] suffix, int i) {
         ArrayList<Node> children = start.getChildren();
 
-        if(children == null) {
-            System.out.println("children == null: returning current node");
+        if(children.size() == 0) {
+            //System.out.println("children == null: returning current node");
             Node leaf = new Node(start,suffix,i);
             start.addChild(leaf);
             return;
