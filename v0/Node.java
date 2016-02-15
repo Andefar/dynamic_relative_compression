@@ -1,29 +1,42 @@
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
 
 /**
  * Created by andl on 11/02/2016.
  */
 public class Node {
 
-    Map<Character, Node> children;
+    ArrayList<Node> children = null;
+    Node parent = null;
+    Edge in = null;
+    int id = -1;
 
 
+    public Node(Node parent,char[] suffix,int id) {
+        this.children = new ArrayList<Node>();
+        this.in = new Edge(suffix);
+        this.parent = parent;
+        this.id = id;
+    }
     public Node() {
-        this.children = new HashMap<>();
-
+        this.children = new ArrayList<Node>();
     }
 
-    public Map<Character,Node> getChildren() {
+    public ArrayList<Node> getChildren() {
         return this.children;
     }
 
-    public void addChild (Character key, Node child) {
-        this.children.put(key,child);
+    public Edge getEdge() {
+        return this.in;
+    }
+
+    public void addChild(Node child) {
+        this.children.add(child);
     }
 
     public Node findChild (Character key) {
         return this.children.get(key);
     }
+
+
 
 }
