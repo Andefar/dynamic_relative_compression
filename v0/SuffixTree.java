@@ -18,22 +18,28 @@ public class SuffixTree {
         for(int i = 0; i < SA.length; i++) {
             char[] s = Arrays.copyOfRange(SA, i,SA.length);
             System.out.println(new String(s));
-            addSuffixNaive(i,s);
+            addSuffixNaive(this.root,s,i);
         }
         //System.out.println(prettyPrint(this.root,""));
-
     }
 
 
-    public void addSuffixNaive(int index, char[] suffix) {
-
-        Node parent = findRecursive(this.root,suffix,0);
-
-        if(parent == null) { throw new IllegalArgumentException("Something disastrous happened \\[O.o]/"); }
-
-        insert(parent,suffix,index);
-
-    }
+//    public void addSuffixNaive2(int index, char[] suffix) {
+//
+//        /*ALgorithm:
+//        insert the entire string S into the tree
+//        start at the root
+//
+//
+//
+//        */
+//        Node parent = findRecursive(this.root,suffix,0);
+//
+//        if(parent == null) { throw new IllegalArgumentException("Something disastrous happened \\[O.o]/"); }
+//
+//        insert(parent,suffix,index);
+//
+//    }
 
     public String prettyPrint (Node start,String prev) {
         if(start.getChildren().isEmpty()) {
@@ -47,32 +53,56 @@ public class SuffixTree {
         return prev;
     }
 
-    public Node findRecursive(Node start, char[] suffix, int i) {
+    public void addSuffixNaive(Node start, char[] suffix, int i) {
         ArrayList<Node> children = start.getChildren();
 
         if(children == null) {
             System.out.println("children == null: returning current node");
-            return start;
+            Node leaf = new Node(start,suffix,i);
+            start.addChild(leaf);
+            return;
         }
 
         for (Node child : children) {
-            if ((new String(suffix)).equals(new String(child.getEdge().getLabel()))) {
-                System.out.println("suffix matches");
-                if (i+1 == suffix.length) {
-                    System.out.println("found child with suffix: " + (new String(suffix)));
-                    return child;
-                } else {
-                    int newI = i+1;
-                    char[] rest = Arrays.copyOfRange(suffix,newI,suffix.length);
-                    System.out.println("continue search with rest: " + (new String(rest)));
-                    return findRecursive(child,rest,newI);
-                }
 
-            } else {
-                System.out.println("No suffix matches");
+            boolean inserted = false;
+            char[] label_arr = child.getEdge().getLabel();
+            int max = Math.max(label_arr.length, suffix.length);
+            if(suffix[0] != label_arr[0]) { continue; }
+
+            for(int k = 1; k < max; k++) {
+                if(suffix[k] != label_arr[k]) {
+                    //change existing label before split
+                    child.getEdge().setLabel(Arrays.copyOfRange(suffix,0,k));
+                    //create node to represent existing suffix
+                    Node l1 = new Node(child,Arrays.copyOfRange(label_arr,k-1,label_arr.length),child.id);
+                    //create node to represent new suffix. Increase length of suffix array by 1 to contain '$'
+                    char[] newSuffix = Arrays.copyOf(suffix,suffix.length-k+1);
+                    newSuffix[newSuffix.length-1] = '$';
+                    Node l2 = new Node(child,newSuffix,i);
+                    //add new nodes as children to parent (named child here)
+                    child.addChild(l1);
+                    child.addChild(l2);
+                    inserted = true;
+                    break;
+                } else if(k == suffix.length-1) {
+                    //split
+                    child.getEdge().setLabel(Arrays.copyOfRange(suffix,0,k));
+                    Node l1 = new Node(child,Arrays.copyOfRange(label_arr,k-1,label_arr.length),child.id);
+                    //create node to represent new suffix. Just '$' in this case.
+                    Node l2 = new Node(child,new char['$'],i);
+                    //add new nodes as children to parent (named child here)
+                    child.addChild(l1);
+                    child.addChild(l2);
+                    inserted = true;
+                    break;
+                } else {
+                    throw new IllegalArgumentException("Something disastrous happened \\[O.o]/ when matching label");
+                }
             }
+            if(inserted) { break; }
         }
-        return start;
+
     }
 
     public void insert(Node parent,char[] suffix,int index){
