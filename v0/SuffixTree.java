@@ -62,7 +62,9 @@ public class SuffixTree {
             }
 
             for(int k = 1; k < min; k++) {
+                System.out.println("\t match suffix,label: " + suffix[k] + "," + label_arr[k]);
                 if(suffix[k] != label_arr[k]) {
+
                     System.out.println("label and suffix stopped matching -> split");
                     //change existing label before split
                     child.getEdge().setLabel(Arrays.copyOfRange(suffix,0,k));
@@ -90,7 +92,7 @@ public class SuffixTree {
                     inserted = true;
                     break;
                 } else {
-                    System.out.println("found label length == 1");
+                    System.out.println("SOMETHING THAT ISNT MATCHED");
                 }
 
             }
@@ -101,12 +103,14 @@ public class SuffixTree {
                 char[] childSuffix = Arrays.copyOfRange(temp,1,temp.length);
                 Node leaf = new Node(child,childSuffix,i);
                 child.addChild(leaf);
+                inserted = true;
+                System.out.println("    found label length == 1. inserted: " + (new String(childSuffix)));
             }
 
         }
 
         if (!inserted) {
-            Node leaf = new Node(start, suffix, i);
+            Node leaf = new Node(start, (new String(suffix)+"$").toCharArray(), i);
             start.addChild(leaf);
             System.out.println("no match. insert: " + new String(leaf.getEdge().getLabel()));
         }
