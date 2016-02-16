@@ -51,6 +51,7 @@ public class SuffixTree {
             return;
         }
         boolean inserted = false;
+
         for (Node child : children) {
             System.out.println("inspecting children with label:" + new String(child.getEdge().getLabel()));
             char[] label_arr = child.getEdge().getLabel();
@@ -88,12 +89,19 @@ public class SuffixTree {
                     child.addChild(l2);
                     inserted = true;
                     break;
+                } else {
+                    System.out.println("found label length == 1");
                 }
-                //TODO: implement same length case
-                //else {}
 
             }
-            if(inserted) { break; }
+            if(inserted) {
+                break;
+            } else if(label_arr.length == 1) {
+                char[] temp = ((new String(suffix))+"$").toCharArray();
+                char[] childSuffix = Arrays.copyOfRange(temp,1,temp.length);
+                Node leaf = new Node(child,childSuffix,i);
+                child.addChild(leaf);
+            }
 
         }
 
