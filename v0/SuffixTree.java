@@ -87,9 +87,17 @@ public class SuffixTree {
                     System.out.println("Suffix exhausted: splitting");
                     //split
                     child.getEdge().setLabel(Arrays.copyOfRange(suffix,0,k));
-                    Node l1 = new Node(child,Arrays.copyOfRange(label_arr,k-1,label_arr.length),child.id);
+                    Node l1 = new Node(child,Arrays.copyOfRange(label_arr,k,label_arr.length),child.id);
                     //create node to represent new suffix. Just '$' in this case.
-                    Node l2 = new Node(child,new char['$'],i);
+
+                    for (Node subChild : child.getChildren() ) {
+                        l1.addChild(subChild);
+                    }
+                    child.removeChildren();
+
+                    char[] l2suffix = {'$'};
+
+                    Node l2 = new Node(child,l2suffix,i);
                     //add new nodes as children to parent (named child here)
                     child.addChild(l1);
                     child.addChild(l2);
