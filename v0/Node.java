@@ -33,6 +33,10 @@ public class Node {
         this.children.add(child);
     }
 
+    public void removeChildren() {
+        this.children = new ArrayList<Node>();
+    }
+
     public Node findChild (Character key) {
         return this.children.get(key);
     }
