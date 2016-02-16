@@ -84,7 +84,6 @@ public class SuffixTree {
                     inserted = true;
                     break;
                 } else if(k == suffix.length-1) {
-                    System.out.println("Suffix exhausted: splitting");
                     //split
                     child.getEdge().setLabel(Arrays.copyOfRange(suffix,0,k+1));
                     Node l1 = new Node(child,Arrays.copyOfRange(label_arr,k+1,label_arr.length),child.id);
