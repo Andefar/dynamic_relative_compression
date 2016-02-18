@@ -71,18 +71,37 @@ public class FileHandler {
         return "" + b.getPos()+ "," + b.getLength();
     }
 
-    public String readFromFile(String path) throws IOException {
+    public String readFromFileLine(String path) throws IOException {
 
         BufferedReader bufferedReader = new BufferedReader(new FileReader(path));
 
         StringBuffer stringBuffer = new StringBuffer();
         String line = null;
 
+
+
         while ((line = bufferedReader.readLine()) != null) {
             stringBuffer.append(line).append("\n");
         }
 
         return stringBuffer.toString();
+    }
+
+    public String readFromFileChar(String path) throws IOException{
+
+        FileReader fileReader = new FileReader(path);
+
+        String fileContents = "";
+
+        int i;
+
+        while ((i = fileReader.read()) != -1) {
+            char ch = (char) i;
+
+            fileContents = fileContents + ch;
+        }
+
+        return fileContents;
     }
 
 
