@@ -147,7 +147,6 @@ public class DynamicOperationsNaive extends DynamicOperations {
             this.C.add(blockNo, new Block(indexOfR, 1));
             this.C.add(blockNo, new Block(startPosInR, length));
 
-
         } else { //middle of block
             int endPosInS = startPosInS + length - 1;
             int firstBlockLength = index - startPosInS;

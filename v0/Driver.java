@@ -7,9 +7,9 @@ public class Driver {
 
         SuffixTree test = new SuffixTree("bananada");
         String s = "s";
-        System.out.println(test.search(s.toCharArray()));
+        //System.out.println(test.search(s.toCharArray()));
         CompressorSuffix suf = new CompressorSuffix("bananada");
-        System.out.println((suf.decode(suf.encode("banadanandandnanan"))));
+        System.out.println("banadanandandnanan".equals(suf.decode(suf.encode("banadanandandnanan"))));
 
 
     }

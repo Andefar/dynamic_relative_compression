@@ -14,7 +14,7 @@ public class CompressorSuffix extends Compressor{
 
     public CompressorSuffix(String R) {
         super(R);
-        this.stR = new SuffixTree(this.RA.toString());
+        this.stR = new SuffixTree(R);
     }
 
 
