@@ -25,6 +25,70 @@ public class CompressorTest extends GroovyTestCase {
     }
 
     @Test
+    public void testOperationsReplaceAndDeleteNaive() {
+
+        DynamicOperationsNaive ops1 = new DynamicOperationsNaive(encodedS0, R0.toCharArray(), cmp0);
+        DynamicOperationsNaive ops2 = new DynamicOperationsNaive(encodedS0, R0.toCharArray(), cmp0);
+        DynamicOperationsNaive ops3 = new DynamicOperationsNaive(encodedS0, R0.toCharArray(), cmp0);
+        DynamicOperationsNaive ops4 = new DynamicOperationsNaive(encodedS0, R0.toCharArray(), cmp0);
+        DynamicOperationsNaive ops5 = new DynamicOperationsNaive(encodedS0, R0.toCharArray(), cmp0);
+        DynamicOperationsNaive ops6 = new DynamicOperationsNaive(encodedS0, R0.toCharArray(), cmp0);
+        DynamicOperationsNaive ops7 = new DynamicOperationsNaive(encodedS0, R0.toCharArray(), cmp0);
+        DynamicOperationsNaive ops8 = new DynamicOperationsNaive(encodedS0, R0.toCharArray(), cmp0);
+        ops1.replace(3,(char) 'c');
+        ops2.replace(5,(char) 'b');
+        ops3.replace(9,(char) 'a');
+        ops4.replace(1,(char) 'c');
+        ops5.delete(3);
+        ops6.delete(5);
+        ops7.delete(9);
+        ops8.delete(1);
+        String decodedS1 = cmp0.decode(ops1.getC());
+        String decodedS2 = cmp0.decode(ops2.getC());
+        String decodedS3 = cmp0.decode(ops3.getC());
+        String decodedS4 = cmp0.decode(ops4.getC());
+        String decodedS5 = cmp0.decode(ops5.getC());
+        String decodedS6 = cmp0.decode(ops6.getC());
+        String decodedS7 = cmp0.decode(ops7.getC());
+        String decodedS8 = cmp0.decode(ops8.getC());
+
+        //replace tests
+        assertEquals("baccaabcbc",decodedS1);
+        assertEquals("bacaabbcbc",decodedS2);
+        assertEquals("bacaaabcba",decodedS3);
+        assertEquals("bccaaabcbc",decodedS4);
+        //delete tests
+        assertEquals("bacaabcbc",decodedS5);
+        assertEquals("bacaabcbc",decodedS6);
+        assertEquals("bacaaabcb",decodedS7);
+        assertEquals("bcaaabcbc",decodedS8);
+
+    }
+
+    @Test
+    public void testOperationsInsertNaive() {
+
+        DynamicOperationsNaive ops1 = new DynamicOperationsNaive(encodedS0, R0.toCharArray(), cmp0);
+        DynamicOperationsNaive ops2 = new DynamicOperationsNaive(encodedS0, R0.toCharArray(), cmp0);
+        DynamicOperationsNaive ops3 = new DynamicOperationsNaive(encodedS0, R0.toCharArray(), cmp0);
+        DynamicOperationsNaive ops4 = new DynamicOperationsNaive(encodedS0, R0.toCharArray(), cmp0);
+        ops1.insert(3,(char) 'c');
+        ops2.insert(5,(char) 'b');
+        ops3.insert(10,(char) 'a');
+        ops4.insert(0,(char) 'c');
+        String decodedS1 = cmp0.decode(ops1.getC());
+        String decodedS2 = cmp0.decode(ops2.getC());
+        String decodedS3 = cmp0.decode(ops3.getC());
+        String decodedS4 = cmp0.decode(ops4.getC());
+
+        //insert tests
+        assertEquals("baccaaabcbc",decodedS1);
+        assertEquals("bacaababcbc",decodedS2);
+        assertEquals("bacaaabcbca",decodedS3);
+        assertEquals("cbacaaabcbc",decodedS4);
+    }
+
+    @Test
     public void testOperationsReplaceAndDeleteMerge() {
 
         DynamicOperationsMerge ops1 = new DynamicOperationsMerge(encodedS0, R0.toCharArray(), cmp0);

@@ -8,10 +8,13 @@ import java.util.Arrays;
 //Initial version of string compression - naive
 
 
-public class CompressorNaive extends Compressor{
+public class CompressorSuffix extends Compressor{
 
-    public CompressorNaive(String R) {
+    SuffixTree stR;
+
+    public CompressorSuffix(String R) {
         super(R);
+        this.stR = new SuffixTree(this.RA.toString());
     }
 
 
@@ -60,24 +63,14 @@ public class CompressorNaive extends Compressor{
         return compressed;
     }
 
+
     // Return index of beginning of C in R. If not found return -1
-// O(|R|^2) : C might be the length of R
+    // Use suffix tree of R to search
+    // O(|C|) : C might be the length of R
     public int indexOf(char[] C){
-        int index = -1;
 
-        for (int i = 0; i < this.RA.length; i++){
+        return stR.search(C);
 
-            for (int j = 0; j < C.length; j++){
-
-                if (i+j < this.RA.length && C[j] != this.RA[i+j] ){
-                    break;
-                } else if (j == C.length -1){
-                    index = i;
-                }
-            }
-            if (index != -1){ return index;};
-        }
-        return -1;
     }
 
 
@@ -92,7 +85,7 @@ public class CompressorNaive extends Compressor{
         for (Block b : C ){
             p = b.getPos();
             l = b.getLength();
-            S += new String((Arrays.copyOfRange(this.RA, p, p+l)));
+            S += new String((Arrays.copyOfRange(RA, p, p+l)));
             //S += (Arrays.copyOfRange(RA, p, p+l)).toString();
             //System.out.println((Arrays.copyOfRange(RA, p, p+l)));
         }

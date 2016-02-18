@@ -10,7 +10,6 @@ public class Node {
     Edge in = null;
     int id = -1;
 
-
     public Node(Node parent,char[] suffix,int id) {
         this.children = new ArrayList<Node>();
         this.in = new Edge(suffix);
@@ -27,6 +26,12 @@ public class Node {
 
     public Edge getEdge() {
         return this.in;
+    }
+
+    public int getID() {return this.id;}
+
+    public void resetID() {
+        this.id = -1;
     }
 
     public void addChild(Node child) {
