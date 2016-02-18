@@ -9,7 +9,8 @@ public class Driver {
         String s = "s";
         System.out.println(test.search(s.toCharArray()));
         CompressorSuffix suf = new CompressorSuffix("bananada");
-        System.out.println();
+        System.out.println((suf.decode(suf.encode("banadanandandnanan"))));
+
 
     }
 

@@ -16,12 +16,25 @@ public class CompressorTest extends GroovyTestCase {
     ArrayList<Block> encodedS0 = cmp0.encode(ST0);
     ArrayList<Block> encodedS1 = cmp1.encode(ST1);
 
+    CompressorSuffix cmp2 = new CompressorSuffix(R0);
+    CompressorSuffix cmp3 = new CompressorSuffix(R1);
+    ArrayList<Block> encodedS2 = cmp2.encode(ST0);
+    ArrayList<Block> encodedS3 = cmp3.encode(ST1);
+
     @Test
     public void testCompressionDecompression() {
         String results0 = cmp0.decode(encodedS0);
         String results1 = cmp1.decode(encodedS1);
         assertEquals(S0, results0);
         assertEquals(S1, results1);
+    }
+
+    @Test
+    public void testCompressionDecompressionSuffix() {
+        String results2 = cmp2.decode(encodedS2);
+        String results3 = cmp3.decode(encodedS3);
+        assertEquals(S0, results2);
+        assertEquals(S1, results3);
     }
 
     @Test

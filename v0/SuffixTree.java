@@ -19,9 +19,9 @@ public class SuffixTree {
         for(int i = 0; i < SA.length; i++) {
             char[] s = Arrays.copyOfRange(SA, i,SA.length);
             addSuffixNaive(this.root,s,i);
-            System.out.println("\nROUND " + i + " INSERTING: " + (new String(s)) + "\nTREE:\n");
-            prettyPrint(this.root,0);
-            System.out.println("\n\n");
+            //System.out.println("\nROUND " + i + " INSERTING: " + (new String(s)) + "\nTREE:\n");
+            //prettyPrint(this.root,0);
+            //System.out.println("\n\n");
         }
     }
 
