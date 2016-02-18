@@ -38,6 +38,19 @@ public class CompressorTest extends GroovyTestCase {
     }
 
     @Test
+    public void testCompressionDecompressionSuffixFileRead() {
+        FileHandler f = new FileHandler();
+        String S = f.readFromFile("/Users/Josefinetusindfryd/Desktop/dynamic_relative_compression/data/DNA_S");
+        String R = f.readFromFile("/Users/Josefinetusindfryd/Desktop/dynamic_relative_compression/data/DNA_R");
+        CompressorSuffix cmp = new CompressorSuffix(R);
+        ArrayList<Block> encodedS = cmp.encode(S);
+        String resultS = cmp.decode(encodedS);
+
+        assertEquals(S, resultS);
+
+    }
+
+    @Test
     public void testOperationsReplaceAndDeleteNaive() {
 
         DynamicOperationsNaive ops1 = new DynamicOperationsNaive(encodedS0, R0.toCharArray(), cmp0);

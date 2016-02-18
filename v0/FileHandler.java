@@ -1,7 +1,4 @@
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -73,5 +70,20 @@ public class FileHandler {
         //format="p l"
         return "" + b.getPos()+ "," + b.getLength();
     }
+
+    public String readFromFile(String path) throws IOException {
+
+        BufferedReader bufferedReader = new BufferedReader(new FileReader(path));
+
+        StringBuffer stringBuffer = new StringBuffer();
+        String line = null;
+
+        while ((line = bufferedReader.readLine()) != null) {
+            stringBuffer.append(line).append("\n");
+        }
+
+        return stringBuffer.toString();
+    }
+
 
 }
