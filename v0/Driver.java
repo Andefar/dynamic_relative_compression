@@ -32,8 +32,8 @@ public class Driver {
 
         try {
             System.out.println("Reading data from file..");
-            S = f.readFromFileChar("/Users/Josefinetusindfryd/Desktop/dynamic_relative_compression/data/DNA_full");
-            R = f.readFromFileChar("/Users/Josefinetusindfryd/Desktop/dynamic_relative_compression/data/DNA_R");
+            S = f.readFromFileLine("/Users/Josefinetusindfryd/Desktop/dynamic_relative_compression/data/dna.50MB");
+            R = f.readFromFileChar("/Users/Josefinetusindfryd/Desktop/dynamic_relative_compression/DNA_R");
 
             System.out.println("Building suffix tree..");
             long suffixTreeCpuTimeStart = getCpuTime();
@@ -48,26 +48,27 @@ public class Driver {
             ArrayList<Block> t2;
             long encodeCpuTimeStart = getCpuTime();
             t1 = suf1.encode(S);
+            //System.out.print(t1.size());
             long encodeCpuTimeEnd = getCpuTime() - encodeCpuTimeStart;
-            long encodeTimeStart = System.nanoTime();
-            t2 = suf2.encode(S);
-            long encodeTimeEnd = System.nanoTime() - encodeTimeStart;
+            //long encodeTimeStart = System.nanoTime();
+            //t2 = suf2.encode(S);
+            //long encodeTimeEnd = System.nanoTime() - encodeTimeStart;
 
 
             System.out.println("Decoding the string..");
             long decodeCpuTimeStart = getCpuTime();
             suf1.decode(t1);
             long decodeCpuTimeEnd = getCpuTime() - decodeCpuTimeStart;
-            long decodeTimeStart = System.nanoTime();
-            suf2.decode(t2);
-            long decodeTimeEnd = System.nanoTime() - decodeTimeStart;
+            //long decodeTimeStart = System.nanoTime();
+            //suf2.decode(t2);
+            //long decodeTimeEnd = System.nanoTime() - decodeTimeStart;
 
             System.out.println("Done!..");
 
             System.out.println("WALLCLOCK TIMES");
             System.out.println("Suffix tree construction: " + suffixTreeTimeEnd/(1000000000.0));
-            System.out.println("encode: " + encodeTimeEnd/(1000000000.0));
-            System.out.println("decode: " + decodeTimeEnd/(1000000000.0));
+            //System.out.println("encode: " + encodeTimeEnd/(1000000000.0));
+           // System.out.println("decode: " + decodeTimeEnd/(1000000000.0));
 
             System.out.println();
 
