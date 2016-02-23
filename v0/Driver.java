@@ -8,84 +8,51 @@ import java.lang.management.*;
 
 public class Driver {
 
-    /** Get CPU time in nanoseconds. */
-    public static long getCpuTime( ) {
-        ThreadMXBean bean = ManagementFactory.getThreadMXBean( );
-        return bean.isCurrentThreadCpuTimeSupported( ) ?
-                bean.getCurrentThreadCpuTime( ) : 0L;
-    }
-
-    /** Get user time in nanoseconds. */
-    public static long getUserTime( ) {
-        ThreadMXBean bean = ManagementFactory.getThreadMXBean( );
-        return bean.isCurrentThreadCpuTimeSupported( ) ?
-                bean.getCurrentThreadUserTime( ) : 0L;
-    }
-
     public static void main(String[] args) {
-
-//        long suffixTreeTimeStart = System.nanoTime();
-//        SuffixTree test = new SuffixTree("bananada");
-//        long suffixTreeTimeEnd  = System.nanoTime() - suffixTreeTimeStart;
-        FileHandler f = new FileHandler();
+        String pathS = "/Users/Josefinetusindfryd/Desktop/dynamic_relative_compression/data/dna.50MB";
+        String pathR = "/Users/Josefinetusindfryd/Desktop/dynamic_relative_compression/DNA_R";
         String S, R;
+        try{
+            FileHandler f = new FileHandler();
+            System.out.println("Reading..");
+            S = f.readFromFileLine(pathS);
+            R = f.readFromFileLine(pathR);
+            System.out.println("Compressor..");
+            Compressor cmp = new CompressorSuffix(R);
+            System.out.println("Dynamic Operations..");
+            DynamicOperations dop = new DynamicOperationsNaive(cmp.encode(S), cmp);
+            System.out.println("Create Running Time..");
+            RunningTime rt = new RunningTime(dop);
 
-        try {
-            System.out.println("Reading data from file..");
-            S = f.readFromFileLine("/Users/Josefinetusindfryd/Desktop/dynamic_relative_compression/data/dna.50MB");
-            R = f.readFromFileChar("/Users/Josefinetusindfryd/Desktop/dynamic_relative_compression/DNA_R");
+            long[] accessTime, replaceTime, deleteTime, insertTime;
 
-            System.out.println("Building suffix tree..");
-            long suffixTreeCpuTimeStart = getCpuTime();
-            CompressorSuffix suf1 = new CompressorSuffix(R);
-            long suffixTreeCpuTimeEnd = getCpuTime() - suffixTreeCpuTimeStart;
-            long suffixTreeTimeStart = System.nanoTime();
-            CompressorSuffix suf2 = new CompressorSuffix(R);
-            long suffixTreeTimeEnd  = System.nanoTime() - suffixTreeTimeStart;
+            System.out.println("Measure running time access..");
+            accessTime = rt.runTimeAccess(100000);
+            System.out.println("Measure running time replace..");
+            replaceTime = rt.runTimeReplace(100000, 'T');
+            System.out.println("Measure running time delete..");
+            deleteTime = rt.runTimeDelete(100000);
+            System.out.println("Measure running time insert..");
+            insertTime = rt.runTimeInsert(100000, 'A');
 
-            System.out.println("Encoding the string..");
-            ArrayList<Block> t1;
-            ArrayList<Block> t2;
-            long encodeCpuTimeStart = getCpuTime();
-            t1 = suf1.encode(S);
-            //System.out.print(t1.size());
-            long encodeCpuTimeEnd = getCpuTime() - encodeCpuTimeStart;
-            //long encodeTimeStart = System.nanoTime();
-            //t2 = suf2.encode(S);
-            //long encodeTimeEnd = System.nanoTime() - encodeTimeStart;
+            System.out.println("Access CPU: " + accessTime[0]/1000000.0);
+            System.out.println("Access Real: " + accessTime[1]/1000000.0);
+            System.out.println("Replace CPU: " + replaceTime[0]/1000000.0);
+            System.out.println("Replace Real: " + replaceTime[1]/1000000.0);
+            System.out.println("Delete CPU: " + deleteTime[0]/1000000.0);
+            System.out.println("Delete Real: " + deleteTime[1]/1000000.0);
+            System.out.println("Insert CPU: " + insertTime[0]/1000000.0);
+            System.out.println("Insert Real: " + insertTime[1]/1000000.0
+            );
 
-
-            System.out.println("Decoding the string..");
-            long decodeCpuTimeStart = getCpuTime();
-            suf1.decode(t1);
-            long decodeCpuTimeEnd = getCpuTime() - decodeCpuTimeStart;
-            //long decodeTimeStart = System.nanoTime();
-            //suf2.decode(t2);
-            //long decodeTimeEnd = System.nanoTime() - decodeTimeStart;
-
-            System.out.println("Done!..");
-
-            System.out.println("WALLCLOCK TIMES");
-            System.out.println("Suffix tree construction: " + suffixTreeTimeEnd/(1000000000.0));
-            //System.out.println("encode: " + encodeTimeEnd/(1000000000.0));
-           // System.out.println("decode: " + decodeTimeEnd/(1000000000.0));
-
-            System.out.println();
-
-            System.out.println("CPU TIMES");
-            System.out.println("Suffix tree construction: " + suffixTreeCpuTimeEnd/(1000000000.0));
-            System.out.println("encode: " + encodeCpuTimeEnd/(1000000000.0));
-            System.out.println("decode: " + decodeCpuTimeEnd/(1000000000.0));
 
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+
+
     }
-
-
-
-
 
 
 }

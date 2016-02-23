@@ -9,22 +9,18 @@ import java.lang.management.*;
 
 public class RunningTime {
 
-    protected FileHandler f;
-    protected String S, R;
+    //protected FileHandler f;
+    //protected String S, R;
     protected DynamicOperations dop;
 
-    public RunningTime(String pathS, String pathR, DynamicOperations dop) throws IOException {
-        try{
-            this.f = new FileHandler();
-            this.S = this.f.readFromFileLine(pathS);
-            this.R = this.f.readFromFileLine(pathR);
-            this.dop = dop;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public RunningTime(DynamicOperations dop) throws IOException {
+
+            //this.f = new FileHandler();
+            //this.S = this.f.readFromFileLine(pathS);
+            //this.R = this.f.readFromFileLine(pathR);
+        this.dop = dop;
+
     }
-
-
 
     public long[] runTimeAccess(int i) {
 
@@ -50,20 +46,29 @@ public class RunningTime {
         return new long[]{CpuTimeEnd, TimeEnd};
     }
 
-    public long[] runTimeUpdate(int i, int value) {
+    public long[] runTimeReplace(int i, char c) {
 
         long CpuTimeStart = getCpuTime();
-        this.dop.replace(i, value);
+        this.dop.replace(i, c);
         long CpuTimeEnd = getCpuTime() - CpuTimeStart;
         long TimeStart = System.nanoTime();
-        this.dop.delete(i);
+        this.dop.replace(i, c);
         long TimeEnd = System.nanoTime() - TimeStart;
 
         return new long[]{CpuTimeEnd, TimeEnd};
     }
 
+    public long[] runTimeInsert(int i, char c) {
 
+        long CpuTimeStart = getCpuTime();
+        this.dop.insert(i, c);
+        long CpuTimeEnd = getCpuTime() - CpuTimeStart;
+        long TimeStart = System.nanoTime();
+        this.dop.insert(i, c);
+        long TimeEnd = System.nanoTime() - TimeStart;
 
+        return new long[]{CpuTimeEnd, TimeEnd};
+    }
 
     /** Get CPU time in nanoseconds. */
     public static long getCpuTime( ) {
