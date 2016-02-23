@@ -87,6 +87,7 @@ public class FileHandler {
         return stringBuffer.toString();
     }
 
+    //reads from file character by character - since the lines in the full DNA file are to long for readline
     public String readFromFileChar(String path) throws IOException{
 
         FileReader fileReader = new FileReader(path);
