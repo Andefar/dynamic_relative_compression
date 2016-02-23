@@ -5,11 +5,12 @@ import java.util.ArrayList;
  */
 
 public class DynamicOperationsNaive extends DynamicOperations {
-
-    public DynamicOperationsNaive(ArrayList<Block> C, char[] RA, Compressor cmp){
-        super(C,RA, cmp);
+    //constructor
+    public DynamicOperationsNaive(ArrayList<Block> C, Compressor cmp){
+        super(C, cmp);
     }
 
+    //getter for Compressed
     public ArrayList<Block> getC() { return this.C; }
 
 
@@ -22,13 +23,13 @@ public class DynamicOperationsNaive extends DynamicOperations {
         int p = this.C.get(BS[0]).getPos(); //BS[0] is the block holding the index - p is the start position of that block in R
         int start = BS[1]; //B[1] is the starting position of block BS[0] in S (the original string)
 
-        return this.RA[p + (index - start)];
+        return cmp.RA[p + (index - start)];
     }
 
 
 
     // Return the block which contains the specified position and the start position of that block in the original string
-    public int[] getBlockandStartPos(int index) {
+    private int[] getBlockandStartPos(int index) {
         if (index >=0) {
             int start = 0, j = 0;
 
@@ -58,15 +59,15 @@ public class DynamicOperationsNaive extends DynamicOperations {
         int p = b.getPos();
         int offsetInRA = i - blockPosInS;
         int indexInRA = p+offsetInRA;
-        int charToReplace = RA[indexInRA];
+        int charToReplace = this.cmp.RA[indexInRA];
 
         //replace with same char
         if(charToReplace == sub) { return;}
 
         //find the occurrence of sub char in RA
         int subPosInRA = -1;
-        for (int k = 0; k < RA.length; k++) {
-            if (RA[k] == sub) {
+        for (int k = 0; k < this.cmp.RA.length; k++) {
+            if (this.cmp.RA[k] == sub) {
                 subPosInRA = k;
             }
         }
@@ -115,8 +116,8 @@ public class DynamicOperationsNaive extends DynamicOperations {
     }
     public void insert(int index, char c) {
         int indexOfR = -1;
-        for (int i = 0; i < RA.length; i++){
-            if (RA[i] == c) {
+        for (int i = 0; i < this.cmp.RA.length; i++){
+            if (this.cmp.RA[i] == c) {
                 indexOfR = i;
                 break;
             }

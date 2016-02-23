@@ -80,6 +80,7 @@ public class CompressorSuffix extends Compressor{
         //String S = "";
         int p;
         int l;
+        int count = 0;
 
         for (Block b : C ){
             p = b.getPos();
@@ -87,6 +88,7 @@ public class CompressorSuffix extends Compressor{
             sb.append(new String((Arrays.copyOfRange(RA, p, p+l))));
             //S += (Arrays.copyOfRange(RA, p, p+l)).toString();
             //System.out.println((Arrays.copyOfRange(RA, p, p+l)));
+            count++;
         }
 
         return sb.toString();

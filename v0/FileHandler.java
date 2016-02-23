@@ -1,11 +1,16 @@
+
+
+import com.sun.org.apache.xml.internal.utils.StringBufferPool;
+import com.sun.tools.javac.util.ArrayUtils;
+
 import java.io.*;
 import java.nio.charset.Charset;
-import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 /**
  * Created by andl on 09/02/2016.
@@ -78,8 +83,6 @@ public class FileHandler {
         StringBuffer stringBuffer = new StringBuffer();
         String line = null;
 
-
-
         while ((line = bufferedReader.readLine()) != null) {
             stringBuffer.append(line).append("\n");
         }
@@ -92,14 +95,23 @@ public class FileHandler {
 
         FileReader fileReader = new FileReader(path);
 
+        double count = 0.0;
+        double full = 52428800.0;
+
         String fileContents = "";
 
         int i;
-
         while ((i = fileReader.read()) != -1) {
+
+            double percent = count/full*100.0;
+            //if (((int) (percent % 5.0)) == 0 && ((int) percent) != 0) { System.out.println(percent); }
+
             char ch = (char) i;
+            System.out.println(percent);
 
             fileContents = fileContents + ch;
+
+            count = count + 1.0;
         }
 
         return fileContents;

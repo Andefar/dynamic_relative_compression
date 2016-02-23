@@ -5,29 +5,25 @@ import java.util.ArrayList;
  */
 abstract class DynamicOperations {
 
-    protected ArrayList<Block> C;
-    protected char[] RA;
-    protected Compressor cmp;
+    ArrayList<Block> C;
+    Compressor cmp;
 
-    public DynamicOperations(ArrayList<Block> C, char[] RA, Compressor cmp){
+    public DynamicOperations(ArrayList<Block> C, Compressor cmp){
         this.C = (ArrayList<Block>) C.clone();
-        this.RA = RA.clone();
         this.cmp = cmp;
     }
 
-    public abstract ArrayList<Block> getC();
+    abstract ArrayList<Block> getC();
     public abstract char access(int index) throws IndexOutOfBoundsException;
     public abstract void replace(int i, char sub);
     public abstract void delete(int i);
     public abstract void insert(int i, char c);
 
-    public int getSLength(){
+    int getSLength(){
         int len = 0;
-
         for (Block b : this.C){
             len += b.getLength();
         }
-
         return len;
     }
 }
