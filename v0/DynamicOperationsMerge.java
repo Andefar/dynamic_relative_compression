@@ -2,6 +2,7 @@
  * Created by Josefinetusindfryd on 11/02/16.
  */
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by andl on 08/02/2016.
@@ -73,6 +74,7 @@ public class DynamicOperationsMerge extends DynamicOperations {
         for (int k = 0; k < this.cmp.RA.length; k++) {
             if (this.cmp.RA[k] == sub) {
                 subPosInRA = k;
+                break;
             }
         }
         //remove the old block
@@ -219,7 +221,7 @@ public class DynamicOperationsMerge extends DynamicOperations {
 
     }
 
-    private void restoreMax(int startBlock, int endBlock){
+    private void mergeBlocks(int startBlock, int endBlock){
         ArrayList<Block> blocksC = new ArrayList<>();
 
         for (int i = startBlock; i <= endBlock; i++){
@@ -234,8 +236,31 @@ public class DynamicOperationsMerge extends DynamicOperations {
         for (int i = blocksC.size() -1 ; i>=0; i--){
             this.C.add(startBlock, blocksC.get(i));
         }
-
-
     }
 
+    private void restoreMax(int startBlock, int endBlock){
+        StringBuilder rest = new StringBuilder();
+
+        for (int i = startBlock; i < endBlock - 1; i++) {
+                if(rest.length() == 0) {
+                    char[] a = Arrays.copyOfRange(this.cmp.RA, this.C.get(i).getPos(), this.C.get(i).getPos() + this.C.get(i).getLength());
+                    char[] b = Arrays.copyOfRange(this.cmp.RA, this.C.get(i + 1).getPos(), this.C.get(i + 1).getPos() + this.C.get(i + 1).getLength());
+                    rest.append(a);
+                    rest.append(b);
+                } else {
+                    char[] a = Arrays.copyOfRange(this.cmp.RA, this.C.get(i).getPos(), this.C.get(i).getPos() + this.C.get(i).getLength());
+                    rest.append(a);
+                }
+
+                int index = this.cmp.indexOf(rest.toString().toCharArray());
+                if (index > -1) {
+                    this.C.get(i).setLength(rest.length());
+                    this.C.get(i).setPos(index);
+                    this.C.remove(i + 1);
+                    continue;
+                }
+                rest.setLength(0);
+
+        }
+    }
 }

@@ -9,8 +9,8 @@ import java.lang.management.*;
 public class Driver {
 
     public static void main(String[] args) {
-        String pathS = "/Users/Josefinetusindfryd/Desktop/dynamic_relative_compression/data/dna.50MB";
-        String pathR = "/Users/Josefinetusindfryd/Desktop/dynamic_relative_compression/DNA_R";
+        String pathS = "/Users/AndreasLauritzen/dynamic_relative_compression/dna";
+        String pathR = "/Users/AndreasLauritzen/dynamic_relative_compression/DNA_R";
         String S, R;
         try{
             FileHandler f = new FileHandler();

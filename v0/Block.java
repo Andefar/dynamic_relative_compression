@@ -24,6 +24,9 @@ public class Block {
 
     public int getLength() {return this.len;}
 
+    public void setPos(int pos) {this.pos = pos;}
+    public void setLength(int len) {this.len = len;}
+
     public String toString() {
         return "(" + this.pos + "," + this.len + ")";
     }

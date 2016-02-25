@@ -81,23 +81,23 @@ public class CompressorNaive extends Compressor{
     }
 
 
-
     // Decode a compressed representation, D,  of string S with reference to R
     // Evt ikke
     public String decode(ArrayList<Block> C){
-        String S = "";
+        StringBuilder sb = new StringBuilder();
+        //String S = "";
         int p;
         int l;
 
         for (Block b : C ){
             p = b.getPos();
             l = b.getLength();
-            S += new String((Arrays.copyOfRange(this.RA, p, p+l)));
-            //S += (Arrays.copyOfRange(RA, p, p+l)).toString();
-            //System.out.println((Arrays.copyOfRange(RA, p, p+l)));
+            sb.append(new String((Arrays.copyOfRange(RA, p, p+l))));
+
         }
 
-        return S;
+        return sb.toString();
     }
+
 
 }

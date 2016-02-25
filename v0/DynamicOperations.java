@@ -9,7 +9,10 @@ abstract class DynamicOperations {
     Compressor cmp;
 
     public DynamicOperations(ArrayList<Block> C, Compressor cmp){
-        this.C = (ArrayList<Block>) C.clone();
+        this.C = new ArrayList();
+        for (Block b : C) {
+            this.C.add(b);
+        }
         this.cmp = cmp;
     }
 
