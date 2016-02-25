@@ -11,7 +11,8 @@ abstract class DynamicOperations {
     public DynamicOperations(ArrayList<Block> C, Compressor cmp){
         this.C = new ArrayList();
         for (Block b : C) {
-            this.C.add(b);
+            this.C.add(new Block(b.getPos(),b.getLength()));
+            //this.C.add(b);
         }
         this.cmp = cmp;
     }

@@ -10,11 +10,14 @@ import java.util.Arrays;
 
 public class DynamicOperationsMerge extends DynamicOperations {
     //constructor
-    public DynamicOperationsMerge(ArrayList<Block> C, Compressor cmp){
-        super(C,cmp);
+    public DynamicOperationsMerge(ArrayList<Block> C, Compressor cmp) {
+        super(C, cmp);
     }
+
     //getter for C
-    public ArrayList<Block> getC() { return this.C; }
+    public ArrayList<Block> getC() {
+        return this.C;
+    }
 
 
     // Return character S[i]
@@ -30,10 +33,9 @@ public class DynamicOperationsMerge extends DynamicOperations {
     }
 
 
-
     // Return the block which contains the specified position and the start position of that block in the original string
     private int[] getBlockandStartPos(int index) {
-        if (index >=0) {
+        if (index >= 0) {
             int start = 0, j = 0;
 
             // loop through all blocks to find the block containing the specified index
@@ -52,8 +54,6 @@ public class DynamicOperationsMerge extends DynamicOperations {
     }
 
 
-
-
     public void replace(int i, char sub) {
         //get all positions and distances
         int[] t = this.getBlockandStartPos(i);
@@ -63,11 +63,13 @@ public class DynamicOperationsMerge extends DynamicOperations {
         int l = b.getLength();
         int p = b.getPos();
         int offsetInRA = i - blockPosInS;
-        int indexInRA = p+offsetInRA;
+        int indexInRA = p + offsetInRA;
         int charToReplace = this.cmp.RA[indexInRA];
 
         //replace with same char
-        if(charToReplace == sub) { return;}
+        if (charToReplace == sub) {
+            return;
+        }
 
         //find the occurrence of sub char in RA
         int subPosInRA = -1;
@@ -83,50 +85,50 @@ public class DynamicOperationsMerge extends DynamicOperations {
 
         //when block can be split in 3, i is in the middle
         //i not first in block, i not the last in block, length is 3 or more
-        if (offsetInRA > 0 && offsetInRA != (l-1)  && l >= 3) {
+        if (offsetInRA > 0 && offsetInRA != (l - 1) && l >= 3) {
 
-            Block first = new Block(p,offsetInRA);
-            Block replace = new Block(subPosInRA,1);
-            Block last = new Block(p+offsetInRA+1,l-(offsetInRA+1));
-            this.C.add(blockNum,last);
-            this.C.add(blockNum,replace);
-            this.C.add(blockNum,first);
+            Block first = new Block(p, offsetInRA);
+            Block replace = new Block(subPosInRA, 1);
+            Block last = new Block(p + offsetInRA + 1, l - (offsetInRA + 1));
+            this.C.add(blockNum, last);
+            this.C.add(blockNum, replace);
+            this.C.add(blockNum, first);
 
         }
         //i is the first in the block and length is at least 2
         else if (offsetInRA == 0 && l >= 2) {
 
-            Block replace = new Block(subPosInRA,1);
-            Block rest = new Block(p+1,l-1);
-            this.C.add(blockNum,rest);
-            this.C.add(blockNum,replace);
+            Block replace = new Block(subPosInRA, 1);
+            Block rest = new Block(p + 1, l - 1);
+            this.C.add(blockNum, rest);
+            this.C.add(blockNum, replace);
         }
         //i is the last index and length is at least 2
-        else if (offsetInRA == (l-1) && l >= 2) {
+        else if (offsetInRA == (l - 1) && l >= 2) {
 
-            Block replace = new Block(subPosInRA,1);
-            Block preBlock = new Block(p,l-1);
-            this.C.add(blockNum,replace);
-            this.C.add(blockNum,preBlock);
+            Block replace = new Block(subPosInRA, 1);
+            Block preBlock = new Block(p, l - 1);
+            this.C.add(blockNum, replace);
+            this.C.add(blockNum, preBlock);
         }
         //replace with a single char
         else if (l == 1) {
 
-            Block replace = new Block(subPosInRA,1);
-            this.C.add(blockNum,replace);
+            Block replace = new Block(subPosInRA, 1);
+            this.C.add(blockNum, replace);
 
         } else {
             throw new IllegalArgumentException("Case not covered");
         }
 
-        restoreMax( (Math.max(blockNum - 1, 0)), (Math.min(blockNum + 4, (this.C.size() - 1))) );
+        restoreMax((Math.max(blockNum - 1, 0)), (Math.min(blockNum + 4, (this.C.size() - 1))));
 
     }
 
 
     public void insert(int index, char c) {
         int indexOfR = -1;
-        for (int i = 0; i < this.cmp.RA.length; i++){
+        for (int i = 0; i < this.cmp.RA.length; i++) {
             if (this.cmp.RA[i] == c) {
                 indexOfR = i;
                 break;
@@ -134,9 +136,9 @@ public class DynamicOperationsMerge extends DynamicOperations {
         }
 
         // insert at the end of string
-        if (index == super.getSLength()){
+        if (index == super.getSLength()) {
             this.C.add(new Block(indexOfR, 1));
-            restoreMax( (this.C.size() - 2), (this.C.size()-1));
+            restoreMax((this.C.size() - 2), (this.C.size() - 1));
             return;
         }
 
@@ -146,13 +148,13 @@ public class DynamicOperationsMerge extends DynamicOperations {
         int length = this.C.get(blockNo).getLength();
         int startPosInS = BS[1];
 
-        if ( index == startPosInS) { //insert in beginning of block
+        if (index == startPosInS) { //insert in beginning of block
 
             this.C.remove(blockNo);
             this.C.add(blockNo, new Block(startPosInR, length));
             this.C.add(blockNo, new Block(indexOfR, 1));
 
-        } else if ( index == startPosInS + length - 1){ //insert at the end of block
+        } else if (index == startPosInS + length - 1) { //insert at the end of block
 
             this.C.remove(blockNo);
             this.C.add(blockNo, new Block(indexOfR, 1));
@@ -170,7 +172,7 @@ public class DynamicOperationsMerge extends DynamicOperations {
             this.C.add(blockNo, new Block(startPosInR, firstBlockLength));
         }
 
-        restoreMax( (Math.max(blockNo - 1, 0)), (Math.min(blockNo + 4, (this.C.size() - 1))) );
+        restoreMax((Math.max(blockNo - 1, 0)), (Math.min(blockNo + 4, (this.C.size() - 1))));
     }
 
     public void delete(int i) {
@@ -188,43 +190,43 @@ public class DynamicOperationsMerge extends DynamicOperations {
 
         //when block can be split in 3, i is in the middle
         //i not first in block, i not the last in block, length is 3 or more
-        if (offsetInRA > 0 && offsetInRA != (l-1)  && l >= 3) {
+        if (offsetInRA > 0 && offsetInRA != (l - 1) && l >= 3) {
 
-            Block first = new Block(p,offsetInRA);
-            Block last = new Block(p+offsetInRA+1,l-(offsetInRA+1));
-            this.C.add(blockNum,last);
-            this.C.add(blockNum,first);
+            Block first = new Block(p, offsetInRA);
+            Block last = new Block(p + offsetInRA + 1, l - (offsetInRA + 1));
+            this.C.add(blockNum, last);
+            this.C.add(blockNum, first);
 
         }
         //i is the first in the block and length is at least 2
         else if (offsetInRA == 0 && l >= 2) {
 
-            Block rest = new Block(p+1,l-1);
-            this.C.add(blockNum,rest);
+            Block rest = new Block(p + 1, l - 1);
+            this.C.add(blockNum, rest);
 
         }
         //i is the last index and length is at least 2
-        else if (offsetInRA == (l-1) && l >= 2) {
+        else if (offsetInRA == (l - 1) && l >= 2) {
 
-            Block preBlock = new Block(p,l-1);
-            this.C.add(blockNum,preBlock);
+            Block preBlock = new Block(p, l - 1);
+            this.C.add(blockNum, preBlock);
         }
         //replace with a single char
         else if (l == 1) {
-            restoreMax( (Math.max(blockNum - 1, 0)), (Math.min(blockNum + 4, (this.C.size() - 1))) );
+            restoreMax((Math.max(blockNum - 1, 0)), (Math.min(blockNum + 4, (this.C.size() - 1))));
             return;
         } else {
             throw new IllegalArgumentException("Case not covered");
         }
 
-        restoreMax( (Math.max(blockNum - 1, 0)), (Math.min(blockNum + 4, (this.C.size() - 1))) );
+        restoreMax((Math.max(blockNum - 1, 0)), (Math.min(blockNum + 4, (this.C.size() - 1))));
 
     }
 
-    private void mergeBlocks(int startBlock, int endBlock){
+    private void mergeBlocks(int startBlock, int endBlock) {
         ArrayList<Block> blocksC = new ArrayList<>();
 
-        for (int i = startBlock; i <= endBlock; i++){
+        for (int i = startBlock; i <= endBlock; i++) {
             blocksC.add(this.C.get(startBlock));
             this.C.remove(startBlock); //delete old block from compressed rep
         }
@@ -233,34 +235,43 @@ public class DynamicOperationsMerge extends DynamicOperations {
         blocksC.clear();
         blocksC = cmp.encode(partOfS);
 
-        for (int i = blocksC.size() -1 ; i>=0; i--){
+        for (int i = blocksC.size() - 1; i >= 0; i--) {
             this.C.add(startBlock, blocksC.get(i));
         }
     }
 
-    private void restoreMax(int startBlock, int endBlock){
+    private void restoreMax(int startBlock, int endBlock) {
         StringBuilder rest = new StringBuilder();
-
+        int index = -1;
+        char[] a;
         for (int i = startBlock; i < endBlock - 1; i++) {
-                if(rest.length() == 0) {
-                    char[] a = Arrays.copyOfRange(this.cmp.RA, this.C.get(i).getPos(), this.C.get(i).getPos() + this.C.get(i).getLength());
-                    char[] b = Arrays.copyOfRange(this.cmp.RA, this.C.get(i + 1).getPos(), this.C.get(i + 1).getPos() + this.C.get(i + 1).getLength());
-                    rest.append(a);
-                    rest.append(b);
-                } else {
-                    char[] a = Arrays.copyOfRange(this.cmp.RA, this.C.get(i).getPos(), this.C.get(i).getPos() + this.C.get(i).getLength());
-                    rest.append(a);
-                }
-
-                int index = this.cmp.indexOf(rest.toString().toCharArray());
+            if (rest.length() == 0) {
+                a = Arrays.copyOfRange(this.cmp.RA, this.C.get(i).getPos(), this.C.get(i).getPos() + this.C.get(i).getLength());
+                char[] b = Arrays.copyOfRange(this.cmp.RA, this.C.get(i + 1).getPos(), this.C.get(i + 1).getPos() + this.C.get(i + 1).getLength());
+                rest.append(a);
+                rest.append(b);
+                index = this.cmp.indexOf(rest.toString().toCharArray());
                 if (index > -1) {
                     this.C.get(i).setLength(rest.length());
                     this.C.get(i).setPos(index);
                     this.C.remove(i + 1);
                     continue;
+                } else {
+                a = Arrays.copyOfRange(this.cmp.RA, this.C.get(i).getPos(), this.C.get(i).getPos() + this.C.get(i).getLength());
+                rest.append(a);
+                index = this.cmp.indexOf(rest.toString().toCharArray());
+                if (index > -1) {
+                    this.C.get(i - 1).setLength(rest.length());
+                    this.C.get(i - 1).setPos(index);
+                    this.C.remove(i);
+                    continue;
+                }
+
+
                 }
                 rest.setLength(0);
 
+            }
         }
     }
 }
