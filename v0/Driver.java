@@ -19,8 +19,9 @@ public class Driver {
             R = f.readFromFileLine(pathR);
             System.out.println("Compressor..");
             Compressor cmp = new CompressorSuffix(R);
+            ArrayList<Block> cp = cmp.encode(S);
             System.out.println("Dynamic Operations..");
-            DynamicOperations dop = new DynamicOperationsNaive(cmp.encode(S), cmp);
+            DynamicOperations dop = new DynamicOperationsMerge(cp, cmp);
             System.out.println("Create Running Time..");
             RunningTime rt = new RunningTime(dop);
 
