@@ -16,6 +16,7 @@ public class Block {
     private int len;
 
     public Block(int pos, int len) {
+        if(pos < 0 || len < 0) throw new IllegalArgumentException("block pos or len is negative");
         this.pos = pos;
         this.len = len;
     }
