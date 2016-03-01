@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -5,28 +6,25 @@ import java.util.ArrayList;
  */
 public class BinTest {
 
-
     public static void main(String[] args) {
-        ArrayList<Block> test = new ArrayList<Block>();
-        test.add(new Block(1,2));
-        test.add(new Block(2,4));
-        test.add(new Block(1,1));
-        test.add(new Block(3,8));
-        test.add(new Block(3,3));
-        test.add(new Block(7,4));
-        test.add(new Block(2,4));
-        test.add(new Block(1,1));
-        test.add(new Block(3,8));
-        test.add(new Block(3,1));
-        test.add(new Block(3,3));
-        test.add(new Block(7,4));
-        test.add(new Block(2,4));
-        test.add(new Block(1,1));
-        test.add(new Block(3,8));
-
-        BinaryTree bt = new BinaryTree(test);
+        String pathS = "/Users/AndreasLauritzen/dynamic_relative_compression/dna";
+        String pathR = "/Users/AndreasLauritzen/dynamic_relative_compression/DNA_R";
+        String S, R;
+        try{
+            FileHandler f = new FileHandler();
+            System.out.println("Reading..");
+            S = f.readFromFileLine(pathS);
+            R = f.readFromFileLine(pathR);
+            System.out.println("Compressing..");
+            Compressor cmp = new CompressorSuffix(R);
+            ArrayList<Block> cp = cmp.encode(S);
+            System.out.println("Building binary tree..");
+            BinaryTree bt = new BinaryTree(cp);
 
 
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 

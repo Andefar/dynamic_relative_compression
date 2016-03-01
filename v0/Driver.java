@@ -10,25 +10,10 @@ public class Driver {
 
     public static void main(String[] args) {
 
-        ArrayList<Block> C = new ArrayList<Block>();
-      C.add(new Block(0,3));
-        C.add(new Block(0,2));
-        C.add(new Block(0,4));
-//        C.add(new Block(0,1));
-//        C.add(new Block(0,2));
-//       C.add(new Block(0,7));
-//        C.add(new Block(0,5));
-//        C.add(new Block(0,2));
-//        C.add(new Block(0,1));
-////        C.add(new Block(0,3));
-
-        BinaryTree B = new BinaryTree(C);
-
-        B.prettyPrintBinary(B.root, 0);
 
 
 
-       /* String pathS = "/Users/AndreasLauritzen/dynamic_relative_compression/dna";
+        String pathS = "/Users/AndreasLauritzen/dynamic_relative_compression/dna";
         String pathR = "/Users/AndreasLauritzen/dynamic_relative_compression/DNA_R";
         String S, R;
         try{
@@ -70,7 +55,6 @@ public class Driver {
             e.printStackTrace();
         }
 
-*/
 
     }
 
