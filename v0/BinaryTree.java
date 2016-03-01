@@ -29,7 +29,7 @@ public class BinaryTree {
         for(int i = 1; i < C.size(); i++) {
             Block b = C.get(i);
             addNode(b, this.root,i,0);
-           // prettyPrintBinary(this.root,0);
+            prettyPrintBinary(this.root,0);
         }
 
     }
@@ -76,15 +76,18 @@ public class BinaryTree {
             copy.setRight((new BinNode(null, null, copy, b.getLength(), index, this.height - (depth + 1))));
             // update free layers to the left
             decrementLayers(start, 1);
+            updatePath(copy,b.getLength());
         }
         // case 3) ledige lag til højre i undertræ
-        else if ((start.getRight().getFreeLayers() - start.getLeft().getFreeLayers()) == 1){
+        else if (start.getRight().getFreeLayers() > start.getLeft().getFreeLayers()) {
             addNode(b, start.getRight(), index, depth + 1);
+        } else {
+            throw new IllegalArgumentException("feekekvsdfsfrk");
         }
         // error
-        else {
-            throw new IllegalArgumentException("Something went wrong when building the binary tree");
-        }
+        //else {
+        //    throw new IllegalArgumentException("Something went wrong when building the binary tree");
+        //}
     }
 /*
         if (depth < this.height) {
