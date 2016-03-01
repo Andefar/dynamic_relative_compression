@@ -7,13 +7,15 @@ public class BinNode {
     private BinNode parent;
     private int value;
     private int index;
+    private int freeLayers;
 
-    public BinNode (BinNode left, BinNode right, BinNode parent, int value, int index) {
+    public BinNode (BinNode left, BinNode right, BinNode parent, int value, int index, int freeLayers) {
         this.left = left;
         this.right = right;
         this.parent = parent;
         this.value = value;
         this.index = index;
+        this.freeLayers = freeLayers;
     }
 
     public void setLeft(BinNode left) {
@@ -56,5 +58,7 @@ public class BinNode {
         this.parent = parent;
     }
 
+    public int getFreeLayers() { return freeLayers;}
 
+    public void setFreeLayers(int freeLayers) {this.freeLayers = freeLayers;}
 }
