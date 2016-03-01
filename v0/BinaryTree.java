@@ -38,13 +38,24 @@ public class BinaryTree {
 
         // case 0) current node has no children -> split + insert
         if (start.getRight() == null && start.getLeft() == null) {
-            //Split
-            BinNode copy = new BinNode(null, null, start, start.getValue(), start.getIndex(), start.getFreeLayers() - 1);
-            start.setLeft(copy);
-            start.setIndex(-1);
-            start.setRight(new BinNode(null, null, start, b.getLength(), index, start.getFreeLayers() - 1));
-            //update path to root with new sums
-            updatePath(start, b.getLength());
+            //root
+            if (start.getParent() == null){
+                BinNode copy = new BinNode(null, null, start, start.getValue(), start.getIndex(), 0);
+                start.setLeft(copy);
+                start.setIndex(-1);
+                start.setRight(new BinNode(null, null, start, b.getLength(), index, 0));
+                //update path to root with new sums
+                updatePath(start, b.getLength());
+                this.height += 1;
+            } else {
+                //Split
+                BinNode copy = new BinNode(null, null, start, start.getValue(), start.getIndex(), start.getFreeLayers() - 1);
+                start.setLeft(copy);
+                start.setIndex(-1);
+                start.setRight(new BinNode(null, null, start, b.getLength(), index, start.getFreeLayers() - 1));
+                //update path to root with new sums
+                updatePath(start, b.getLength());
+            }
         }
         // case 1) full tree, children have no freeLayers -> spilt + insert
         else if (start.getRight().getFreeLayers() == 0 && start.getLeft().getFreeLayers() == 0) {
@@ -54,16 +65,25 @@ public class BinaryTree {
             copy.setRight((new BinNode(null, null, copy, b.getLength(), index, this.height - (depth + 1))));
             start.setParent(copy);
             updatePath(copy, b.getLength());
-            // case 2) ledige lag i undertræer
-        } else {
-            int freeLayersR = start.getRight().getFreeLayers();
-            int freeLayersL = start.getRight().getFreeLayers();
-            // insert in left subtree if possible
-            if (freeLayersL > 0) {
-                addNode(b, start.getLeft(), index, depth + 1);
-            } else { // insert in rigth subtree
-                addNode(b, start.getRight(), index, depth + 1);
-            }
+            this.root = copy;
+        }
+        // case 2) full subtree -> split at root of this
+        else if (start.getRight().getFreeLayers() == start.getLeft().getFreeLayers()){
+            BinNode copy = new BinNode(start, null, null, start.getValue(), -1, -1);
+            start.getParent().setRight(copy);
+            copy.setParent(start.getParent());
+            start.setParent(copy);
+            copy.setRight((new BinNode(null, null, copy, b.getLength(), index, this.height - (depth + 1))));
+            // update free layers to the left
+            decrementLayers(start, 1);
+        }
+        // case 3) ledige lag til højre i undertræ
+        else if ((start.getRight().getFreeLayers() - start.getLeft().getFreeLayers()) == 1){
+            addNode(b, start.getRight(), index, depth + 1);
+        }
+        // error
+        else {
+            throw new IllegalArgumentException("Something went wrong when building the binary tree");
         }
     }
 /*
@@ -123,6 +143,17 @@ public class BinaryTree {
         start.setFreeLayers(Math.max(start.getLeft().getFreeLayers(), start.getRight().getFreeLayers()));
         if(start.getParent() != null) {
             updatePath(start.getParent(),length);
+        }
+    }
+
+    private void decrementLayers(BinNode start, int no) {
+        System.out.println("decrementing layers");
+        start.setFreeLayers(start.getFreeLayers() - no);
+        if(start.getRight() != null){
+            decrementLayers(start.getRight(), no);
+        }
+        if(start.getLeft() != null){
+            decrementLayers(start.getLeft(), no);
         }
     }
 
