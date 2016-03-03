@@ -35,7 +35,6 @@ public class BinaryTree {
 
     /* ===== PUBLIC METHODS, IMPLEMENTS OPERTATIONS  ===== */
 
-
     /* return sum up until and including the specified index */
     public int sum(int index){
         // if sum up until and including last element then return thev value of the root
