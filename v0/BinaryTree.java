@@ -14,11 +14,13 @@ public class BinaryTree {
     //Fields of the binary tree
     private BinNode root;
     private int height;
+    private int totalLeafs;
 
     //Constructor: given the compression of S; C
     public BinaryTree(ArrayList<Block> C) {
         this.root = null;
         this.height = 0;
+        this.totalLeafs = C.size();
         //factor the insertion of the root out
         this.root = new BinNode(null,null,null,C.get(0).getLength(),0, 0);
         //Insert every block length into binary tree
@@ -33,7 +35,7 @@ public class BinaryTree {
 
     /* ===== PUBLIC METHODS, IMPLEMENTS OPERTATIONS  ===== */
 
-    public int sum(int i) {return -1;}
+    //public int sum(int i) {}
     public void update(int i,int k) {}
     public void search(int t) {}
     public void insert(int i,int k) {}
@@ -138,5 +140,39 @@ public class BinaryTree {
         prettyPrintBinary(right,depth+1);
 
     }
+
+    /* return sum up until and including the specified index */
+    public int sum(int index){
+        // if sum up until and including last element then return thev value of the root
+        if (index == this.totalLeafs -1 ){
+            return this.root.getValue();
+        } else {
+            //Recursively follow the correct path until the index above the specified and then return the sum of everything on the left
+            return sumHelp(0, 0, index + 1 , 0, this.root);
+        }
+    }
+
+    /* Follow path to  */
+    private int sumHelp(int depth, int indexCut, int index, int sum, BinNode start){
+        // the node is found
+        if (index == start.getIndex()) {
+            return sum;
+        } else {
+
+            // number of leafs in the current subtree if the tree was full
+            int maxLeafs = (int) Math.pow((double) 2, (double) (this.height - depth));
+            // index in the current subtree
+            int localIndex = index - indexCut;
+
+
+            if (localIndex <= ((int) (1.0/2.0 * (double) maxLeafs)) -1) { //the left subtree will always be full -> go left
+                return sumHelp(depth + 1, indexCut, index, sum, start.getLeft());
+            } else { // go right and update indexCut (the number of leafs to the left) and sum (to the left)
+                return sumHelp(depth + 1, indexCut + (int) (1.0/2.0 * (double) maxLeafs), index, sum + start.getLeft().getValue(), start.getRight());
+            }
+        }
+
+    }
+
 
 }
