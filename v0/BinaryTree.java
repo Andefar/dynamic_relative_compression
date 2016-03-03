@@ -25,9 +25,9 @@ public class BinaryTree {
         for(int i = 1; i < C.size(); i++) {
             Block b = C.get(i);
             addNode(b, this.root,i,0);
-            //For debug:
-            //prettyPrintBinary(this.root,0);
         }
+        //For debug:
+        //prettyPrintBinary(this.root,0);
 
     }
 
@@ -107,7 +107,6 @@ public class BinaryTree {
     * starting from the parent of the inserted node.
     */
     private void updatePath(BinNode start, int length) {
-        System.out.println("updating path");
         //if parent is null, it must be root
         start.setValue(start.getValue() + length);
         start.setFreeLayers(Math.max(start.getLeft().getFreeLayers(), start.getRight().getFreeLayers()));
@@ -119,7 +118,6 @@ public class BinaryTree {
     /* Decrements the freeLayers counter when a whole subtree is moved
      * downwards when splitting. */
     private void decrementLayers(BinNode start, int no) {
-        System.out.println("decrementing layers");
         start.setFreeLayers(start.getFreeLayers() - no);
         if(start.getRight() != null){
             decrementLayers(start.getRight(), no);

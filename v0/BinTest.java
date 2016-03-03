@@ -20,6 +20,7 @@ public class BinTest {
             ArrayList<Block> cp = cmp.encode(S);
             System.out.println("Building binary tree..");
             BinaryTree bt = new BinaryTree(cp);
+            System.out.println("Done!");
 
 
         } catch (IOException e) {
