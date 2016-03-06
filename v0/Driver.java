@@ -31,8 +31,8 @@ public class Driver {
 
 
         BinaryTree B = new BinaryTree(C);
-        for (int i = 0; i < C.size(); i++){
-          System.out.println(B.sum(i));
+        for (int t = 0; t <= 63; t++){
+          System.out.println(B.search(t));
         }
 
 

@@ -37,6 +37,8 @@ public class BinaryTree {
 
     /* return sum up until and including the specified index */
     public int sum(int index){
+
+        if (index < 0 || index > this.totalLeafs) throw new IllegalArgumentException("Index is out of bounds");
         // if sum up until and including last element then return thev value of the root
         if (index == this.totalLeafs -1 ){
             return this.root.getValue();
@@ -97,7 +99,23 @@ public class BinaryTree {
         }
     }
 
-    public void search(int t) {}
+    // return index at which the sum first exceeds the value t
+    public int search(int t) {
+      if (t < 0 || t > this.root.getValue()) throw new IllegalArgumentException("Sum is out of bounds");
+
+      return searchHelp(t, 0, this.root);
+    }
+
+    public int searchHelp(int t, int sum, BinNode start){
+        // correct index is reached
+        if (start.getIndex() != -1) {
+            return start.getIndex();
+        } else if (start.getLeft().getValue() + sum < t){
+            return searchHelp(t, sum + start.getLeft().getValue(), start.getRight());
+        } else {
+           return searchHelp(t, sum, start.getLeft());
+        }
+    }
     public void insert(int i,int k) {}
     public void delete(int i, int k) {}
     public void merge(int i) {}
