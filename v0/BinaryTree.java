@@ -101,17 +101,19 @@ public class BinaryTree {
 
     // return index at which the sum first exceeds the value t
     public int search(int t) {
-      if (t < 0 || t > this.root.getValue()) throw new IllegalArgumentException("Sum is out of bounds");
-
-      return searchHelp(t, 0, this.root);
+        if (t < 0 || t > this.root.getValue()) throw new IllegalArgumentException("Sum is out of bounds");
+        // start search in root
+        return searchHelp(t, 0, this.root);
     }
 
     public int searchHelp(int t, int sum, BinNode start){
         // correct index is reached
         if (start.getIndex() != -1) {
             return start.getIndex();
+        // continue search in the right subtree - add the sum of the left subtree to the sum
         } else if (start.getLeft().getValue() + sum < t){
             return searchHelp(t, sum + start.getLeft().getValue(), start.getRight());
+        // continue search in the left subtree
         } else {
            return searchHelp(t, sum, start.getLeft());
         }
