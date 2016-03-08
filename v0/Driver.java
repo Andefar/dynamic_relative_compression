@@ -34,10 +34,10 @@ public class Driver {
         BinaryTree B2 = new BinaryTree(C);
 
         for (int t = 0; t <= 15; t++){
-          B1.update(t,1);
-          B2.update(t,1);
+          //B1.update(t,1);
+          //B2.update(t,1);
 
-          System.out.println(B1.test(t).getValue() + "      " + B2.test(t).getValue());
+          System.out.println(t + "    " + B1.test(t).getValue());
         }
 
 

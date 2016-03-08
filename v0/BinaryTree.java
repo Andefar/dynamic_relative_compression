@@ -45,8 +45,6 @@ public class BinaryTree {
 
     }
 
-
-
     /* ===== PUBLIC METHODS, IMPLEMENTS OPERTATIONS  ===== */
 
     /* help */
@@ -57,24 +55,18 @@ public class BinaryTree {
     /* return the node withe the specified index */
     private BinNode findIndex(BinNode start, int index){
         if (index < 0 || index >= this.totalLeafs) throw new IllegalArgumentException("Index is out of bounds");
-
-        // tree has only one node
-        if(start.getIndex() == index) {
+        // tree has only one node or a leaf has been found
+        if(start.getIndex() == index || (start.getLeft() == null && start.getRight() == null)) {
             return start;
         }
-        BinNode found = findIndexHelp(start,0);
-        // the node with the specified index is found
-        if (found.getIndex() == index){ return found; }
-        // continue search in left subtree
-        if (index < found.getIndex() ) {
-            return findIndex(start.getLeft(), index);
-        // continue search in right subtree
+
+        if(index < start.getLeft().getLeafsUnder() || index == 0 ) {
+            return findIndex(start.getLeft(),index);
         } else {
-            return findIndex(start.getRight(), index);
+            return findIndex(start.getRight(),index-start.getLeft().getLeafsUnder());
         }
 
     }
-
 
 
     /* find predecessor of the current node
