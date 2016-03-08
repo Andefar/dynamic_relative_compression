@@ -155,36 +155,6 @@ public class BinaryTree {
         updatePath(found, k);
     }
 
-
-    public void updateOld(int i,int k) {
-        if (i < 0 || i > this.totalLeafs) throw new IllegalArgumentException("Index is out of bounds");
-        if (k < 0) throw new IllegalArgumentException("Delta must be positive");
-        //k = delta
-        updateHelp(0,0,i,k,this.root);
-    }
-
-    public void updateHelp(int depth,int indexCut,int indexUpdate, int k, BinNode start){
-        //Increment the current note with delta
-        start.setValue(start.getValue()+k);
-        //return when the leaf is reached
-        if(start.getIndex() == indexUpdate) {
-            return;
-        }
-        //calculate max number of leaf in the subtree
-        int maxLeafs = (int) Math.pow((double) 2, ((double) (this.height-depth)));
-        //get offset from the start of the subtree
-        int localIndex = indexUpdate - indexCut;
-
-        //go left if the offset is left subtree (less or equal to the middle index)
-        if(localIndex <= ((int) ((double) maxLeafs/((double)2))-1)) {
-            //left subtree is always full therefore no cut is needed
-            updateHelp(depth+1,indexCut,indexUpdate,k,start.getLeft());
-        } else {
-            //find the new cut and go right.
-            updateHelp(depth+1,indexCut+((int) ((double) maxLeafs/((double)2))),indexUpdate,k,start.getRight());
-        }
-    }
-
     // return index at which the sum first exceeds the value t
     public int search(int t) {
         if (t < 0 || t > this.root.getValue()) throw new IllegalArgumentException("Sum to seach for is out of bounds");
@@ -204,10 +174,42 @@ public class BinaryTree {
            return searchHelp(t, sum, start.getLeft());
         }
     }
-    public void insert(int i,int k) {}
-    public void delete(int i, int k) {}
-    public void merge(int i) {}
-    public void divide(int i,int t) {}
+    public void insert(int i,int k) {
+        // Find node med givne index
+        // Split noden
+        // Opdater path
+        // Opdater indexes
+        // Opdater totalLeafs
+        // Evt opdater højde
+    }
+
+    public void delete(int i, int k) {
+        // Find node med givne index
+        // Opdater parent til værdi af søskende
+        // slet børn
+        // opdater path
+        // opdater indexes
+        // Opdater totalLeafs
+        // Evt opdater højde
+    }
+    public void merge(int i) {
+        // Find node med givne indes
+        // to cases
+            // samme parent - slet børn
+            // Forskellig parent - noget andet
+        // opdater path(s)
+        // opdater indexes
+        // opdater totalLeafs
+        // evt opdater højde
+    }
+    public void divide(int i,int t) {
+        // Find node med givne index
+        // del op i to
+        // Opdater path
+        // Opdater inees
+        // Opdater totalLeafs
+        // Evt opdater højde
+    }
 
     /* ===== PRIVATE METHODS TO BUILD THE BINARY TREE ===== */
 
