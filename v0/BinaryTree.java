@@ -22,16 +22,30 @@ public class BinaryTree {
         this.height = 0;
         this.totalLeafs = C.size();
         //factor the insertion of the root out
-        this.root = new BinNode(null,null,null,C.get(0).getLength(),0, 0);
+        this.root = new BinNode(null,null,null,C.get(0).getLength(),0, 0,0);
         //Insert every block length into binary tree
         for(int i = 1; i < C.size(); i++) {
             Block b = C.get(i);
             addNode(b, this.root,i,0);
         }
+        updateLeafsUnder(this.root);
         //For debug:
         //prettyPrintBinary(this.root,0);
 
     }
+    /* ===== FIX NODES UNDER  ===== */
+    public int updateLeafsUnder (BinNode start ) {
+        if(start.getLeft() == null && start.getRight() == null) {
+            return 1;
+        } else {
+            int tot = updateLeafsUnder(start.getLeft()) + updateLeafsUnder(start.getRight());
+            start.setLeafsUnder(tot);
+            return tot;
+        }
+
+    }
+
+
 
     /* ===== PUBLIC METHODS, IMPLEMENTS OPERTATIONS  ===== */
 
@@ -60,6 +74,8 @@ public class BinaryTree {
         }
 
     }
+
+
 
     /* find predecessor of the current node
      * turn left the first time and then right until a leaf is reached */
@@ -233,8 +249,8 @@ public class BinaryTree {
                 flInsert = start.getFreeLayers() - 1;
             }
             //Splitting the node to the left and inserts new to the right.
-            BinNode copy = new BinNode(null, null, start, start.getValue(), start.getIndex(), flCopy);
-            BinNode insert = new BinNode(null, null, start, b.getLength(), index, flInsert);
+            BinNode copy = new BinNode(null, null, start, start.getValue(), start.getIndex(), flCopy,0);
+            BinNode insert = new BinNode(null, null, start, b.getLength(), index, flInsert,0);
             start.setRight(insert);
             start.setLeft(copy);
             start.setIndex(-1);
@@ -244,10 +260,10 @@ public class BinaryTree {
         // Case 1: The current binary tree is full tree (characterized by no free layers)
         else if (start.getRight().getFreeLayers() == 0 && start.getLeft().getFreeLayers() == 0) {
             //Split the root downwards to the left and insert the new node to the right.
-            BinNode copy = new BinNode(start, null, null, start.getValue(), -1, -1);
+            BinNode copy = new BinNode(start, null, null, start.getValue(), -1, -1,0);
             this.height += 1;
             copy.setLeft(start);
-            copy.setRight((new BinNode(null, null, copy, b.getLength(), index, this.height - (depth + 1))));
+            copy.setRight((new BinNode(null, null, copy, b.getLength(), index, this.height - (depth + 1),0)));
             start.setParent(copy);
             updatePath(copy, b.getLength());
             this.root = copy;
@@ -255,11 +271,11 @@ public class BinaryTree {
         // Case 2: Subtree starting at current node as root is full (characterized by the same amount of
         //         free layers)
         else if (start.getRight().getFreeLayers() == start.getLeft().getFreeLayers()){
-            BinNode copy = new BinNode(start, null, null, start.getValue(), -1, -1);
+            BinNode copy = new BinNode(start, null, null, start.getValue(), -1, -1,0);
             start.getParent().setRight(copy);
             copy.setParent(start.getParent());
             start.setParent(copy);
-            copy.setRight((new BinNode(null, null, copy, b.getLength(), index, this.height - (depth + 1))));
+            copy.setRight((new BinNode(null, null, copy, b.getLength(), index, this.height - (depth + 1),0)));
             // update free layers to the left
             decrementLayers(start, 1);
             updatePath(copy,b.getLength());
@@ -303,6 +319,7 @@ public class BinaryTree {
         BinNode right = start.getRight();
         String repeated = new String(new char[depth*5]).replace("\0"," ");
         System.out.println(repeated + start.getValue());
+        //System.out.println(repeated + start.getValue() + "," + start.getLeafsUnder());
         if(left == null && right == null) { return; }
         prettyPrintBinary(left,depth+1);
         prettyPrintBinary(right,depth+1);
