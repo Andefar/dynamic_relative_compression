@@ -53,10 +53,10 @@ public class BinaryTree {
         if (found.getIndex() == index){ return found; }
         // continue search in left subtree
         if (index < found.getIndex() ) {
-            return findIndex(start.getLeft(), 0);
+            return findIndex(start.getLeft(), index);
         // continue search in right subtree
         } else {
-            return findIndex(start.getRight(), 0);
+            return findIndex(start.getRight(), index);
         }
 
     }
