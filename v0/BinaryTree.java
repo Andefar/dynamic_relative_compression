@@ -146,7 +146,7 @@ public class BinaryTree {
         }
     }
 
-    public void updateNew(int i,int k) {
+    public void update(int i,int k) {
         if (i < 0 || i > this.totalLeafs) throw new IllegalArgumentException("Index is out of bounds");
         if (k < 0) throw new IllegalArgumentException("Delta must be positive");
         //k = delta
@@ -155,7 +155,7 @@ public class BinaryTree {
     }
 
 
-    public void update(int i,int k) {
+    public void updateOld(int i,int k) {
         if (i < 0 || i > this.totalLeafs) throw new IllegalArgumentException("Index is out of bounds");
         if (k < 0) throw new IllegalArgumentException("Delta must be positive");
         //k = delta
