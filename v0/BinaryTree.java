@@ -9,6 +9,7 @@ import java.util.ArrayList;
  * n = nodes in tree
  * Height of tree: O(log(n))
  */
+
 public class BinaryTree {
 
     //Fields of the binary tree
@@ -17,6 +18,7 @@ public class BinaryTree {
     private int totalLeafs;
 
     //Constructor: given the compression of S; C
+    //TODO: Fix the way we build the tree
     public BinaryTree(ArrayList<Block> C) {
         this.root = null;
         this.height = 0;
@@ -28,169 +30,85 @@ public class BinaryTree {
             Block b = C.get(i);
             addNode(b, this.root,i,0);
         }
-        updateLeafsUnder(this.root);
+        initLeafsUnder(this.root);
         //For debug:
         //prettyPrintBinary(this.root,0);
 
     }
-    /* ===== FIX NODES UNDER  ===== */
-    public int updateLeafsUnder (BinNode start ) {
-        if(start.getLeft() == null && start.getRight() == null) {
+
+
+
+    /** ===== FIX leafsUnder property (workaround)  =====  */
+    public int initLeafsUnder (BinNode start ) {
+        if(start.isLeaf()) {
             return 1;
         } else {
-            int tot = updateLeafsUnder(start.getLeft()) + updateLeafsUnder(start.getRight());
+            int tot = initLeafsUnder(start.getLeft()) + initLeafsUnder(start.getRight());
             start.setLeafsUnder(tot);
             return tot;
         }
 
     }
 
-    /* ===== PUBLIC METHODS, IMPLEMENTS OPERTATIONS  ===== */
-
-    /* help */
-    public BinNode test(int i){
-        return findIndex(this.root, i);
-    }
-
-    /* return the node withe the specified index */
-    private BinNode findIndex(BinNode start, int index){
-        if (index < 0 || index >= this.totalLeafs) throw new IllegalArgumentException("Index is out of bounds");
-        // tree has only one node or a leaf has been found
-        if(start.getIndex() == index || (start.getLeft() == null && start.getRight() == null)) {
-            return start;
-        }
-
-        if(index < start.getLeft().getLeafsUnder() || index == 0 ) {
-            return findIndex(start.getLeft(),index);
-        } else {
-            return findIndex(start.getRight(),index-start.getLeft().getLeafsUnder());
-        }
-
-    }
+    //TODO: fjern denne her senere. Brugt i tests
+    public BinNode getRoot() {return this.root;}
 
 
-    /* find predecessor of the current node
-     * turn left the first time and then right until a leaf is reached */
-    private BinNode findIndexHelp(BinNode start, int steps){
-        // leaf is reached
-        if (start.getIndex() != -1){
-            return start;
-        }
-        // first time - turn left
-        if (steps == 0){
-            return findIndexHelp(start.getLeft(), steps + 1);
-        // turn right
-        } else {
-            return findIndexHelp(start.getRight(), steps + 1);
-        }
-    }
 
-    // sum of everything to the left, when moving down a layer in the whole tree - changed by findIndexSum
-    private int totalSum = 0;
-    // sum of everything to the left when following a path from a node to a leaf - changed by findIndexHelpSum
-    private int tempSum = 0;
+    /** ===== PUBLIC METHODS, IMPLEMENTS OPERTATIONS  ===== */
+    int tmpDepth = 0; //TODO: fix this global into local somehow?
 
-    /* return sum up until and including the specified index */
+    /** All operations throws illegalArgumentException if the arguments are out of bound or
+     * some value is negative. These functions will call their related helper functions
+     * when needed. This setup is used because of the need for recursive methods.
+     */
+
+    /** Return the sum of entries up to and incl index i */
     public int sum(int index){
-        totalSum = 0;
-        tempSum = 0;
+        if (index == this.totalLeafs - 1) return this.root.getValue();
         if (index < 0 || index > this.totalLeafs) throw new IllegalArgumentException("Index is out of bounds");
-        // if last element then return value of the root
-        if (index == this.totalLeafs -1 ){
-            return this.root.getValue();
-        }
-        else {
-            // Recursively follow the correct path until the index above the specified
-            // keep track of the sums to the left when moving right in the tree
-            return findIndexSum(this.root, index + 1);
-        }
+        return sumHelp(this.root,index+1,0);
     }
 
-    /* return sum of everything to the left of index */
-    private int findIndexSum(BinNode start, int index){
-        if (index < 0 || index >= this.totalLeafs) throw new IllegalArgumentException("Index is out of bounds");
-
-        // tree has only one node - is probably never used, since the case is covered in sum()
-        if(start.getIndex() == index) {
-            return totalSum + tempSum;
-        }
-
-        // Find the leaf approximatly in the middle of subtree from current node
-        BinNode found = findIndexHelpSum(start,0);
-        // the node with the specified index is found
-        if (found.getIndex() == index){ return totalSum + tempSum; }
-        // continue search in left subtree
-        // no update of totalSums necessary
-        // tempSum reset to reflect the sum in the current search
-        if (index < found.getIndex() ) {
-            tempSum = 0;
-            return findIndexSum(start.getLeft(), index);
-            // continue search in right subtree
-            // add the left child value to totalSum.
-            // tempSum reset to reflect the sum in the current search
-        } else {
-            totalSum += start.getLeft().getValue();
-            tempSum = 0;
-            return findIndexSum(start.getRight(), index);
-        }
-
-    }
-
-    /* find leaf approximately in the middle of subtree starting from current node
-     * turn left the first time and then right until a leaf is reached */
-    private BinNode findIndexHelpSum(BinNode start, int steps){
-        // leaf is reached
-        if (start.getIndex() != -1){
-            return start;
-        }
-        // first time - turn left
-        if (steps == 0){
-            return findIndexHelpSum(start.getLeft(), steps + 1);
-            // turn right
-        } else {
-            tempSum += start.getLeft().getValue();
-            return findIndexHelpSum(start.getRight(), steps + 1);
-        }
-    }
-
-
-    /*Finds node to update by index and increments path all the way to root node.*/
-    public void update(int i,int k) {
+    /** Updates an entry by increment by k (delta) */
+    public void update(int i, int k){
         if (i < 0 || i > this.totalLeafs) throw new IllegalArgumentException("Index is out of bounds");
         if (k < 0) throw new IllegalArgumentException("Delta must be positive");
-        //k = delta
-        BinNode found = findIndex(this.root, i);
-        updatePath(found, k);
+        updateHelp(this.root,i,k);
     }
 
-    // return index at which the sum first exceeds the value t
+     /** Search for index where sum(i) < index <= sum(i+1) */
     public int search(int t) {
-        if (t < 0 || t > this.root.getValue()) throw new IllegalArgumentException("Sum to seach for is out of bounds");
+        if (t < 0 || t > this.root.getValue()) throw new IllegalArgumentException("Sum to search for is out of bounds");
         // start search in root
-        return searchHelp(t, 0, this.root);
+        return searchHelp(this.root,t, 0);
     }
 
-    public int searchHelp(int t, int sum, BinNode start){
-        // correct index is reached
-        if (start.getIndex() != -1) {
-            return start.getIndex();
-        // continue search in the right subtree - add the sum of the left subtree to the sum
-        } else if (start.getLeft().getValue() + sum < t){
-            return searchHelp(t, sum + start.getLeft().getValue(), start.getRight());
-        // continue search in the left subtree
-        } else {
-           return searchHelp(t, sum, start.getLeft());
+     /** Insert new entry with value k at i. */
+    public void insert(int i , int k) {
+        if (i < 0 || i > this.totalLeafs) throw new IllegalArgumentException("Index is out of bounds");
+        if (k < 0) throw new IllegalArgumentException("Inserted value must be positive");
+        // Find the leaf which will be split. Update leafsUnder and Sums all the way down.
+        BinNode leafToSplit = insertHelp(this.root,i,k);
+        // Split it and insert new node in front
+        BinNode copy = new BinNode(null,null,leafToSplit,leafToSplit.getValue()-k,leafToSplit.getIndex()+1,0,0);
+        BinNode insert = new BinNode(null,null,leafToSplit,k,leafToSplit.getIndex(),0,0);
+        leafToSplit.setRight(copy);
+        leafToSplit.setLeft(insert);
+        //update leafsUnder for the leaf that has been split
+        leafToSplit.setLeafsUnder(2);
+
+        //increment totalLeafs
+        this.totalLeafs++;
+        //update height if leaf is in the bottom of the tree
+        if (tmpDepth == this.height) {
+            this.height++;
         }
-    }
-    public void insert(int i,int k) {
-        // Find node med givne index
-        // Split noden
-        // Opdater path
-        // Opdater indexes
-        // Opdater totalLeafs
-        // Evt opdater højde
+        tmpDepth = 0;
+
     }
 
+    //TODO: implement these
     public void delete(int i, int k) {
         // Find node med givne index
         // Opdater parent til værdi af søskende
@@ -203,8 +121,8 @@ public class BinaryTree {
     public void merge(int i) {
         // Find node med givne indes
         // to cases
-            // samme parent - slet børn
-            // Forskellig parent - noget andet
+        // samme parent - slet børn
+        // Forskellig parent - noget andet
         // opdater path(s)
         // opdater indexes
         // opdater totalLeafs
@@ -219,14 +137,112 @@ public class BinaryTree {
         // Evt opdater højde
     }
 
-    /* ===== PRIVATE METHODS TO BUILD THE BINARY TREE ===== */
 
-   /* Given a block, root of the binary tree and a start depth, inserts
+
+    /** ===== PRIVATE HELPER METHODS, IMPLEMENTS OPERTATIONS  ===== */
+
+    /** Recursive method. Searching for the leaf given its index and return the sum up to and incl index.
+     * Turn left: do not add sum of sister subtree
+     * Turn right: add sum of sister subtree
+     */
+    private int sumHelp(BinNode start, int index,int sum) {
+        //Return the sum if we hit the leaf where index matches or just a leaf.
+        if(start.getIndex() == index || start.isLeaf()) {
+            return sum;
+        }
+        //Continue in left subtree if the index we search for is less how many leaf there are below
+        if(index < start.getLeft().getLeafsUnder() || index == 0 ) {
+            //Turn left
+            return sumHelp(start.getLeft(),index,sum);
+        } else {
+            //Turn right and subtract the offset of the index. Also increment the sum.
+            return sumHelp(start.getRight(),index-start.getLeft().getLeafsUnder(),sum+start.getLeft().getValue());
+        }
+    }
+
+    /** Recursive method. Searching for the leaf given its index. Add the value k to all nodes
+     * on the path to the leaf so maintain property
+     */
+    private void updateHelp(BinNode start, int index, int k) {
+        //update all sums on the path down to the leaf
+        start.setValue(start.getValue()+k);
+        if(start.getIndex() == index || start.isLeaf()) {
+            return;
+        }
+        //Continue in left subtree if the index we search for is less how many leaf there are below
+        if(index < start.getLeft().getLeafsUnder() || index == 0 ) {
+            //Turn left
+            updateHelp(start.getLeft(),index,k);
+        } else {
+            //Turn right and subtract the offset of the index
+            updateHelp(start.getRight(),index-start.getLeft().getLeafsUnder(),k);
+        }
+    }
+
+    /** Recursive method. Searching for index i, where t (given) sum(i) < t <= sum(i+1)
+     */
+    private int searchHelp(BinNode start,int t, int sum){
+        // correct index is reached
+        if (start.isLeaf()) {
+            return start.getIndex();
+        // continue search in the right subtree - add the sum of the left subtree to the sum
+        } else if (start.getLeft().getValue() + sum < t){
+            return searchHelp(start.getRight(),t, sum + start.getLeft().getValue());
+        // continue search in the left subtree
+        } else {
+           return searchHelp(start.getLeft(),t, sum);
+        }
+    }
+
+    /** Finds the nodes that has to be split and update sums and leafsUnder on the way down to the leaf.
+     * Doesn't increment the leaf itself (this is handled in insert())
+     */
+    private BinNode insertHelp(BinNode start, int index, int k) {
+        //increment sum on the way down (incl leaf)
+        start.setValue(start.getValue()+k);
+        // return if leaf or index matches
+        if(start.getIndex() == index || start.isLeaf()) {
+            return start;
+        }
+
+        //increment leafsUnder (excl leaf: incremented in insert() )
+        start.setLeafsUnder(start.getLeafsUnder()+1);
+
+        //continue in the correct subtree. Increment the tmpDepth that has to be used in insert()
+        if(index < start.getLeft().getLeafsUnder() || index == 0 ) {
+            tmpDepth++;
+            return insertHelp(start.getLeft(),index,k);
+        } else {
+            tmpDepth++;
+            return insertHelp(start.getRight(),index-start.getLeft().getLeafsUnder(),k);
+        }
+    }
+
+
+
+
+    /** ===== PRIVATE METHODS TO BUILD/SCAN THE BINARY TREE ===== */
+
+    /** return the node withe the specified index */
+    private BinNode findIndex(BinNode start, int index){
+        if (index < 0 || index >= this.totalLeafs) throw new IllegalArgumentException("Index is out of bounds");
+        // tree has only one node or a leaf has been found
+        if(start.getIndex() == index || start.isLeaf()) {
+            return start;
+        }
+        if(index < start.getLeft().getLeafsUnder() || index == 0 ) {
+            return findIndex(start.getLeft(),index);
+        } else {
+            return findIndex(start.getRight(),index-start.getLeft().getLeafsUnder());
+        }
+    }
+
+   /** Given a block, root of the binary tree and a start depth, inserts
     * an node into the tree. Used be build the tree one block by block. */
     private void addNode(Block b, BinNode start, int index,int depth) {
 
         // Case 0: Current node is a leaf
-        if (start.getRight() == null && start.getLeft() == null) {
+        if (start.isLeaf()) {
 
             int flCopy;
             int flInsert;
@@ -280,20 +296,21 @@ public class BinaryTree {
         }
     }
 
-    /*
+    /**
     * Updates sums along the path to the root,
     * starting from the parent of the inserted node.
     */
     private void updatePath(BinNode start, int length) {
-        //if parent is null, it must be root
+        //Increment sum and freelayers
         start.setValue(start.getValue() + length);
         start.setFreeLayers(Math.max(start.getLeft().getFreeLayers(), start.getRight().getFreeLayers()));
-        if(start.getParent() != null) {
+        //stop when the methods hits the root.
+        if(!(start.isRoot())) {
             updatePath(start.getParent(),length);
         }
     }
 
-    /* Decrements the freeLayers counter when a whole subtree is moved
+    /** Decrements the freeLayers counter when a whole subtree is moved
      * downwards when splitting. */
     private void decrementLayers(BinNode start, int no) {
         start.setFreeLayers(start.getFreeLayers() - no);
@@ -305,13 +322,14 @@ public class BinaryTree {
         }
     }
 
-    /* Prints the binary tree recursively */
-    private void prettyPrintBinary (BinNode start,int depth) {
+    /** Prints the binary tree recursively */
+    //TODO: set til private senere
+    public void prettyPrintBinary (BinNode start,int depth) {
         BinNode left = start.getLeft();
         BinNode right = start.getRight();
         String repeated = new String(new char[depth*5]).replace("\0"," ");
-        System.out.println(repeated + start.getValue());
-        //System.out.println(repeated + start.getValue() + "," + start.getLeafsUnder());
+        //System.out.println(repeated + start.getValue());
+        System.out.println(repeated + start.getValue() + " lf:" + start.getLeafsUnder());
         if(left == null && right == null) { return; }
         prettyPrintBinary(left,depth+1);
         prettyPrintBinary(right,depth+1);

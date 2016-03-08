@@ -6,8 +6,8 @@ public class BinNode {
     private BinNode right;
     private BinNode parent;
     private int value;
-    private int index;
-    private int freeLayers;
+    private int index; //not needed when build methods is fixed
+    private int freeLayers; //not needed when build methods is fixed
     private int leafsUnder;
 
     //Constructor
@@ -45,32 +45,24 @@ public class BinNode {
     public void setLeafsUnder(int leafsUnder) { this.leafsUnder = leafsUnder; }
 
     //GETTERS
-    public BinNode getLeft() {
-        return this.left;
-    }
+    public BinNode getLeft() { return this.left; }
 
-    public BinNode getRight() {
-        return this.right;
-    }
+    public BinNode getRight() { return this.right; }
 
     public BinNode getParent() {
         return this.parent;
     }
 
-    public int getValue() {
-        return this.value;
-    }
+    public int getValue() { return this.value; }
 
-    public int getIndex() {
-        return this.index;
-    }
+    public int getIndex() { return this.index; }
 
     public int getFreeLayers() { return this.freeLayers;}
 
     public int getLeafsUnder() { return this.leafsUnder;}
 
 
-    //PUBLIC METHODS
+    //PUBLIC BOOLEAN METHODS
     public boolean isRightChild() {
         return this.getParent().getRight() == this;
     }
@@ -78,5 +70,9 @@ public class BinNode {
     public boolean isLeftChild() {
         return this.getParent().getLeft() == this;
     }
+
+    public boolean isLeaf() { return (this.getLeft() == null && this.getRight() == null);}
+
+    public boolean isRoot() { return this.getParent() == null;}
 
 }
