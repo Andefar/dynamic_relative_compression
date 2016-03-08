@@ -1,3 +1,4 @@
+import javax.xml.bind.annotation.XmlElementDecl;
 import java.util.ArrayList;
 
 /**
@@ -77,40 +78,82 @@ public class BinaryTree {
         }
     }
 
+    // sum of everything to the left, when moving down a layer in the whole tree - changed by findIndexSum
+    private int totalSum = 0;
+    // sum of everything to the left when following a path from a node to a leaf - changed by findIndexHelpSum
+    private int tempSum = 0;
+
     /* return sum up until and including the specified index */
     public int sum(int index){
-
+        totalSum = 0;
+        tempSum = 0;
         if (index < 0 || index > this.totalLeafs) throw new IllegalArgumentException("Index is out of bounds");
-        // if sum up until and including last element then return thev value of the root
+        // if last element then return value of the root
         if (index == this.totalLeafs -1 ){
             return this.root.getValue();
-        } else {
-            //Recursively follow the correct path until the index above the specified and then return the sum of everything on the left
-            return sumHelp(0, 0, index + 1 , 0, this.root);
+        }
+        else {
+            // Recursively follow the correct path until the index above the specified
+            // keep track of the sums to the left when moving right in the tree
+            return findIndexSum(this.root, index + 1);
         }
     }
 
-    /* Follow path to  */
-    private int sumHelp(int depth, int indexCut, int index, int sum, BinNode start){
-        // the node is found
-        if (index == start.getIndex()) {
-            return sum;
+    /* return sum of everything to the left of index */
+    private int findIndexSum(BinNode start, int index){
+        if (index < 0 || index >= this.totalLeafs) throw new IllegalArgumentException("Index is out of bounds");
+
+        // tree has only one node - is probably never used, since the case is covered in sum()
+        if(start.getIndex() == index) {
+            return totalSum + tempSum;
+        }
+
+        // Find the leaf approximatly in the middle of subtree from current node
+        BinNode found = findIndexHelpSum(start,0);
+        // the node with the specified index is found
+        if (found.getIndex() == index){ return totalSum + tempSum; }
+        // continue search in left subtree
+        // no update of totalSums necessary
+        // tempSum reset to reflect the sum in the current search
+        if (index < found.getIndex() ) {
+            tempSum = 0;
+            return findIndexSum(start.getLeft(), index);
+            // continue search in right subtree
+            // add the left child value to totalSum.
+            // tempSum reset to reflect the sum in the current search
         } else {
-
-            // number of leafs in the current subtree if the tree was full
-            int maxLeafs = (int) Math.pow((double) 2, (double) (this.height - depth));
-            // index in the current subtree
-            int localIndex = index - indexCut;
-
-
-            if (localIndex <= ((int) (1.0/2.0 * (double) maxLeafs)) -1) { //the left subtree will always be full -> go left
-                return sumHelp(depth + 1, indexCut, index, sum, start.getLeft());
-            } else { // go right and update indexCut (the number of leafs to the left) and sum (to the left)
-                return sumHelp(depth + 1, indexCut + (int) (1.0/2.0 * (double) maxLeafs), index, sum + start.getLeft().getValue(), start.getRight());
-            }
+            totalSum += start.getLeft().getValue();
+            tempSum = 0;
+            return findIndexSum(start.getRight(), index);
         }
 
     }
+
+    /* find leaf approximately in the middle of subtree starting from current node
+     * turn left the first time and then right until a leaf is reached */
+    private BinNode findIndexHelpSum(BinNode start, int steps){
+        // leaf is reached
+        if (start.getIndex() != -1){
+            return start;
+        }
+        // first time - turn left
+        if (steps == 0){
+            return findIndexHelpSum(start.getLeft(), steps + 1);
+            // turn right
+        } else {
+            tempSum += start.getLeft().getValue();
+            return findIndexHelpSum(start.getRight(), steps + 1);
+        }
+    }
+
+    public void updateNew(int i,int k) {
+        if (i < 0 || i > this.totalLeafs) throw new IllegalArgumentException("Index is out of bounds");
+        if (k < 0) throw new IllegalArgumentException("Delta must be positive");
+        //k = delta
+        BinNode found = findIndex(this.root, i);
+        updatePath(found, k);
+    }
+
 
     public void update(int i,int k) {
         if (i < 0 || i > this.totalLeafs) throw new IllegalArgumentException("Index is out of bounds");

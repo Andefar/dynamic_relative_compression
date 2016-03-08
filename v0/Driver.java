@@ -30,11 +30,16 @@ public class Driver {
 
 
 
-        BinaryTree B = new BinaryTree(C);
+        BinaryTree B1 = new BinaryTree(C);
+        BinaryTree B2 = new BinaryTree(C);
 
         for (int t = 0; t <= 15; t++){
-          System.out.println(t + "   " +  B.test(t).getIndex());
+          B1.update(t,1);
+          B2.update(t,1);
+
+          System.out.println(B1.test(t).getValue() + "      " + B2.test(t).getValue());
         }
+
 
 
        // B.prettyPrintBinary(B.root, 0);
