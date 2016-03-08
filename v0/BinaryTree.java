@@ -1,4 +1,3 @@
-import javax.xml.bind.annotation.XmlElementDecl;
 import java.util.ArrayList;
 
 /**
@@ -146,6 +145,8 @@ public class BinaryTree {
         }
     }
 
+
+    /*Finds node to update by index and increments path all the way to root node.*/
     public void update(int i,int k) {
         if (i < 0 || i > this.totalLeafs) throw new IllegalArgumentException("Index is out of bounds");
         if (k < 0) throw new IllegalArgumentException("Delta must be positive");
