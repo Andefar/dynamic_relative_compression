@@ -31,8 +31,9 @@ public class Driver {
 
 
         BinaryTree B = new BinaryTree(C);
-        for (int t = 0; t <= 63; t++){
-          System.out.println(B.search(t));
+
+        for (int t = 0; t <= 15; t++){
+          System.out.println(t + "   " +  B.test(t).getIndex());
         }
 
 

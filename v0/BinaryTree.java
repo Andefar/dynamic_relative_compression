@@ -35,6 +35,48 @@ public class BinaryTree {
 
     /* ===== PUBLIC METHODS, IMPLEMENTS OPERTATIONS  ===== */
 
+    /* help */
+    public BinNode test(int i){
+        return findIndex(this.root, i);
+    }
+
+    /* return the node withe the specified index */
+    private BinNode findIndex(BinNode start, int index){
+        if (index < 0 || index >= this.totalLeafs) throw new IllegalArgumentException("Index is out of bounds");
+
+        // tree has only one node
+        if(start.getIndex() == index) {
+            return start;
+        }
+        BinNode found = findIndexHelp(start,0);
+        // the node woth the specified index is found
+        if (found.getIndex() == index){ return found; }
+        // continue search in left subtree
+        if (index < found.getIndex() ) {
+            return findIndex(start.getLeft(), 0);
+        // continue search in right subtree
+        } else {
+            return findIndex(start.getRight(), 0);
+        }
+
+    }
+
+    /* find predecessor of the current node
+     * turn left the first time and then right until a leaf is reached */
+    private BinNode findIndexHelp(BinNode start, int steps){
+        // leaf is reached
+        if (start.getIndex() != -1){
+            return start;
+        }
+        // first time - turn left
+        if (steps == 0){
+            return findIndexHelp(start.getLeft(), steps + 1);
+        // turn right
+        } else {
+            return findIndexHelp(start.getRight(), steps + 1);
+        }
+    }
+
     /* return sum up until and including the specified index */
     public int sum(int index){
 
@@ -101,7 +143,7 @@ public class BinaryTree {
 
     // return index at which the sum first exceeds the value t
     public int search(int t) {
-        if (t < 0 || t > this.root.getValue()) throw new IllegalArgumentException("Sum is out of bounds");
+        if (t < 0 || t > this.root.getValue()) throw new IllegalArgumentException("Sum to seach for is out of bounds");
         // start search in root
         return searchHelp(t, 0, this.root);
     }
