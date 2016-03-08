@@ -50,7 +50,7 @@ public class BinaryTree {
             return start;
         }
         BinNode found = findIndexHelp(start,0);
-        // the node woth the specified index is found
+        // the node with the specified index is found
         if (found.getIndex() == index){ return found; }
         // continue search in left subtree
         if (index < found.getIndex() ) {
