@@ -8,15 +8,17 @@ public class BinNode {
     private int value;
     private int index;
     private int freeLayers;
+    private int nodesUnder;
 
     //Constructor
-    public BinNode (BinNode left, BinNode right, BinNode parent, int value, int index, int freeLayers) {
+    public BinNode (BinNode left, BinNode right, BinNode parent, int value, int index, int freeLayers, int nodesUnder) {
         this.left = left;
         this.right = right;
         this.parent = parent;
         this.value = value;
         this.index = index;
         this.freeLayers = freeLayers;
+        this.nodesUnder = nodesUnder;
     }
 
     //SETTERS
@@ -40,28 +42,32 @@ public class BinNode {
 
     public void setFreeLayers(int freeLayers) { this.freeLayers = freeLayers; }
 
+    public void setNodesUnder(int nodesUnder) { this.nodesUnder = nodesUnder; }
+
     //GETTERS
     public BinNode getLeft() {
-        return left;
+        return this.left;
     }
 
     public BinNode getRight() {
-        return right;
+        return this.right;
     }
 
     public BinNode getParent() {
-        return parent;
+        return this.parent;
     }
 
     public int getValue() {
-        return value;
+        return this.value;
     }
 
     public int getIndex() {
-        return index;
+        return this.index;
     }
 
-    public int getFreeLayers() { return freeLayers;}
+    public int getFreeLayers() { return this.freeLayers;}
+
+    public int getNodesUnder() { return this.nodesUnder;}
 
 
     //PUBLIC METHODS
