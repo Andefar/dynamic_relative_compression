@@ -28,7 +28,11 @@ public class Driver {
 
         BinaryTree B1 = new BinaryTree(C);
 
+      for (int i = 0 ; i <= 63; i++){
+        System.out.println(i + "      " + B1.search(i));
+      }
 
+      /*
         System.out.println(B1.search(7));
 
         B1.prettyPrintBinary(B1.getRoot(), 0);
@@ -40,7 +44,7 @@ public class Driver {
         B1.prettyPrintBinary(B1.getRoot(), 0);
 
 
-
+*/
 
 
        /* String pathS = "/Users/AndreasLauritzen/dynamic_relative_compression/dna";

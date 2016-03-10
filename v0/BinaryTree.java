@@ -36,8 +36,6 @@ public class BinaryTree {
 
     }
 
-
-
     /** ===== FIX leafsUnder property (workaround)  =====  */
     public int initLeafsUnder (BinNode start ) {
         if(start.isLeaf()) {
@@ -52,8 +50,6 @@ public class BinaryTree {
 
     //TODO: fjern denne her senere. Brugt i tests
     public BinNode getRoot() {return this.root;}
-
-
 
     /** ===== PUBLIC METHODS, IMPLEMENTS OPERTATIONS  ===== */
     int tmpDepth = 0; //TODO: fix this global into local somehow?
@@ -77,6 +73,8 @@ public class BinaryTree {
         updateHelp(this.root,i,k);
     }
 
+    //TODO: could implement this without the sum argument in the searchHelp - by just subtracting the left sum when going right
+    //TODO: use counter to return the correct index - we do not maintain the index anymore!
      /** Search for index where sum(i) < index <= sum(i+1) */
     public int search(int t) {
         if (t < 0 || t > this.root.getValue()) throw new IllegalArgumentException("Sum to search for is out of bounds");
@@ -150,7 +148,7 @@ public class BinaryTree {
         if(start.getIndex() == index || start.isLeaf()) {
             return sum;
         }
-        //Continue in left subtree if the index we search for is less how many leaf there are below
+        //Continue in left subtree if the index we search for is less how many leaf there are below left child
         if(index < start.getLeft().getLeafsUnder() || index == 0 ) {
             //Turn left
             return sumHelp(start.getLeft(),index,sum);
@@ -161,11 +159,12 @@ public class BinaryTree {
     }
 
     /** Recursive method. Searching for the leaf given its index. Add the value k to all nodes
-     * on the path to the leaf so maintain property
+     * on the path to the leaf to maintain property
      */
     private void updateHelp(BinNode start, int index, int k) {
         //update all sums on the path down to the leaf
         start.setValue(start.getValue()+k);
+
         if(start.getIndex() == index || start.isLeaf()) {
             return;
         }
@@ -181,16 +180,18 @@ public class BinaryTree {
 
     /** Recursive method. Searching for index i, where t (given) sum(i) < t <= sum(i+1)
      */
-    private int searchHelp(BinNode start,int t, int sum){
+    private int searchHelp(BinNode start,int t, int index){
         // correct index is reached
         if (start.isLeaf()) {
-            return start.getIndex();
-        // continue search in the right subtree - add the sum of the left subtree to the sum
-        } else if (start.getLeft().getValue() + sum < t){
-            return searchHelp(start.getRight(),t, sum + start.getLeft().getValue());
+            return index;
         // continue search in the left subtree
+        } else if (t <= start.getLeft().getValue()){
+            return searchHelp(start.getLeft(),t, index);
+        // continue search in the right subtree
+        // - add the number of leafs in the left subtree to the index (or 1 if the left subtree is leaf
+        // - subtract the value of the left child from the value to search for in the right subtree
         } else {
-           return searchHelp(start.getLeft(),t, sum);
+           return searchHelp(start.getRight(),t - start.getLeft().getValue(), index + Math.max(start.getLeft().getLeafsUnder(),1));
         }
     }
 
@@ -239,7 +240,7 @@ public class BinaryTree {
 
    /** Given a block, root of the binary tree and a start depth, inserts
     * an node into the tree. Used be build the tree one block by block. */
-    private void addNode(Block b, BinNode start, int index,int depth) {
+    private void addNode(Block b, BinNode start, int index, int depth) {
 
         // Case 0: Current node is a leaf
         if (start.isLeaf()) {
