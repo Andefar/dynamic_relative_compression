@@ -52,7 +52,6 @@ public class BinaryTree {
     public BinNode getRoot() {return this.root;}
 
     /** ===== PUBLIC METHODS, IMPLEMENTS OPERTATIONS  ===== */
-    int tmpDepth = 0; //TODO: fix this global into local somehow?
 
     /** All operations throws illegalArgumentException if the arguments are out of bound or
      * some value is negative. These functions will call their related helper functions
@@ -95,15 +94,6 @@ public class BinaryTree {
         leafToSplit.setLeft(insert);
         //update leafsUnder for the leaf that has been split
         leafToSplit.setLeafsUnder(2);
-
-        //increment totalLeafs
-        this.totalLeafs++;
-        //update height if leaf is in the bottom of the tree
-        if (tmpDepth == this.height) {
-            this.height++;
-        }
-        tmpDepth = 0;
-
     }
 
     //TODO: implement these
@@ -211,10 +201,8 @@ public class BinaryTree {
 
         //continue in the correct subtree. Increment the tmpDepth that has to be used in insert()
         if(index < start.getLeft().getLeafsUnder() || index == 0 ) {
-            tmpDepth++;
             return insertHelp(start.getLeft(),index,k);
         } else {
-            tmpDepth++;
             return insertHelp(start.getRight(),index-start.getLeft().getLeafsUnder(),k);
         }
     }

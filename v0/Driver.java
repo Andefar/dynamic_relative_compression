@@ -27,12 +27,15 @@ public class Driver {
         C.add(new Block(0,6));
 
         BinaryTree B1 = new BinaryTree(C);
+        //B1.insert(2,1);
+        //B1.insert(2,2);
+        /*
 
-      for (int i = 0 ; i <= 63; i++){
+      for (int i = 0 ; i <= 15; i++){
         System.out.println(i + "      " + B1.search(i));
       }
 
-      /*
+
         System.out.println(B1.search(7));
 
         B1.prettyPrintBinary(B1.getRoot(), 0);
@@ -41,10 +44,11 @@ public class Driver {
           //B1.update(t,1);
           //B1.insert(t,1);
         }
+        */
         B1.prettyPrintBinary(B1.getRoot(), 0);
 
 
-*/
+
 
 
        /* String pathS = "/Users/AndreasLauritzen/dynamic_relative_compression/dna";
