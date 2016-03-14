@@ -95,8 +95,6 @@ public class BinaryTree {
         //update leafsUnder for the leaf that has been split
         leafToSplit.setLeafsUnder(2);
     }
-
-    //TODO: implement these
     public void delete(int i, int k) {
         // Find node med givne index
         // Opdater parent til værdi af søskende
@@ -117,14 +115,24 @@ public class BinaryTree {
         // evt opdater højde
     }
     public void divide(int i,int t) {
-        // Find node med givne index
-        // del op i to
-        // Opdater path
-        // Opdater inees
-        // Opdater totalLeafs
-        // Evt opdater højde
-    }
+        //exception if i is out of bounds
+        if (i < 0 || i > this.totalLeafs) throw new IllegalArgumentException("Index is out of bounds");
 
+        // Find the leaf which will be split. Update leafsUnder on the the way down.
+        BinNode leafToSplit = divdeHelp(this.root,i);
+
+        // if t is more or equal to the value then one value will be <= 0 which is not allowed
+        if (t >= leafToSplit.getValue()) throw new IllegalArgumentException("divide value t must be less than the nodes value");
+
+        //create left and right children. update pointers, leafsUnder, totalLeafs
+        BinNode left = new BinNode(null,null,leafToSplit,t,0,0,0);
+        BinNode right = new BinNode(null,null,leafToSplit,leafToSplit.getValue()-t,0,0,0);
+        leafToSplit.setRight(right);
+        leafToSplit.setLeft(left);
+        leafToSplit.setLeafsUnder(2);
+        totalLeafs++;
+
+    }
 
 
     /** ===== PRIVATE HELPER METHODS, IMPLEMENTS OPERTATIONS  ===== */
@@ -135,11 +143,11 @@ public class BinaryTree {
      */
     private int sumHelp(BinNode start, int index,int sum) {
         //Return the sum if we hit the leaf where index matches or just a leaf.
-        if(start.getIndex() == index || start.isLeaf()) {
+        if(start.isLeaf()) {
             return sum;
         }
         //Continue in left subtree if the index we search for is less how many leaf there are below left child
-        if(index < start.getLeft().getLeafsUnder() || index == 0 ) {
+        if(index == 0 ) {
             //Turn left
             return sumHelp(start.getLeft(),index,sum);
         } else {
@@ -155,7 +163,7 @@ public class BinaryTree {
         //update all sums on the path down to the leaf
         start.setValue(start.getValue()+k);
 
-        if(start.getIndex() == index || start.isLeaf()) {
+        if(start.isLeaf()) {
             return;
         }
         //Continue in left subtree if the index we search for is less how many leaf there are below
@@ -192,7 +200,7 @@ public class BinaryTree {
         //increment sum on the way down (incl leaf)
         start.setValue(start.getValue()+k);
         // return if leaf or index matches
-        if(start.getIndex() == index || start.isLeaf()) {
+        if(start.isLeaf()) {
             return start;
         }
 
@@ -207,6 +215,23 @@ public class BinaryTree {
         }
     }
 
+    /** divideHelp
+     */
+    private BinNode divdeHelp(BinNode start, int index) {
+
+        if(start.isLeaf()) {
+            return start;
+        }
+        //increment leafsUnder (excl leaf: incremented in divide(); )
+        start.setLeafsUnder(start.getLeafsUnder()+1);
+
+        //continue in the correct subtree. Increment the tmpDepth that has to be used in insert()
+        if(index < start.getLeft().getLeafsUnder() || index == 0 ) {
+            return divdeHelp(start.getLeft(),index);
+        } else {
+            return divdeHelp(start.getRight(),index-start.getLeft().getLeafsUnder());
+        }
+    }
 
 
 
@@ -216,7 +241,7 @@ public class BinaryTree {
     private BinNode findIndex(BinNode start, int index){
         if (index < 0 || index >= this.totalLeafs) throw new IllegalArgumentException("Index is out of bounds");
         // tree has only one node or a leaf has been found
-        if(start.getIndex() == index || start.isLeaf()) {
+        if(start.isLeaf()) {
             return start;
         }
         if(index < start.getLeft().getLeafsUnder() || index == 0 ) {

@@ -27,27 +27,14 @@ public class Driver {
         C.add(new Block(0,6));
 
         BinaryTree B1 = new BinaryTree(C);
-        //B1.insert(2,1);
-        //B1.insert(2,2);
-        /*
-
-      for (int i = 0 ; i <= 15; i++){
-        System.out.println(i + "      " + B1.search(i));
-      }
-
-
-        System.out.println(B1.search(7));
 
         B1.prettyPrintBinary(B1.getRoot(), 0);
-        for (int t = 15; t >= 0; t--){
-          //System.out.println("sum( " + t + ") = " + B1.sum(t));
-          //B1.update(t,1);
-          //B1.insert(t,1);
-        }
-        */
+        B1.divide(15,1);
+        B1.divide(16,1);
+        B1.divide(17,1);
+        B1.divide(18,1);
+        B1.divide(19,1);
         B1.prettyPrintBinary(B1.getRoot(), 0);
-
-
 
 
 
