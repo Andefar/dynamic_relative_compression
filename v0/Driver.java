@@ -24,18 +24,32 @@ public class Driver {
         C.add(new Block(0,3));
         C.add(new Block(0,2));
         C.add(new Block(0,4));
-        C.add(new Block(0,6));
+      C.add(new Block(0,6));
 
         BinaryTree B1 = new BinaryTree(C);
-
         B1.prettyPrintBinary(B1.getRoot(), 0);
-        B1.divide(15,1);
-        B1.divide(16,1);
-        B1.divide(17,1);
-        B1.divide(18,1);
-        B1.divide(19,1);
+        B1.merge(0);
+        B1.prettyPrintBinary(B1.getRoot(), 0);
+        System.out.println(B1.findIndex(B1.getRoot(),1).getValue());
+        B1.merge(0);
+        B1.prettyPrintBinary(B1.getRoot(),0);
+       // B1.delete(9);
+        //B1.prettyPrintBinary(B1.getRoot(), 0);
+      //  B1.delete(10);
+
+        //B1.delete(0);
+
+
+/*        B1.prettyPrintBinary(B1.getRoot(), 0);
+       for (int t = 15; t >= 0; t--){
+          //System.out.println("sum( " + t + ") = " + B1.sum(t));
+          //B1.update(t,1);
+          //B1.insert(t,1);
+        }
         B1.prettyPrintBinary(B1.getRoot(), 0);
 
+
+*/
 
 
        /* String pathS = "/Users/AndreasLauritzen/dynamic_relative_compression/dna";

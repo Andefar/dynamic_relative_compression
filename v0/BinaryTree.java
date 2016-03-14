@@ -72,8 +72,6 @@ public class BinaryTree {
         updateHelp(this.root,i,k);
     }
 
-    //TODO: could implement this without the sum argument in the searchHelp - by just subtracting the left sum when going right
-    //TODO: use counter to return the correct index - we do not maintain the index anymore!
      /** Search for index where sum(i) < index <= sum(i+1) */
     public int search(int t) {
         if (t < 0 || t > this.root.getValue()) throw new IllegalArgumentException("Sum to search for is out of bounds");
@@ -95,24 +93,66 @@ public class BinaryTree {
         //update leafsUnder for the leaf that has been split
         leafToSplit.setLeafsUnder(2);
     }
-    public void delete(int i, int k) {
-        // Find node med givne index
-        // Opdater parent til værdi af søskende
-        // slet børn
-        // opdater path
-        // opdater indexes
-        // Opdater totalLeafs
-        // Evt opdater højde
+
+    public void delete(int i){
+        if (i < 0 || i > this.totalLeafs) throw new IllegalArgumentException("Index is out of bounds");
+
+        //Find the node to delete
+        BinNode deleted = deleteHelp(this.root, i);
+        BinNode parent = deleted.getParent();
+
+        deleted.getSibling().setParent(parent.getParent());
+
+        if (parent.isLeftChild()){
+            parent.getParent().setLeft(deleted.getSibling());
+        } else {
+            parent.getParent().setRight(deleted.getSibling());
+        }
+
+        updatePath(parent.getParent(), - deleted.getValue());
+
+        parent.setParent(null);
+        parent.setRight(null);
+        parent.setLeft(null);
+
+
+
     }
+
+    //TODO: implement these
+
     public void merge(int i) {
-        // Find node med givne indes
-        // to cases
-        // samme parent - slet børn
-        // Forskellig parent - noget andet
-        // opdater path(s)
-        // opdater indexes
-        // opdater totalLeafs
-        // evt opdater højde
+        if (i < 0 || i >= this.totalLeafs) throw new IllegalArgumentException("Index is out of bounds");
+
+        // FIND THE CONSECUTIVE NODE
+        BinNode deleted = deleteHelp(this.root, i + 1);
+
+        // DELETE THE FOUND NODE
+        BinNode parent = deleted.getParent();
+
+        deleted.getSibling().setParent(parent.getParent());
+
+        if (parent.isLeftChild()){
+            parent.getParent().setLeft(deleted.getSibling());
+        } else {
+            parent.getParent().setRight(deleted.getSibling());
+        }
+
+        updatePath(parent.getParent(), - deleted.getValue());
+
+        parent.setParent(null);
+        parent.setRight(null);
+        parent.setLeft(null);
+
+        // DELETION COMPLETED
+
+        // FIND THE NODE TO UPDATE
+        BinNode updateNode = findIndex(this.root, i);
+
+        // UPDATE THE UPDATE NODE WITH THE DELETED VALUE
+        updateNode.setValue(updateNode.getValue() + deleted.getValue());
+        updatePath(updateNode.getParent(), deleted.getValue());
+
     }
     public void divide(int i,int t) {
         //exception if i is out of bounds
@@ -147,7 +187,7 @@ public class BinaryTree {
             return sum;
         }
         //Continue in left subtree if the index we search for is less how many leaf there are below left child
-        if(index == 0 ) {
+        if(index < start.getLeft().getLeafsUnder() || index == 0 ) {
             //Turn left
             return sumHelp(start.getLeft(),index,sum);
         } else {
@@ -172,7 +212,7 @@ public class BinaryTree {
             updateHelp(start.getLeft(),index,k);
         } else {
             //Turn right and subtract the offset of the index
-            updateHelp(start.getRight(),index-start.getLeft().getLeafsUnder(),k);
+            updateHelp(start.getRight(),index-Math.max(start.getLeft().getLeafsUnder(),1),k);
         }
     }
 
@@ -211,7 +251,24 @@ public class BinaryTree {
         if(index < start.getLeft().getLeafsUnder() || index == 0 ) {
             return insertHelp(start.getLeft(),index,k);
         } else {
-            return insertHelp(start.getRight(),index-start.getLeft().getLeafsUnder(),k);
+            return insertHelp(start.getRight(),index - Math.max(start.getLeft().getLeafsUnder(),k),1);
+        }
+    }
+
+    private BinNode deleteHelp(BinNode start, int index){
+
+        if(start.isLeaf()) {
+            return start;
+        }
+
+        //decrement leafsUnder (excl leaf: incremented in insert() )
+        start.setLeafsUnder(start.getLeafsUnder()-1);
+
+        //continue in the correct subtree. Increment the tmpDepth that has to be used in insert()
+        if(index < start.getLeft().getLeafsUnder() || index == 0 ) {
+            return deleteHelp(start.getLeft(),index);
+        } else {
+            return deleteHelp(start.getRight(),index - Math.max(start.getLeft().getLeafsUnder(),1)) ;
         }
     }
 
@@ -247,7 +304,7 @@ public class BinaryTree {
         if(index < start.getLeft().getLeafsUnder() || index == 0 ) {
             return findIndex(start.getLeft(),index);
         } else {
-            return findIndex(start.getRight(),index-start.getLeft().getLeafsUnder());
+            return findIndex(start.getRight(),index-Math.max(start.getLeft().getLeafsUnder(),1));
         }
     }
 

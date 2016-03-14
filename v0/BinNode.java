@@ -75,4 +75,15 @@ public class BinNode {
 
     public boolean isRoot() { return this.getParent() == null;}
 
+    public BinNode getSibling() {
+        if (this.getParent() == null) {
+            return null;
+        }
+        if (this.isLeftChild()){
+            return this.getParent().getRight();
+        } else {
+            return this.getParent().getLeft();
+        }
+    }
+
 }
