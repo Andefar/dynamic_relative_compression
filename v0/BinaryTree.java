@@ -24,15 +24,17 @@ public class BinaryTree {
         this.height = 0;
         this.totalLeafs = C.size();
         //factor the insertion of the root out
-        this.root = new BinNode(null,null,null,C.get(0).getLength(),0, 0,0);
+        this.root = new BinNode(null,null,null,C.get(0).getLength(),0, 0,0, C.get(0).getPos());
+        this.prettyPrintBinary(this.root, 0);
         //Insert every block length into binary tree
         for(int i = 1; i < C.size(); i++) {
             Block b = C.get(i);
-            addNode(b, this.root,i,0);
+            addNode(this.root,b,i,0);
+            this.prettyPrintBinary(this.root, 0);
         }
         initLeafsUnder(this.root);
         //For debug:
-        //prettyPrintBinary(this.root,0);
+        prettyPrintBinary(this.root,0);
 
     }
 
@@ -80,14 +82,15 @@ public class BinaryTree {
     }
 
      /** Insert new entry with value k at i. */
-    public void insert(int i , int k) {
+    public void insert(int i , int k, int startPosInR) {
         if (i < 0 || i > this.totalLeafs) throw new IllegalArgumentException("Index is out of bounds");
         if (k < 0) throw new IllegalArgumentException("Inserted value must be positive");
         // Find the leaf which will be split. Update leafsUnder and Sums all the way down.
         BinNode leafToSplit = insertHelp(this.root,i,k);
         // Split it and insert new node in front
-        BinNode copy = new BinNode(null,null,leafToSplit,leafToSplit.getValue()-k,leafToSplit.getIndex()+1,0,0);
-        BinNode insert = new BinNode(null,null,leafToSplit,k,leafToSplit.getIndex(),0,0);
+        BinNode copy = new BinNode(null,null,leafToSplit,leafToSplit.getValue()-k,leafToSplit.getIndex()+1,0,0,leafToSplit.getStartPositionInR());
+        BinNode insert = new BinNode(null,null,leafToSplit,k,leafToSplit.getIndex(),0,0, startPosInR);
+        leafToSplit.setStartPositionInR(-1);
         leafToSplit.setRight(copy);
         leafToSplit.setLeft(insert);
         //update leafsUnder for the leaf that has been split
@@ -159,14 +162,14 @@ public class BinaryTree {
         if (i < 0 || i > this.totalLeafs) throw new IllegalArgumentException("Index is out of bounds");
 
         // Find the leaf which will be split. Update leafsUnder on the the way down.
-        BinNode leafToSplit = divdeHelp(this.root,i);
+        BinNode leafToSplit = divideHelp(this.root,i);
 
         // if t is more or equal to the value then one value will be <= 0 which is not allowed
         if (t >= leafToSplit.getValue()) throw new IllegalArgumentException("divide value t must be less than the nodes value");
 
         //create left and right children. update pointers, leafsUnder, totalLeafs
-        BinNode left = new BinNode(null,null,leafToSplit,t,0,0,0);
-        BinNode right = new BinNode(null,null,leafToSplit,leafToSplit.getValue()-t,0,0,0);
+        BinNode left = new BinNode(null,null,leafToSplit,t,0,0,0,leafToSplit.getStartPositionInR());
+        BinNode right = new BinNode(null,null,leafToSplit,leafToSplit.getValue()-t,0,0,0, leafToSplit.getStartPositionInR()+t);
         leafToSplit.setRight(right);
         leafToSplit.setLeft(left);
         leafToSplit.setLeafsUnder(2);
@@ -274,7 +277,7 @@ public class BinaryTree {
 
     /** divideHelp
      */
-    private BinNode divdeHelp(BinNode start, int index) {
+    private BinNode divideHelp(BinNode start, int index) {
 
         if(start.isLeaf()) {
             return start;
@@ -284,9 +287,9 @@ public class BinaryTree {
 
         //continue in the correct subtree. Increment the tmpDepth that has to be used in insert()
         if(index < start.getLeft().getLeafsUnder() || index == 0 ) {
-            return divdeHelp(start.getLeft(),index);
+            return divideHelp(start.getLeft(),index);
         } else {
-            return divdeHelp(start.getRight(),index-start.getLeft().getLeafsUnder());
+            return divideHelp(start.getRight(),index-start.getLeft().getLeafsUnder());
         }
     }
 
@@ -310,7 +313,7 @@ public class BinaryTree {
 
    /** Given a block, root of the binary tree and a start depth, inserts
     * an node into the tree. Used be build the tree one block by block. */
-    private void addNode(Block b, BinNode start, int index, int depth) {
+    private void addNode( BinNode start, Block b, int index, int depth) {
 
         // Case 0: Current node is a leaf
         if (start.isLeaf()) {
@@ -328,21 +331,22 @@ public class BinaryTree {
                 flInsert = start.getFreeLayers() - 1;
             }
             //Splitting the node to the left and inserts new to the right.
-            BinNode copy = new BinNode(null, null, start, start.getValue(), start.getIndex(), flCopy,0);
-            BinNode insert = new BinNode(null, null, start, b.getLength(), index, flInsert,0);
+            BinNode copy = new BinNode(null, null, start, start.getValue(), start.getIndex(), flCopy,0, start.getStartPositionInR());
+            BinNode insert = new BinNode(null, null, start, b.getLength(), index, flInsert,0, b.getPos());
             start.setRight(insert);
             start.setLeft(copy);
             start.setIndex(-1);
+            start.setStartPositionInR(-1);
             updatePath(start, b.getLength());
 
         }
         // Case 1: The current binary tree is full tree (characterized by no free layers)
         else if (start.getRight().getFreeLayers() == 0 && start.getLeft().getFreeLayers() == 0) {
             //Split the root downwards to the left and insert the new node to the right.
-            BinNode copy = new BinNode(start, null, null, start.getValue(), -1, -1,0);
+            BinNode copy = new BinNode(start, null, null, start.getValue(), -1, -1,0, -1);
             this.height += 1;
-            copy.setLeft(start);
-            copy.setRight((new BinNode(null, null, copy, b.getLength(), index, this.height - (depth + 1),0)));
+            //copy.setLeft(start);
+            copy.setRight((new BinNode(null, null, copy, b.getLength(), index, this.height - (depth + 1),0, b.getPos())));
             start.setParent(copy);
             updatePath(copy, b.getLength());
             this.root = copy;
@@ -350,18 +354,18 @@ public class BinaryTree {
         // Case 2: Subtree starting at current node as root is full (characterized by the same amount of
         //         free layers)
         else if (start.getRight().getFreeLayers() == start.getLeft().getFreeLayers()){
-            BinNode copy = new BinNode(start, null, null, start.getValue(), -1, -1,0);
+            BinNode copy = new BinNode(start, null, null, start.getValue(), -1, -1,0,-1);
             start.getParent().setRight(copy);
             copy.setParent(start.getParent());
             start.setParent(copy);
-            copy.setRight((new BinNode(null, null, copy, b.getLength(), index, this.height - (depth + 1),0)));
+            copy.setRight((new BinNode(null, null, copy, b.getLength(), index, this.height - (depth + 1),0,b.getPos())));
             // update free layers to the left
             decrementLayers(start, 1);
             updatePath(copy,b.getLength());
         }
         // Case 3: Continue searching in the right subtree. Check is not necessary.
         else if (start.getRight().getFreeLayers() > start.getLeft().getFreeLayers()) {
-            addNode(b, start.getRight(), index, depth + 1);
+            addNode( start.getRight(),b, index, depth + 1);
         } else {
             throw new IllegalArgumentException("Error in the binary tree build process: Case not covered");
         }
@@ -400,7 +404,7 @@ public class BinaryTree {
         BinNode right = start.getRight();
         String repeated = new String(new char[depth*5]).replace("\0"," ");
         //System.out.println(repeated + start.getValue());
-        System.out.println(repeated + start.getValue() + " lf:" + start.getLeafsUnder());
+        System.out.println(repeated + start.getValue() + " SiR:" + start.getStartPositionInR());
         if(left == null && right == null) { return; }
         prettyPrintBinary(left,depth+1);
         prettyPrintBinary(right,depth+1);

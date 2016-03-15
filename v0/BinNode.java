@@ -9,9 +9,10 @@ public class BinNode {
     private int index; //not needed when build methods is fixed
     private int freeLayers; //not needed when build methods is fixed
     private int leafsUnder;
+    private int startPositionInR;
 
     //Constructor
-    public BinNode (BinNode left, BinNode right, BinNode parent, int value, int index, int freeLayers, int leafsUnder) {
+    public BinNode (BinNode left, BinNode right, BinNode parent, int value, int index, int freeLayers, int leafsUnder, int startPositionInR) {
         this.left = left;
         this.right = right;
         this.parent = parent;
@@ -19,6 +20,7 @@ public class BinNode {
         this.index = index;
         this.freeLayers = freeLayers;
         this.leafsUnder = leafsUnder;
+        this.startPositionInR = startPositionInR;
     }
 
     //SETTERS
@@ -44,6 +46,8 @@ public class BinNode {
 
     public void setLeafsUnder(int leafsUnder) { this.leafsUnder = leafsUnder; }
 
+    public void setStartPositionInR(int startPositionInR) {this.startPositionInR = startPositionInR;}
+
     //GETTERS
     public BinNode getLeft() { return this.left; }
 
@@ -60,6 +64,8 @@ public class BinNode {
     public int getFreeLayers() { return this.freeLayers;}
 
     public int getLeafsUnder() { return this.leafsUnder;}
+
+    public int getStartPositionInR() {return this.startPositionInR;}
 
 
     //PUBLIC BOOLEAN METHODS
