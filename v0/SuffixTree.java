@@ -150,7 +150,7 @@ public class SuffixTree {
 
     }
 
-    // Seach for string in the suffixtree
+    // Search for string in the suffixtree
     // return the index in R at which the string starts
     // if string not found return -1
 

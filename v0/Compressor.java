@@ -17,5 +17,6 @@ abstract class Compressor {
     public abstract ArrayList<Block> encode(String S);
     public abstract int indexOf(char[] C);
     public abstract String decode(ArrayList<Block> C);
+    //public abstract
 
 }

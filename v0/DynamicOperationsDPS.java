@@ -7,12 +7,14 @@ import java.util.Arrays;
 public class DynamicOperationsDPS extends DynamicOperations {
 
     BinaryTree dps;
+
     //constructor
     public DynamicOperationsDPS(ArrayList<Block> C, Compressor cmp) {
         super(C, cmp);
         this.dps = new BinaryTree(C);
     }
 
+    //TODO: Hvor bruger vi getC??
     //getter for C
     public ArrayList<Block> getC() {
         return this.C;
@@ -23,20 +25,22 @@ public class DynamicOperationsDPS extends DynamicOperations {
     // Index out of bound exception
     public char access(int index) throws IndexOutOfBoundsException {
 
-        int[] BS = this.getBlockandStartPos(index);
+        int[] BS = this.dps.searchReturnIndexSIR(index);
 
-        int p = this.C.get(BS[0]).getPos(); //BS[0] is the block holding the index - p is the start position of that block in R
-        int start = BS[1]; //B[1] is the starting position of block BS[0] in S (the original string)
+        int p = BS[1]; //BS[0] is the block holding the index - p is the start position of that block in R
+        int start = this.dps.sum(BS[0]); //B[1] is the starting position of block BS[0] in S (the original string)
 
         return this.cmp.RA[p + (index - start)];
     }
 
-
-    // Return the block which contains the specified position and the start position of that block in the original string
+    /*
+    // Return startPositionInR of the node containing the given index
+    // Return startPositionInS of the node containing the given index
     private int[] getBlockandStartPos(int index) {
-        int foundIndex = dps.search(index);
-        return new int[]{foundIndex,dps.sum(foundIndex)};
-    }
+        BinNode foundIndex = dps.searchReturnNode(index);
+
+        return new int[]{foundIndex.getStartPositionInR(),dps.sum(foundIndex.getIndex())};
+    } */
 
 
     public void replace(int i, char sub) {

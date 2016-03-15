@@ -72,8 +72,17 @@ public class BinaryTree {
         updateHelp(this.root,i,k);
     }
 
-     /** Search for index where sum(i) < index <= sum(i+1) */
+     /** Search for index where sum(i) < index <= sum(i+1)
+      * Return the index */
     public int search(int t) {
+        if (t < 0 || t > this.root.getValue()) throw new IllegalArgumentException("Sum to search for is out of bounds");
+        // start search in root
+        return searchHelp(this.root,t, 0)[0];
+    }
+
+    /** Search for index where sum(i) < index <= sum(i+1)
+     * Return the index and the startPositionInR */
+    public int[] searchReturnIndexSIR(int t) {
         if (t < 0 || t > this.root.getValue()) throw new IllegalArgumentException("Sum to search for is out of bounds");
         // start search in root
         return searchHelp(this.root,t, 0);
@@ -220,10 +229,10 @@ public class BinaryTree {
 
     /** Recursive method. Searching for index i, where t (given) sum(i) < t <= sum(i+1)
      */
-    private int searchHelp(BinNode start,int t, int index){
+    private int[] searchHelp(BinNode start,int t, int index){
         // correct index is reached
         if (start.isLeaf()) {
-            return index;
+            return new int[] {index, start.getStartPositionInR()};
         // continue search in the left subtree
         } else if (t <= start.getLeft().getValue()){
             return searchHelp(start.getLeft(),t, index);
