@@ -25,16 +25,14 @@ public class BinaryTree {
         this.totalLeafs = C.size();
         //factor the insertion of the root out
         this.root = new BinNode(null,null,null,C.get(0).getLength(),0, 0,0, C.get(0).getPos());
-        this.prettyPrintBinary(this.root, 0);
         //Insert every block length into binary tree
         for(int i = 1; i < C.size(); i++) {
             Block b = C.get(i);
             addNode(this.root,b,i,0);
-            this.prettyPrintBinary(this.root, 0);
         }
         initLeafsUnder(this.root);
         //For debug:
-        prettyPrintBinary(this.root,0);
+        //prettyPrintBinary(this.root,0);
 
     }
 
@@ -173,6 +171,7 @@ public class BinaryTree {
         leafToSplit.setRight(right);
         leafToSplit.setLeft(left);
         leafToSplit.setLeafsUnder(2);
+        leafToSplit.setStartPositionInR(-1);
         totalLeafs++;
 
     }
@@ -406,8 +405,12 @@ public class BinaryTree {
         //System.out.println(repeated + start.getValue());
         System.out.println(repeated + start.getValue() + " SiR:" + start.getStartPositionInR());
         if(left == null && right == null) { return; }
-        prettyPrintBinary(left,depth+1);
+
+        System.out.print(" right");
         prettyPrintBinary(right,depth+1);
+        System.out.print(" left ");
+        prettyPrintBinary(left,depth+1);
+
 
     }
 }
