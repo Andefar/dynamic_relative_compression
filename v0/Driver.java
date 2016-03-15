@@ -9,69 +9,7 @@ import java.lang.management.*;
 public class Driver {
     public static void main(String[] args) {
         ArrayList<Block> C = new ArrayList<Block>();
-
-        C.add(new Block(0,3));
-        C.add(new Block(1,8));
-        C.add(new Block(2,4));
-        C.add(new Block(3,3));
-        C.add(new Block(4,1));
-        C.add(new Block(5,1));
-        C.add(new Block(6,2));
-        C.add(new Block(7,7));
-        C.add(new Block(8,3));
-        C.add(new Block(9,5));
-        C.add(new Block(10,6));
-        C.add(new Block(11,3));
-        C.add(new Block(12,2));
-        C.add(new Block(13,4));
-        C.add(new Block(14,6));
-
-       /* C.add(new Block(0,5));
-        C.add(new Block(0,3));
-        C.add(new Block(0,8));
-        C.add(new Block(0,4));
-        C.add(new Block(0,3));
-        C.add(new Block(0,1));
-        C.add(new Block(0,1));
-        C.add(new Block(0,2));
-        C.add(new Block(0,7));
-        C.add(new Block(0,3));
-        C.add(new Block(0,5));
-        C.add(new Block(0,6));
-        C.add(new Block(0,3));
-        C.add(new Block(0,2));
-        C.add(new Block(0,4));
-      C.add(new Block(0,6));*/
-
-        BinaryTree B1 = new BinaryTree(C);
-
-        /*
-        B1.prettyPrintBinary(B1.getRoot(), 0);
-        B1.merge(0);
-        B1.prettyPrintBinary(B1.getRoot(), 0);
-        System.out.println(B1.findIndex(B1.getRoot(),1).getValue());
-        B1.merge(0);
-        B1.prettyPrintBinary(B1.getRoot(),0);*/
-       // B1.delete(9);
-        //B1.prettyPrintBinary(B1.getRoot(), 0);
-      //  B1.delete(10);
-
-        //B1.delete(0);
-
-
-/*        B1.prettyPrintBinary(B1.getRoot(), 0);
-       for (int t = 15; t >= 0; t--){
-          //System.out.println("sum( " + t + ") = " + B1.sum(t));
-          //B1.update(t,1);
-          //B1.insert(t,1);
-        }
-        B1.prettyPrintBinary(B1.getRoot(), 0);
-
-
-*/
-
-
-       /* String pathS = "/Users/AndreasLauritzen/dynamic_relative_compression/dna";
+        String pathS = "/Users/AndreasLauritzen/dynamic_relative_compression/dna";
          String pathR = "/Users/AndreasLauritzen/dynamic_relative_compression/DNA_R";
          String S, R;
          try{
@@ -112,7 +50,5 @@ public class Driver {
          } catch (IOException e) {
              e.printStackTrace();
          }
-
-*/
     }
 }

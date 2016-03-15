@@ -207,6 +207,23 @@ public class CompressorTest extends GroovyTestCase {
 //        assertEquals(cmp0.encode("cbacaaabcbc").toString(), ops4.getC().toString());
     }
 
+    @Test
+    public void testOperationsAccessMerge() {
+
+        DynamicOperations ops1 = new DynamicOperationsDPS(encodedS0, cmp0);
+
+        char sc = ops1.access(2);
+        char sa = ops1.access(3);
+        char sa2 = ops1.access(4);
+
+
+        //insert tests of final string
+        assertEquals((char) 'c',sc);
+        assertEquals((char) 'a',sa);
+        assertEquals((char) 'a',sa2);
+
+    }
+
 
     @Test
     public void testFileHandlerSaveAndRead() {

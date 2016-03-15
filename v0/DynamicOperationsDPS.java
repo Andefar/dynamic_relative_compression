@@ -24,57 +24,42 @@ public class DynamicOperationsDPS extends DynamicOperations {
     // Return character S[i]
     // Index out of bound exception
     public char access(int index) throws IndexOutOfBoundsException {
-
         int[] BS = this.dps.searchReturnIndexSIR(index);
-
-        int p = BS[1]; //BS[0] is the block holding the index - p is the start position of that block in R
-        int start = this.dps.sum(BS[0]); //B[1] is the starting position of block BS[0] in S (the original string)
-
-        return this.cmp.RA[p + (index - start)];
+        int startPosInR = BS[1]; //BS[0] is the block holding the index - p is the start position of that block in R
+        int startPosInS = this.dps.sum(BS[0]); //B[1] is the starting position of block BS[0] in S (the original string)
+        return this.cmp.RA[startPosInR + (index - startPosInS)];
     }
 
-    /*
-    // Return startPositionInR of the node containing the given index
-    // Return startPositionInS of the node containing the given index
-    private int[] getBlockandStartPos(int index) {
-        BinNode foundIndex = dps.searchReturnNode(index);
-
-        return new int[]{foundIndex.getStartPositionInR(),dps.sum(foundIndex.getIndex())};
-    } */
-
-
-    public void replace(int i, char sub) {
+    public void replace(int index, char sub) {
         //get all positions and distances
-        int[] t = this.getBlockandStartPos(i);
-        int blockNum = t[0];
-        int blockPosInS = t[1];
-        Block b = this.C.get(blockNum);
-        int l = b.getLength();
-        int p = b.getPos();
-        int offsetInRA = i - blockPosInS;
-        int indexInRA = p + offsetInRA;
-        int charToReplace = this.cmp.RA[indexInRA];
+        int[] BS = this.dps.searchReturnIndexSIR(index);
+        int startPosInR = BS[1]; //BS[0] is the block holding the index - p is the start position of that block in R
+        int startPosInS = this.dps.sum(BS[0]); //B[1] is the starting position of block BS[0] in S (the original string)
+        int length = BS[2];
+        int offsetInR = startPosInR + (index - startPosInS);
+
+
+        char charToReplace = this.cmp.RA[startPosInR + (index - startPosInS)];
+        int indexOfReplacedChar = this.cmp.indexOf(new char[]{charToReplace});
 
         //replace with same char
-        if (charToReplace == sub) {
-            return;
-        }
-
-        //find the occurrence of sub char in RA
-        int subPosInRA = -1;
-        for (int k = 0; k < this.cmp.RA.length; k++) {
-            if (this.cmp.RA[k] == sub) {
-                subPosInRA = k;
-                break;
-            }
-        }
-        //remove the old block
-        this.C.remove(blockNum);
-
+        if (charToReplace == sub) return;
+        //if char doesnt exist in R it is illegal
+        if(indexOfReplacedChar == -1) throw new IllegalArgumentException("character is not in the reference string");
 
         //when block can be split in 3, i is in the middle
         //i not first in block, i not the last in block, length is 3 or more
-        if (offsetInRA > 0 && offsetInRA != (l - 1) && l >= 3) {
+        if (offsetInR > 0 && offsetInR != (length - 1) && length >= 3) {
+
+            this.dps.divide(BS[0],offsetInR);
+            this.dps.divide(BS[0]+1,1);
+            this.dps.updateSIR();
+
+            /*
+            divide
+            divide
+            update
+             */
 
             Block first = new Block(p, offsetInRA);
             Block replace = new Block(subPosInRA, 1);
@@ -85,15 +70,25 @@ public class DynamicOperationsDPS extends DynamicOperations {
 
         }
         //i is the first in the block and length is at least 2
-        else if (offsetInRA == 0 && l >= 2) {
+        else if (offsetInR == 0 && length >= 2) {
 
-            Block replace = new Block(subPosInRA, 1);
-            Block rest = new Block(p + 1, l - 1);
+            /*
+            divide
+            update
+             */
+
+            Block replace = new Block(offsetInR, 1);
+            Block rest = new Block(p + 1, length - 1);
             this.C.add(blockNum, rest);
             this.C.add(blockNum, replace);
         }
         //i is the last index and length is at least 2
-        else if (offsetInRA == (l - 1) && l >= 2) {
+        else if (offsetInR == (length - 1) && length >= 2) {
+
+            /*
+            divide
+            update
+             */
 
             Block replace = new Block(subPosInRA, 1);
             Block preBlock = new Block(p, l - 1);
@@ -101,7 +96,11 @@ public class DynamicOperationsDPS extends DynamicOperations {
             this.C.add(blockNum, preBlock);
         }
         //replace with a single char
-        else if (l == 1) {
+        else if (length == 1) {
+
+            /*
+            update
+             */
 
             Block replace = new Block(subPosInRA, 1);
             this.C.add(blockNum, replace);

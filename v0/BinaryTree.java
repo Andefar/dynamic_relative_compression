@@ -72,6 +72,13 @@ public class BinaryTree {
         updateHelp(this.root,i,k);
     }
 
+    /** Updates an entry by increment by k (delta) */
+    public void updateSIR(int i, int newValue){
+        if (i < 0 || i > this.totalLeafs) throw new IllegalArgumentException("Index is out of bounds");
+        if (newValue < 0) throw new IllegalArgumentException("Delta must be positive");
+        updateSIRHelp(this.root,i,newValue);
+    }
+
      /** Search for index where sum(i) < index <= sum(i+1)
       * Return the index */
     public int search(int t) {
@@ -227,12 +234,28 @@ public class BinaryTree {
         }
     }
 
+    private void updateSIRHelp(BinNode start, int index, int newPos) {
+
+        if(start.isLeaf()) {
+            start.setStartPositionInR(newPos);
+            return;
+        }
+        //Continue in left subtree if the index we search for is less how many leaf there are below
+        if(index < start.getLeft().getLeafsUnder() || index == 0 ) {
+            //Turn left
+            updateHelp(start.getLeft(),index,newPos);
+        } else {
+            //Turn right and subtract the offset of the index
+            updateHelp(start.getRight(),index-Math.max(start.getLeft().getLeafsUnder(),1),newPos);
+        }
+    }
+
     /** Recursive method. Searching for index i, where t (given) sum(i) < t <= sum(i+1)
      */
     private int[] searchHelp(BinNode start,int t, int index){
         // correct index is reached
         if (start.isLeaf()) {
-            return new int[] {index, start.getStartPositionInR()};
+            return new int[] {index, start.getStartPositionInR(),start.getValue()};
         // continue search in the left subtree
         } else if (t <= start.getLeft().getValue()){
             return searchHelp(start.getLeft(),t, index);
