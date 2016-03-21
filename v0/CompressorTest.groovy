@@ -21,6 +21,14 @@ public class CompressorTest extends GroovyTestCase {
     ArrayList<Block> encodedS2 = cmp2.encode(ST0);
     ArrayList<Block> encodedS3 = cmp3.encode(ST1);
 
+    CompressorDPS cmp4 = new CompressorDPS(R0);
+    CompressorDPS cmp5 = new CompressorDPS(R1);
+    ArrayList<Block> encodedS4 = cmp4.encode(ST0);
+    ArrayList<Block> encodedS5 = cmp5.encode(ST1);
+
+
+
+    /*
     @Test
     public void testCompressionDecompression() {
         String results0 = cmp0.decode(encodedS0);
@@ -208,7 +216,7 @@ public class CompressorTest extends GroovyTestCase {
     }
 
     @Test
-    public void testOperationsAccessMerge() {
+    public void testOperationsAccessDPS() {
 
         DynamicOperations ops1 = new DynamicOperationsDPS(encodedS0, cmp0);
 
@@ -222,9 +230,67 @@ public class CompressorTest extends GroovyTestCase {
         assertEquals((char) 'a',sa);
         assertEquals((char) 'a',sa2);
 
+    } */
+
+    @Test
+    public void testOperationsInsertDPS() {
+
+        DynamicOperationsDPS ops1 = new DynamicOperationsDPS(encodedS4, cmp4);
+        DynamicOperationsDPS ops2 = new DynamicOperationsDPS(encodedS4, cmp4);
+        DynamicOperationsDPS ops3 = new DynamicOperationsDPS(encodedS4, cmp4);
+        DynamicOperationsDPS ops4 = new DynamicOperationsDPS(encodedS4, cmp4);
+        ops1.insert(3,(char) 'c');
+        ops2.insert(5,(char) 'b');
+        ops3.insert(10,(char) 'a');
+        ops4.insert(0,(char) 'c');
+        String decodedS1 = cmp4.decodeBinTree(ops1.getDPS());
+        String decodedS2 = cmp4.decodeBinTree(ops2.getDPS());
+        String decodedS3 = cmp4.decodeBinTree(ops3.getDPS());
+        String decodedS4 = cmp4.decodeBinTree(ops4.getDPS());
+
+        //insert tests of final string
+        assertEquals("baccaaabcbc",decodedS1);
+        assertEquals("bacaababcbc",decodedS2);
+        assertEquals("bacaaabcbca",decodedS3);
+        assertEquals("cbacaaabcbc",decodedS4);
+
+        //insert tests of compression
+//        assertEquals(cmp0.encode("baccaaabcbc").toString(), ops1.getC().toString());
+//        assertEquals(cmp0.encode("bacaababcbc").toString(), ops2.getC().toString());
+//        assertEquals(cmp0.encode("bacaaabcbca").toString(), ops3.getC().toString());
+//        assertEquals(cmp0.encode("cbacaaabcbc").toString(), ops4.getC().toString());
     }
 
+    @Test
+    public void testOperationsDeleteDPS() {
 
+        DynamicOperationsDPS ops1 = new DynamicOperationsDPS(encodedS4, cmp4);
+        DynamicOperationsDPS ops2 = new DynamicOperationsDPS(encodedS4, cmp4);
+        DynamicOperationsDPS ops3 = new DynamicOperationsDPS(encodedS4, cmp4);
+        DynamicOperationsDPS ops4 = new DynamicOperationsDPS(encodedS4, cmp4);
+        DynamicOperationsDPS ops5 = new DynamicOperationsDPS(encodedS4, cmp4);
+
+        ops1.delete(3);
+        ops2.delete(5);
+        ops3.delete(9);
+        ops4.delete(1);
+        ops5.delete(0);
+
+        String decodedS1 = cmp4.decodeBinTree(ops1.getDPS());
+        String decodedS2 = cmp4.decodeBinTree(ops2.getDPS());
+        String decodedS3 = cmp4.decodeBinTree(ops3.getDPS());
+        String decodedS4 = cmp4.decodeBinTree(ops4.getDPS());
+        String decodedS5 = cmp4.decodeBinTree(ops5.getDPS());
+
+        //delete tests of final string
+        assertEquals("bacaabcbc",decodedS1);
+        assertEquals("bacaabcbc",decodedS2);
+        assertEquals("bacaaabcb",decodedS3);
+        assertEquals("bcaaabcbc",decodedS4);
+        assertEquals("acaaabcbc",decodedS5);
+
+    }
+/*
     @Test
     public void testFileHandlerSaveAndRead() {
 
@@ -241,5 +307,7 @@ public class CompressorTest extends GroovyTestCase {
         assertEquals(orig,S1,res);
 
     }
+
+    */
 
 }

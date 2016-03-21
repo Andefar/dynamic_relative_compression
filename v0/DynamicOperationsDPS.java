@@ -15,9 +15,14 @@ public class DynamicOperationsDPS extends DynamicOperations {
     }
 
     //TODO: Hvor bruger vi getC??
-    //getter for C
+    //getter for C - bruges i test
     public ArrayList<Block> getC() {
         return this.C;
+    }
+
+    //getter for dps - bruges i test
+    public BinaryTree getDPS() {
+        return this.dps;
     }
 
 
@@ -29,185 +34,97 @@ public class DynamicOperationsDPS extends DynamicOperations {
         int startPosInS = this.dps.sum(BS[0]); //B[1] is the starting position of block BS[0] in S (the original string)
         return this.cmp.RA[startPosInR + (index - startPosInS)];
     }
-
-    public void replace(int index, char sub) {
-        //get all positions and distances
-        int[] BS = this.dps.searchReturnIndexSIR(index);
-        int startPosInR = BS[1]; //BS[0] is the block holding the index - p is the start position of that block in R
-        int startPosInS = this.dps.sum(BS[0]); //B[1] is the starting position of block BS[0] in S (the original string)
-        int length = BS[2];
-        int offsetInR = startPosInR + (index - startPosInS);
-
-
-        char charToReplace = this.cmp.RA[startPosInR + (index - startPosInS)];
-        int indexOfReplacedChar = this.cmp.indexOf(new char[]{charToReplace});
-
-        //replace with same char
-        if (charToReplace == sub) return;
-        //if char doesnt exist in R it is illegal
-        if(indexOfReplacedChar == -1) throw new IllegalArgumentException("character is not in the reference string");
-
-        //when block can be split in 3, i is in the middle
-        //i not first in block, i not the last in block, length is 3 or more
-        if (offsetInR > 0 && offsetInR != (length - 1) && length >= 3) {
-
-            this.dps.divide(BS[0],offsetInR);
-            this.dps.divide(BS[0]+1,1);
-            this.dps.updateSIR();
-
-            /*
-            divide
-            divide
-            update
-             */
-
-            Block first = new Block(p, offsetInRA);
-            Block replace = new Block(subPosInRA, 1);
-            Block last = new Block(p + offsetInRA + 1, l - (offsetInRA + 1));
-            this.C.add(blockNum, last);
-            this.C.add(blockNum, replace);
-            this.C.add(blockNum, first);
-
-        }
-        //i is the first in the block and length is at least 2
-        else if (offsetInR == 0 && length >= 2) {
-
-            /*
-            divide
-            update
-             */
-
-            Block replace = new Block(offsetInR, 1);
-            Block rest = new Block(p + 1, length - 1);
-            this.C.add(blockNum, rest);
-            this.C.add(blockNum, replace);
-        }
-        //i is the last index and length is at least 2
-        else if (offsetInR == (length - 1) && length >= 2) {
-
-            /*
-            divide
-            update
-             */
-
-            Block replace = new Block(subPosInRA, 1);
-            Block preBlock = new Block(p, l - 1);
-            this.C.add(blockNum, replace);
-            this.C.add(blockNum, preBlock);
-        }
-        //replace with a single char
-        else if (length == 1) {
-
-            /*
-            update
-             */
-
-            Block replace = new Block(subPosInRA, 1);
-            this.C.add(blockNum, replace);
-
-        } else {
-            throw new IllegalArgumentException("Case not covered");
-        }
-
-        restoreMax((Math.max(blockNum - 1, 0)), (Math.min(blockNum + 4, (this.C.size() - 1))));
-
-    }
-
+    public void replace(int index, char sub) {};
 
     public void insert(int index, char c) {
-        int indexOfR = -1;
-        for (int i = 0; i < this.cmp.RA.length; i++) {
-            if (this.cmp.RA[i] == c) {
-                indexOfR = i;
-                break;
-            }
-        }
+
+
+        int indexOfR = this.cmp.indexOf(new char[]{c});
+        if (indexOfR == -1) throw new IllegalArgumentException("character is not in the reference string");
 
         // insert at the end of string
         if (index == super.getSLength()) {
-            this.C.add(new Block(indexOfR, 1));
-            restoreMax((this.C.size() - 2), (this.C.size() - 1));
+            this.dps.insert(this.dps.getTotalLeafs(), 1, indexOfR);
+
+            //restoreMax((this.C.size() - 2), (this.C.size() - 1));
             return;
         }
 
-        int[] BS = this.getBlockandStartPos(index);
-        int blockNo = BS[0];
-        int startPosInR = this.C.get(blockNo).getPos();
-        int length = this.C.get(blockNo).getLength();
-        int startPosInS = BS[1];
+        //get all positions and distances
+        int[] BS = this.dps.searchReturnIndexSIR(index);
+        int startPosInR = BS[1]; //B[1] is the starting position of block BS[0] in R
+        int nodeIndex = BS[0]; //BS[0] is index of the node holding the index
+        int startPosInS = (nodeIndex == 0) ? 0 : this.dps.sum(nodeIndex - 1);
+        int length = BS[2]; // B[2] is the length of the node holding the index
+        int offSet = index - startPosInS;
+        //int offsetInR = startPosInR + (index - startPosInS);
 
-        if (index == startPosInS) { //insert in beginning of block
+        //insert in beginning of block -> insert new node before the found node
+        // also covers case, where length of node is only 1
+        if (index == startPosInS) {
 
-            this.C.remove(blockNo);
-            this.C.add(blockNo, new Block(startPosInR, length));
-            this.C.add(blockNo, new Block(indexOfR, 1));
+            this.dps.insert(nodeIndex, 1, indexOfR);
 
-        } else if (index == startPosInS + length - 1) { //insert at the end of block
+        } else {//middle of block
+          // also covers if the character is inserted at the last index of the block - since the old character here will then be z
 
-            this.C.remove(blockNo);
-            this.C.add(blockNo, new Block(indexOfR, 1));
-            this.C.add(blockNo, new Block(startPosInR, length));
-
-        } else { //middle of block
-            int endPosInS = startPosInS + length - 1;
-            int firstBlockLength = index - startPosInS;
-            int lastBlockLength = endPosInS - index + 1;
-
-            this.C.remove(blockNo);
-
-            this.C.add(blockNo, new Block(startPosInR + firstBlockLength, lastBlockLength));
-            this.C.add(blockNo, new Block(indexOfR, 1));
-            this.C.add(blockNo, new Block(startPosInR, firstBlockLength));
+            // divide node xyz ---- x   yz
+            // y is the index at which the new node must be inserted - so by inserting a new node after x the new node get the correct index
+            this.dps.divide(nodeIndex, offSet);
+            this.dps.insert(nodeIndex +1 , 1, indexOfR);
         }
 
-        restoreMax((Math.max(blockNo - 1, 0)), (Math.min(blockNo + 4, (this.C.size() - 1))));
+        //restoreMax((Math.max(blockNo - 1, 0)), (Math.min(blockNo + 4, (this.C.size() - 1))));
     }
 
-    public void delete(int i) {
+    public void delete(int index) {
 
-        int[] t = this.getBlockandStartPos(i);
-        int blockNum = t[0];
-        int blockPosInS = t[1];
-        Block b = this.C.get(blockNum);
-        int l = b.getLength();
-        int p = b.getPos();
-        int offsetInRA = i - blockPosInS;
+        //get all positions and distances
+        int[] BS = this.dps.searchReturnIndexSIR(index);
+        int startPosInR = BS[1]; //B[1] is the starting position of block BS[0] in R
+        int nodeIndex = BS[0]; //BS[0] is index of the node holding the index
+        int startPosInS = (nodeIndex == 0) ? 0 : this.dps.sum(nodeIndex - 1);
+        int length = BS[2]; // B[2] is the length of the node holding the index
+        int offSet = index - startPosInS;
 
-        //remove the old block
-        this.C.remove(blockNum);
 
-        //when block can be split in 3, i is in the middle
-        //i not first in block, i not the last in block, length is 3 or more
-        if (offsetInRA > 0 && offsetInRA != (l - 1) && l >= 3) {
+        //when node can be split in 3, i is in the middle
+        //i not first in node, i not the last in node, length is 3 or more
+        if (offSet > 0 && offSet != (length - 1) && length >= 3) {
 
-            Block first = new Block(p, offsetInRA);
-            Block last = new Block(p + offsetInRA + 1, l - (offsetInRA + 1));
-            this.C.add(blockNum, last);
-            this.C.add(blockNum, first);
-
+            // divide det node xyz -> x   y   z
+            // y is the node of length 1 containing the relevant index
+            this.dps.divide(nodeIndex, offSet);
+            this.dps.divide(nodeIndex + 1, 1);
+            this.dps.delete(nodeIndex + 1);
         }
-        //i is the first in the block and length is at least 2
-        else if (offsetInRA == 0 && l >= 2) {
+        //i is the first in the node and length is at least 2
+        else if (offSet == 0 && length >= 2) {
 
-            Block rest = new Block(p + 1, l - 1);
-            this.C.add(blockNum, rest);
+            // divide det node yz ->   y   z
+            // y is the node of length 1 containing the relevant index
+            this.dps.divide(nodeIndex, 1);
+            this.dps.delete(nodeIndex);
 
         }
         //i is the last index and length is at least 2
-        else if (offsetInRA == (l - 1) && l >= 2) {
+        else if (offSet == (length - 1) && length >= 2) {
 
-            Block preBlock = new Block(p, l - 1);
-            this.C.add(blockNum, preBlock);
+            // divide det node xy -> x   y
+            // y is the node of length 1 containing the relevant index
+            this.dps.divide(nodeIndex, offSet);
+            this.dps.delete(nodeIndex+1);
+
         }
-        //replace with a single char
-        else if (l == 1) {
-            restoreMax((Math.max(blockNum - 1, 0)), (Math.min(blockNum + 4, (this.C.size() - 1))));
+        //i is in a node with length 1
+        else if (length == 1) {
+            this.dps.delete(nodeIndex);
             return;
         } else {
             throw new IllegalArgumentException("Case not covered");
         }
 
-        restoreMax((Math.max(blockNum - 1, 0)), (Math.min(blockNum + 4, (this.C.size() - 1))));
+        //restoreMax((Math.max(blockNum - 1, 0)), (Math.min(blockNum + 4, (this.C.size() - 1))));*/
 
     }
 

@@ -51,6 +51,8 @@ public class BinaryTree {
     //TODO: fjern denne her senere. Brugt i tests
     public BinNode getRoot() {return this.root;}
 
+    public int getTotalLeafs() {return this.totalLeafs;}
+
     /** ===== PUBLIC METHODS, IMPLEMENTS OPERTATIONS  ===== */
 
     /** All operations throws illegalArgumentException if the arguments are out of bound or
@@ -105,10 +107,21 @@ public class BinaryTree {
         BinNode copy = new BinNode(null,null,leafToSplit,leafToSplit.getValue()-k,leafToSplit.getIndex()+1,0,0,leafToSplit.getStartPositionInR());
         BinNode insert = new BinNode(null,null,leafToSplit,k,leafToSplit.getIndex(),0,0, startPosInR);
         leafToSplit.setStartPositionInR(-1);
-        leafToSplit.setRight(copy);
-        leafToSplit.setLeft(insert);
-        //update leafsUnder for the leaf that has been split
-        leafToSplit.setLeafsUnder(2);
+
+        //Normally insertion is made to the left of the found node - but when the insertion is
+        // at the end of the string the insertion must be made to the right of the found node
+        if (i == this.totalLeafs){
+            leafToSplit.setLeft(copy);
+            leafToSplit.setRight(insert);
+            //update leafsUnder for the leaf that has been split
+            leafToSplit.setLeafsUnder(2);
+        } else {
+            leafToSplit.setRight(copy);
+            leafToSplit.setLeft(insert);
+            //update leafsUnder for the leaf that has been split
+            leafToSplit.setLeafsUnder(2);
+        }
+        totalLeafs ++;
     }
 
     public void delete(int i){
@@ -132,7 +145,7 @@ public class BinaryTree {
         parent.setRight(null);
         parent.setLeft(null);
 
-
+        totalLeafs --;
 
     }
 
@@ -169,6 +182,7 @@ public class BinaryTree {
         // UPDATE THE UPDATE NODE WITH THE DELETED VALUE
         updateNode.setValue(updateNode.getValue() + deleted.getValue());
         updatePath(updateNode.getParent(), deleted.getValue());
+        totalLeafs --;
 
     }
     public void divide(int i,int t) {
@@ -257,7 +271,7 @@ public class BinaryTree {
         if (start.isLeaf()) {
             return new int[] {index, start.getStartPositionInR(),start.getValue()};
         // continue search in the left subtree
-        } else if (t <= start.getLeft().getValue()){
+        } else if (t < start.getLeft().getValue()){
             return searchHelp(start.getLeft(),t, index);
         // continue search in the right subtree
         // - add the number of leafs in the left subtree to the index (or 1 if the left subtree is leaf
@@ -267,8 +281,8 @@ public class BinaryTree {
         }
     }
 
-    /** Finds the nodes that has to be split and update sums and leafsUnder on the way down to the leaf.
-     * Doesn't increment the leaf itself (this is handled in insert())
+    /** Finds the node that has to be split and update sums and leafsUnder on the way down to the leaf.
+     * Increment the leaf itselfs value but not the leafs under (this is handled in insert())
      */
     private BinNode insertHelp(BinNode start, int index, int k) {
         //increment sum on the way down (incl leaf)
@@ -327,6 +341,13 @@ public class BinaryTree {
 
 
     /** ===== PRIVATE METHODS TO BUILD/SCAN THE BINARY TREE ===== */
+
+
+    /** Return the startPosInR and the value/length of the node at index i*/
+    public int[] find(int index){
+        BinNode found = findIndex(this.root, index);
+        return new int[] {found.getStartPositionInR(), found.getValue()};
+    }
 
     /** return the node withe the specified index */
     private BinNode findIndex(BinNode start, int index){
@@ -435,7 +456,7 @@ public class BinaryTree {
         BinNode right = start.getRight();
         String repeated = new String(new char[depth*5]).replace("\0"," ");
         //System.out.println(repeated + start.getValue());
-        System.out.println(repeated + start.getValue() + " SiR:" + start.getStartPositionInR());
+        System.out.println(repeated + start.getValue() + " Lenght:" + start.getValue());
         if(left == null && right == null) { return; }
 
         System.out.print(" right");
