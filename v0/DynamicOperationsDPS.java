@@ -34,7 +34,11 @@ public class DynamicOperationsDPS extends DynamicOperations {
         int startPosInS = this.dps.sum(BS[0]); //B[1] is the starting position of block BS[0] in S (the original string)
         return this.cmp.RA[startPosInR + (index - startPosInS)];
     }
-    public void replace(int index, char sub) {};
+
+    public void replace(int index, char sub) {
+    }
+
+    ;
 
     public void insert(int index, char c) {
 
@@ -66,12 +70,12 @@ public class DynamicOperationsDPS extends DynamicOperations {
             this.dps.insert(nodeIndex, 1, indexOfR);
 
         } else {//middle of block
-          // also covers if the character is inserted at the last index of the block - since the old character here will then be z
+            // also covers if the character is inserted at the last index of the block - since the old character here will then be z
 
             // divide node xyz ---- x   yz
             // y is the index at which the new node must be inserted - so by inserting a new node after x the new node get the correct index
             this.dps.divide(nodeIndex, offSet);
-            this.dps.insert(nodeIndex +1 , 1, indexOfR);
+            this.dps.insert(nodeIndex + 1, 1, indexOfR);
         }
 
         //restoreMax((Math.max(blockNo - 1, 0)), (Math.min(blockNo + 4, (this.C.size() - 1))));
@@ -113,13 +117,15 @@ public class DynamicOperationsDPS extends DynamicOperations {
             // divide det node xy -> x   y
             // y is the node of length 1 containing the relevant index
             this.dps.divide(nodeIndex, offSet);
-            this.dps.delete(nodeIndex+1);
+            this.dps.delete(nodeIndex + 1);
 
         }
         //i is in a node with length 1
         else if (length == 1) {
             this.dps.delete(nodeIndex);
-            return;
+            //RESTOREMAX
+            return; // Do something to make sure the restoremax is called in this case to!
+
         } else {
             throw new IllegalArgumentException("Case not covered");
         }
@@ -128,7 +134,10 @@ public class DynamicOperationsDPS extends DynamicOperations {
 
     }
 
+
     private void mergeBlocks(int startBlock, int endBlock) {
+
+
         ArrayList<Block> blocksC = new ArrayList<>();
 
         for (int i = startBlock; i <= endBlock; i++) {
@@ -145,7 +154,7 @@ public class DynamicOperationsDPS extends DynamicOperations {
         }
     }
 
-    private void restoreMax(int startBlock, int endBlock) {
+    private void restoreMaxBLOCK(int startBlock, int endBlock) {
         StringBuilder rest = new StringBuilder();
         int index = -1;
         char[] a;
@@ -179,4 +188,54 @@ public class DynamicOperationsDPS extends DynamicOperations {
             }
         }
     }
+
+    private void restoreMax(int startNode, int endNode) {
+        StringBuilder rest = new StringBuilder();
+        int index = -1;
+        int[] aBS;
+        int[] bBS;
+        char[] a;
+        for (int i = startNode; i < endNode - 1; i++) {
+            // the current node could not be merged with the earlier one - rest is now empty
+            // so look at the two next nodes
+            if (rest.length() == 0) {
+                aBS = this.dps.find(i);
+                a = Arrays.copyOfRange(this.cmp.RA, aBS[0], aBS[0] + aBS[1]);
+                bBS = this.dps.find(i + 1);
+                char[] b = Arrays.copyOfRange(this.cmp.RA, bBS[0], bBS[0] + bBS[1]);
+                rest.append(a);
+                rest.append(b);
+                index = this.cmp.indexOf(rest.toString().toCharArray());
+
+                if (index > -1) {// yes can be merged. endNode must be decremented (since there is now one less node to look at)
+                    this.dps.merge(i);
+                    endNode--;
+                    //this.C.get(i).setLength(rest.length());
+                    //this.C.get(i).setPos(index);
+                    //this.C.remove(i + 1);
+                    continue;
+                }
+            } else { // The nodes before could be merged (is now at index i-1) - test if the current node can also be merged with these
+                     // again endNode must be decremented (since there is now one less node to look at)
+                aBS = this.dps.find(i);
+                a = Arrays.copyOfRange(this.cmp.RA, aBS[0], aBS[0] + aBS[1]);
+                rest.append(a);
+                index = this.cmp.indexOf(rest.toString().toCharArray());
+                if (index > -1) {
+                    this.dps.merge(i - 1);
+                    endNode--;
+                    //this.C.get(i - 1).setLength(rest.length());
+                    //this.C.get(i - 1).setPos(index);
+                    //this.C.remove(i);
+                    continue;
+                }
+
+
+            }
+            // if the nodes could not be merges (no continue is reached) the rest must be emptied before moving on to next node
+            rest.setLength(0);
+
+        }
+    }
 }
+
