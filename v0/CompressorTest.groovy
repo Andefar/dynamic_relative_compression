@@ -48,8 +48,8 @@ public class CompressorTest extends GroovyTestCase {
     @Test
     public void testCompressionDecompressionSuffixFileRead() {
         FileHandler f = new FileHandler();
-        String S = f.readFromFileLine("/Users/AndreasLauritzen/dynamic_relative_compression/DNA_S");
-        String R = f.readFromFileLine("/Users/AndreasLauritzen/dynamic_relative_compression/DNA_R");
+        String S = f.readFromFileLine("/Users/JosefineTusindfryd/Desktop/dynamic_relative_compression/DNA_S");
+        String R = f.readFromFileLine("/Users/JosefineTusindfryd/Desktop/dynamic_relative_compression/DNA_R");
         CompressorSuffix cmp = new CompressorSuffix(R);
         ArrayList<Block> encodedS = cmp.encode(S);
         String resultS = cmp.decodeArrayList(encodedS);

@@ -219,7 +219,7 @@ public class DynamicOperationsDPS extends DynamicOperations {
             this.C.remove(startBlock); //delete old block from compressed rep
         }
 
-        String partOfS = cmp.decode(blocksC);
+        String partOfS = cmp.decodeArrayList(blocksC);
         blocksC.clear();
         blocksC = cmp.encode(partOfS);
 

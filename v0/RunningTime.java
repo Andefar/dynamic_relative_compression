@@ -71,7 +71,7 @@ public class RunningTime {
     }
 
     /** Get CPU time in nanoseconds. */
-    public static long getCpuTime( ) {
+    public long getCpuTime( ) {
         ThreadMXBean bean = ManagementFactory.getThreadMXBean( );
         return bean.isCurrentThreadCpuTimeSupported( ) ?
                 bean.getCurrentThreadCpuTime( ) : 0L;
