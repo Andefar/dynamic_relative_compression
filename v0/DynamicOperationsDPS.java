@@ -123,14 +123,12 @@ public class DynamicOperationsDPS extends DynamicOperations {
         //i is in a node with length 1
         else if (length == 1) {
             this.dps.delete(nodeIndex);
-            //RESTOREMAX
-            return; // Do something to make sure the restoremax is called in this case to!
 
         } else {
             throw new IllegalArgumentException("Case not covered");
         }
 
-        //restoreMax((Math.max(blockNum - 1, 0)), (Math.min(blockNum + 4, (this.C.size() - 1))));*/
+        restoreMax((Math.max(index - 1, 0)), (Math.min(index + 4, (this.dps.getTotalLeafs()- 1))));
 
     }
 
@@ -169,8 +167,9 @@ public class DynamicOperationsDPS extends DynamicOperations {
                     this.C.get(i).setLength(rest.length());
                     this.C.get(i).setPos(index);
                     this.C.remove(i + 1);
-                    continue;
-                } else {
+                    continue;}
+
+            } else {
                     a = Arrays.copyOfRange(this.cmp.RA, this.C.get(i).getPos(), this.C.get(i).getPos() + this.C.get(i).getLength());
                     rest.append(a);
                     index = this.cmp.indexOf(rest.toString().toCharArray());
@@ -185,7 +184,7 @@ public class DynamicOperationsDPS extends DynamicOperations {
                 }
                 rest.setLength(0);
 
-            }
+
         }
     }
 
@@ -209,6 +208,7 @@ public class DynamicOperationsDPS extends DynamicOperations {
 
                 if (index > -1) {// yes can be merged. endNode must be decremented (since there is now one less node to look at)
                     this.dps.merge(i);
+                    this.dps.updateSIR(i, index);
                     endNode--;
                     //this.C.get(i).setLength(rest.length());
                     //this.C.get(i).setPos(index);
@@ -223,7 +223,9 @@ public class DynamicOperationsDPS extends DynamicOperations {
                 index = this.cmp.indexOf(rest.toString().toCharArray());
                 if (index > -1) {
                     this.dps.merge(i - 1);
-                    endNode--;
+                    this.dps.updateSIR(i-1, index);
+                    i --;
+                    endNode --;
                     //this.C.get(i - 1).setLength(rest.length());
                     //this.C.get(i - 1).setPos(index);
                     //this.C.remove(i);
