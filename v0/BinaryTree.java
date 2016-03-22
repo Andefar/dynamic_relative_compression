@@ -63,6 +63,7 @@ public class BinaryTree {
     /** Return the sum of entries up to and incl index i */
     public int sum(int index){
         if (index == this.totalLeafs - 1) return this.root.getValue();
+        if (index == 0) return this.find(0)[1];
         if (index < 0 || index > this.totalLeafs) throw new IllegalArgumentException("Index is out of bounds");
         return sumHelp(this.root,index+1,0);
     }
@@ -224,7 +225,7 @@ public class BinaryTree {
             return sumHelp(start.getLeft(),index,sum);
         } else {
             //Turn right and subtract the offset of the index. Also increment the sum.
-            return sumHelp(start.getRight(),index-start.getLeft().getLeafsUnder(),sum+start.getLeft().getValue());
+            return sumHelp(start.getRight(),index-Math.max(start.getLeft().getLeafsUnder(),1),sum+start.getLeft().getValue());
         }
     }
 
@@ -334,7 +335,7 @@ public class BinaryTree {
         if(index < start.getLeft().getLeafsUnder() || index == 0 ) {
             return divideHelp(start.getLeft(),index);
         } else {
-            return divideHelp(start.getRight(),index-start.getLeft().getLeafsUnder());
+            return divideHelp(start.getRight(),index-Math.max(start.getLeft().getLeafsUnder(),1));
         }
     }
 

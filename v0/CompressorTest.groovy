@@ -279,17 +279,27 @@ public class CompressorTest extends GroovyTestCase {
         DynamicOperationsDPS ops2 = new DynamicOperationsDPS(encodedS4, cmp4);
         DynamicOperationsDPS ops3 = new DynamicOperationsDPS(encodedS4, cmp4);
         DynamicOperationsDPS ops4 = new DynamicOperationsDPS(encodedS4, cmp4);
-        ops1.insert(3,(char) 'c');
+
+        ops1.insert(10,(char) 'a');
+        ops1.insert(0,(char) 'a');
+        ops1.insert(2,(char) 'c');
+        ops1.insert(3,(char) 'a');
+        ops1.insert(1,(char) 'c');
+
+
+
+
         ops2.insert(5,(char) 'b');
         ops3.insert(10,(char) 'a');
         ops4.insert(0,(char) 'c');
+
         String decodedS1 = cmp4.decodeBinTree(ops1.getDPS());
         String decodedS2 = cmp4.decodeBinTree(ops2.getDPS());
         String decodedS3 = cmp4.decodeBinTree(ops3.getDPS());
         String decodedS4 = cmp4.decodeBinTree(ops4.getDPS());
 
         //insert tests of final string
-        assertEquals("baccaaabcbc",decodedS1);
+        assertEquals("acbcaacaaabcbca",decodedS1);
         assertEquals("bacaababcbc",decodedS2);
         assertEquals("bacaaabcbca",decodedS3);
         assertEquals("cbacaaabcbc",decodedS4);
@@ -311,6 +321,12 @@ public class CompressorTest extends GroovyTestCase {
         DynamicOperationsDPS ops5 = new DynamicOperationsDPS(encodedS4, cmp4);
 
         ops1.delete(3);
+        ops1.delete(3);
+        ops1.delete(2);
+        ops1.delete(6);
+        ops1.delete(0);
+
+
         ops2.delete(5);
         ops3.delete(9);
         ops4.delete(1);
@@ -323,7 +339,63 @@ public class CompressorTest extends GroovyTestCase {
         String decodedS5 = cmp4.decodeBinTree(ops5.getDPS());
 
         //delete tests of final string
-        assertEquals("bacaabcbc",decodedS1);
+        assertEquals("aabcb",decodedS1);
+        assertEquals("bacaabcbc",decodedS2);
+        assertEquals("bacaaabcb",decodedS3);
+        assertEquals("bcaaabcbc",decodedS4);
+        assertEquals("acaaabcbc",decodedS5);
+
+    }
+
+
+    @Test
+    public void testOperationsReplaceDPS() {
+
+        DynamicOperationsDPS ops1 = new DynamicOperationsDPS(encodedS4, cmp4);
+        DynamicOperationsDPS ops2 = new DynamicOperationsDPS(encodedS4, cmp4);
+        DynamicOperationsDPS ops3 = new DynamicOperationsDPS(encodedS4, cmp4);
+        DynamicOperationsDPS ops4 = new DynamicOperationsDPS(encodedS4, cmp4);
+        DynamicOperationsDPS ops5 = new DynamicOperationsDPS(encodedS4, cmp4);
+
+        ops1.replace(0, (char) 'a');
+        String decodedS1 = cmp4.decodeBinTree(ops1.getDPS());
+        assertEquals("aacaaabcbc",decodedS1);
+
+        ops1.replace(2, (char) 'a');
+        decodedS1 = cmp4.decodeBinTree(ops1.getDPS());
+        assertEquals("aaaaaabcbc",decodedS1);
+
+        ops1.replace(6, (char) 'a');
+        decodedS1 = cmp4.decodeBinTree(ops1.getDPS());
+        assertEquals("aaaaaaacbc",decodedS1);
+
+        ops1.replace(7, (char) 'a');
+        decodedS1 = cmp4.decodeBinTree(ops1.getDPS());
+        assertEquals("aaaaaaaabc",decodedS1);
+
+        ops1.replace(8, (char) 'a');
+        decodedS1 = cmp4.decodeBinTree(ops1.getDPS());
+        assertEquals("aaaaaaaaac",decodedS1);
+
+        ops1.replace(9, (char) 'a');
+        decodedS1 = cmp4.decodeBinTree(ops1.getDPS());
+        assertEquals("aaaaaaaaaa",decodedS1);
+
+
+
+        ops2.delete(5);
+        ops3.delete(9);
+        ops4.delete(1);
+        ops5.delete(0);
+
+
+        String decodedS2 = cmp4.decodeBinTree(ops2.getDPS());
+        String decodedS3 = cmp4.decodeBinTree(ops3.getDPS());
+        String decodedS4 = cmp4.decodeBinTree(ops4.getDPS());
+        String decodedS5 = cmp4.decodeBinTree(ops5.getDPS());
+
+        //delete tests of final string
+        //assertEquals("aaaaaaaaaa",decodedS1);
         assertEquals("bacaabcbc",decodedS2);
         assertEquals("bacaaabcb",decodedS3);
         assertEquals("bcaaabcbc",decodedS4);

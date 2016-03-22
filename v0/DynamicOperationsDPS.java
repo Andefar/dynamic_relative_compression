@@ -108,7 +108,7 @@ public class DynamicOperationsDPS extends DynamicOperations {
             throw new IllegalArgumentException("Case not covered");
         }
 
-        //restoreMax((Math.max(nodeIndex - 1, 0)), (Math.min(nodeIndex + 4, (this.dps.getTotalLeafs() - 1))));
+        restoreMax((Math.max(nodeIndex - 1, 0)), (Math.min(nodeIndex + 4, (this.dps.getTotalLeafs() - 1))));
 
 
     }
@@ -123,7 +123,7 @@ public class DynamicOperationsDPS extends DynamicOperations {
         if (index == super.getSLength()) {
             this.dps.insert(this.dps.getTotalLeafs(), 1, indexOfR);
 
-            //restoreMax((this.C.size() - 2), (this.C.size() - 1));
+            restoreMax((this.dps.getTotalLeafs()-2), (this.dps.getTotalLeafs() - 1));
             return;
         }
 
@@ -151,14 +151,14 @@ public class DynamicOperationsDPS extends DynamicOperations {
             this.dps.insert(nodeIndex + 1, 1, indexOfR);
         }
 
-        //restoreMax((Math.max(blockNo - 1, 0)), (Math.min(blockNo + 4, (this.C.size() - 1))));
+        restoreMax((Math.max(nodeIndex - 1, 0)), (Math.min(nodeIndex + 4, (this.dps.getTotalLeafs() - 1))));
     }
 
     public void delete(int index) {
 
         //get all positions and distances
         int[] BS = this.dps.searchReturnIndexSIR(index);
-        int startPosInR = BS[1]; //B[1] is the starting position of block BS[0] in R
+        int startPosInR = BS[1]; //B[1] is the starting position of node BS[0] in R
         int nodeIndex = BS[0]; //BS[0] is index of the node holding the index
         int startPosInS = (nodeIndex == 0) ? 0 : this.dps.sum(nodeIndex - 1);
         int length = BS[2]; // B[2] is the length of the node holding the index
@@ -201,7 +201,7 @@ public class DynamicOperationsDPS extends DynamicOperations {
             throw new IllegalArgumentException("Case not covered");
         }
 
-        restoreMax((Math.max(index - 1, 0)), (Math.min(index + 4, (this.dps.getTotalLeafs()- 1))));
+        restoreMax((Math.max(nodeIndex - 1, 0)), (Math.min(nodeIndex + 4, (this.dps.getTotalLeafs()- 1))));
 
     }
 
@@ -304,8 +304,8 @@ public class DynamicOperationsDPS extends DynamicOperations {
                     //this.C.remove(i);
                     continue;
                 }
-
-
+                // must look at the current node once more with the consecutive node
+                i --;
             }
             // if the nodes could not be merges (no continue is reached) the rest must be emptied before moving on to next node
             rest.setLength(0);
