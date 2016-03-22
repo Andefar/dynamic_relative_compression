@@ -164,7 +164,7 @@ public class DynamicOperationsDPS extends DynamicOperations {
         int length = BS[2]; // B[2] is the length of the node holding the index
         int offSet = index - startPosInS;
 
-
+        //case 1
         //when node can be split in 3, i is in the middle
         //i not first in node, i not the last in node, length is 3 or more
         if (offSet > 0 && offSet != (length - 1) && length >= 3) {
@@ -175,6 +175,7 @@ public class DynamicOperationsDPS extends DynamicOperations {
             this.dps.divide(nodeIndex + 1, 1);
             this.dps.delete(nodeIndex + 1);
         }
+        //case 2
         //i is the first in the node and length is at least 2
         else if (offSet == 0 && length >= 2) {
 
@@ -184,6 +185,7 @@ public class DynamicOperationsDPS extends DynamicOperations {
             this.dps.delete(nodeIndex);
 
         }
+        //case 3
         //i is the last index and length is at least 2
         else if (offSet == (length - 1) && length >= 2) {
 
@@ -193,6 +195,7 @@ public class DynamicOperationsDPS extends DynamicOperations {
             this.dps.delete(nodeIndex + 1);
 
         }
+        //case 4
         //i is in a node with length 1
         else if (length == 1) {
             this.dps.delete(nodeIndex);

@@ -292,7 +292,6 @@ public class CompressorTest extends GroovyTestCase {
         ops2.insert(5,(char) 'b');
         ops3.insert(10,(char) 'a');
         ops4.insert(0,(char) 'c');
-
         String decodedS1 = cmp4.decodeBinTree(ops1.getDPS());
         String decodedS2 = cmp4.decodeBinTree(ops2.getDPS());
         String decodedS3 = cmp4.decodeBinTree(ops3.getDPS());
@@ -320,11 +319,15 @@ public class CompressorTest extends GroovyTestCase {
         DynamicOperationsDPS ops4 = new DynamicOperationsDPS(encodedS4, cmp4);
         DynamicOperationsDPS ops5 = new DynamicOperationsDPS(encodedS4, cmp4);
 
+        "bacaaabcbc";
+
+        ops1.delete(3); //case 1
+        ops1.delete(5); //case 1
+        ops1.delete(7); //case 3
+        ops1.delete(0); //case 4
+        ops1.delete(1); //case 2
+        ops1.delete(4);
         ops1.delete(3);
-        ops1.delete(3);
-        ops1.delete(2);
-        ops1.delete(6);
-        ops1.delete(0);
 
 
         ops2.delete(5);
@@ -339,6 +342,7 @@ public class CompressorTest extends GroovyTestCase {
         String decodedS5 = cmp4.decodeBinTree(ops5.getDPS());
 
         //delete tests of final string
+        assertEquals("aaa",decodedS1);
         assertEquals("aabcb",decodedS1);
         assertEquals("bacaabcbc",decodedS2);
         assertEquals("bacaaabcb",decodedS3);

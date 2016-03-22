@@ -132,19 +132,33 @@ public class BinaryTree {
         BinNode deleted = deleteHelp(this.root, i);
         BinNode parent = deleted.getParent();
 
-        deleted.getSibling().setParent(parent.getParent());
+        if(!parent.isRoot()) {
 
-        if (parent.isLeftChild()){
-            parent.getParent().setLeft(deleted.getSibling());
+            deleted.getSibling().setParent(parent.getParent());
+
+            if (parent.isLeftChild()) {
+                parent.getParent().setLeft(deleted.getSibling());
+            } else {
+                parent.getParent().setRight(deleted.getSibling());
+            }
+
+            updatePath(parent.getParent(), - deleted.getValue());
+
+            parent.setParent(null);
+            parent.setRight(null);
+            parent.setLeft(null);
+
         } else {
-            parent.getParent().setRight(deleted.getSibling());
+            parent.setValue(parent.getValue() - deleted.getValue());
+            if(deleted.isLeftChild()) {
+                parent.setLeft(null);
+            } else {
+                parent.setRight(null);
+            }
+            deleted.setParent(null);
         }
 
-        updatePath(parent.getParent(), - deleted.getValue());
 
-        parent.setParent(null);
-        parent.setRight(null);
-        parent.setLeft(null);
 
         totalLeafs --;
 
