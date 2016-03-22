@@ -72,7 +72,7 @@ public class CompressorDPS extends Compressor{
 
     // Decode a compressed representation, D,  of string S with reference to R
     // Evt ikke
-    public String decode(ArrayList<Block> C){
+    public String decodeArrayList(ArrayList<Block> C){
         StringBuilder sb = new StringBuilder();
         //String S = "";
         int p;
