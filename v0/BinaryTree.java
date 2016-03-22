@@ -62,7 +62,7 @@ public class BinaryTree {
 
     /** Return the sum of entries up to and incl index i */
     public int sum(int index){
-        if (index == this.totalLeafs - 1) return this.root.getValue();
+        if (index == this.totalLeafs - 1) return this.root.getLength();
         if (index == 0) return this.find(0)[1];
         if (index < 0 || index > this.totalLeafs) throw new IllegalArgumentException("Index is out of bounds");
         return sumHelp(this.root,index+1,0);
@@ -85,7 +85,7 @@ public class BinaryTree {
      /** Search for index where sum(i) < index <= sum(i+1)
       * Return the index */
     public int search(int t) {
-        if (t < 0 || t > this.root.getValue()) throw new IllegalArgumentException("Sum to search for is out of bounds");
+        if (t < 0 || t > this.root.getLength()) throw new IllegalArgumentException("Sum to search for is out of bounds");
         // start search in root
         return searchHelp(this.root,t, 0)[0];
     }
@@ -93,7 +93,7 @@ public class BinaryTree {
     /** Search for index where sum(i) < index <= sum(i+1)
      * Return the index and the startPositionInR */
     public int[] searchReturnIndexSIR(int t) {
-        if (t < 0 || t > this.root.getValue()) throw new IllegalArgumentException("Sum to search for is out of bounds");
+        if (t < 0 || t > this.root.getLength()) throw new IllegalArgumentException("Sum to search for is out of bounds");
         // start search in root
         return searchHelp(this.root,t, 0);
     }
@@ -105,7 +105,7 @@ public class BinaryTree {
         // Find the leaf which will be split. Update leafsUnder and Sums all the way down.
         BinNode leafToSplit = insertHelp(this.root,i,k);
         // Split it and insert new node in front
-        BinNode copy = new BinNode(null,null,leafToSplit,leafToSplit.getValue()-k,leafToSplit.getIndex()+1,0,0,leafToSplit.getStartPositionInR());
+        BinNode copy = new BinNode(null,null,leafToSplit,leafToSplit.getLength()-k,leafToSplit.getIndex()+1,0,0,leafToSplit.getStartPositionInR());
         BinNode insert = new BinNode(null,null,leafToSplit,k,leafToSplit.getIndex(),0,0, startPosInR);
         leafToSplit.setStartPositionInR(-1);
 
@@ -132,7 +132,20 @@ public class BinaryTree {
         BinNode deleted = deleteHelp(this.root, i);
         BinNode parent = deleted.getParent();
 
-        if(!parent.isRoot()) {
+        if (parent.isRoot()) {
+
+            if(deleted.isRightChild()) {
+                this.root = parent.getLeft();
+                parent.getLeft().setParent(null);
+                parent.setLeft(null);
+
+            } else {
+                this.root = parent.getRight();
+                parent.getRight().setParent(null);
+                parent.setRight(null);
+            }
+
+        } else {
 
             deleted.getSibling().setParent(parent.getParent());
 
@@ -142,22 +155,13 @@ public class BinaryTree {
                 parent.getParent().setRight(deleted.getSibling());
             }
 
-            updatePath(parent.getParent(), - deleted.getValue());
+            updatePath(parent.getParent(), - deleted.getLength());
 
             parent.setParent(null);
             parent.setRight(null);
             parent.setLeft(null);
 
-        } else {
-            parent.setValue(parent.getValue() - deleted.getValue());
-            if(deleted.isLeftChild()) {
-                parent.setLeft(null);
-            } else {
-                parent.setRight(null);
-            }
-            deleted.setParent(null);
         }
-
 
 
         totalLeafs --;
@@ -183,7 +187,7 @@ public class BinaryTree {
             parent.getParent().setRight(deleted.getSibling());
         }
 
-        updatePath(parent.getParent(), - deleted.getValue());
+        updatePath(parent.getParent(), - deleted.getLength());
 
         parent.setParent(null);
         parent.setRight(null);
@@ -195,8 +199,8 @@ public class BinaryTree {
         BinNode updateNode = findIndex(this.root, i);
 
         // UPDATE THE UPDATE NODE WITH THE DELETED VALUE
-        updateNode.setValue(updateNode.getValue() + deleted.getValue());
-        updatePath(updateNode.getParent(), deleted.getValue());
+        updateNode.setLength(updateNode.getLength() + deleted.getLength());
+        updatePath(updateNode.getParent(), deleted.getLength());
         totalLeafs --;
 
     }
@@ -208,11 +212,11 @@ public class BinaryTree {
         BinNode leafToSplit = divideHelp(this.root,i);
 
         // if t is more or equal to the value then one value will be <= 0 which is not allowed
-        if (t >= leafToSplit.getValue()) throw new IllegalArgumentException("divide value t must be less than the nodes value");
+        if (t >= leafToSplit.getLength()) throw new IllegalArgumentException("divide value t must be less than the nodes value");
 
         //create left and right children. update pointers, leafsUnder, totalLeafs
         BinNode left = new BinNode(null,null,leafToSplit,t,0,0,0,leafToSplit.getStartPositionInR());
-        BinNode right = new BinNode(null,null,leafToSplit,leafToSplit.getValue()-t,0,0,0, leafToSplit.getStartPositionInR()+t);
+        BinNode right = new BinNode(null,null,leafToSplit,leafToSplit.getLength()-t,0,0,0, leafToSplit.getStartPositionInR()+t);
         leafToSplit.setRight(right);
         leafToSplit.setLeft(left);
         leafToSplit.setLeafsUnder(2);
@@ -239,7 +243,7 @@ public class BinaryTree {
             return sumHelp(start.getLeft(),index,sum);
         } else {
             //Turn right and subtract the offset of the index. Also increment the sum.
-            return sumHelp(start.getRight(),index-Math.max(start.getLeft().getLeafsUnder(),1),sum+start.getLeft().getValue());
+            return sumHelp(start.getRight(),index-Math.max(start.getLeft().getLeafsUnder(),1),sum+start.getLeft().getLength());
         }
     }
 
@@ -248,7 +252,7 @@ public class BinaryTree {
      */
     private void updateHelp(BinNode start, int index, int k) {
         //update all sums on the path down to the leaf
-        start.setValue(start.getValue()+k);
+        start.setLength(start.getLength()+k);
 
         if(start.isLeaf()) {
             return;
@@ -284,15 +288,15 @@ public class BinaryTree {
     private int[] searchHelp(BinNode start,int t, int index){
         // correct index is reached
         if (start.isLeaf()) {
-            return new int[] {index, start.getStartPositionInR(),start.getValue()};
+            return new int[] {index, start.getStartPositionInR(),start.getLength()};
         // continue search in the left subtree
-        } else if (t < start.getLeft().getValue()){
+        } else if (t < start.getLeft().getLength()){
             return searchHelp(start.getLeft(),t, index);
         // continue search in the right subtree
         // - add the number of leafs in the left subtree to the index (or 1 if the left subtree is leaf
         // - subtract the value of the left child from the value to search for in the right subtree
         } else {
-           return searchHelp(start.getRight(),t - start.getLeft().getValue(), index + Math.max(start.getLeft().getLeafsUnder(),1));
+           return searchHelp(start.getRight(),t - start.getLeft().getLength(), index + Math.max(start.getLeft().getLeafsUnder(),1));
         }
     }
 
@@ -301,7 +305,7 @@ public class BinaryTree {
      */
     private BinNode insertHelp(BinNode start, int index, int k) {
         //increment sum on the way down (incl leaf)
-        start.setValue(start.getValue()+k);
+        start.setLength(start.getLength()+k);
         // return if leaf or index matches
         if(start.isLeaf()) {
             return start;
@@ -361,7 +365,7 @@ public class BinaryTree {
     /** Return the startPosInR and the value/length of the node at index i*/
     public int[] find(int index){
         BinNode found = findIndex(this.root, index);
-        return new int[] {found.getStartPositionInR(), found.getValue()};
+        return new int[] {found.getStartPositionInR(), found.getLength()};
     }
 
     /** return the node withe the specified index */
@@ -398,7 +402,7 @@ public class BinaryTree {
                 flInsert = start.getFreeLayers() - 1;
             }
             //Splitting the node to the left and inserts new to the right.
-            BinNode copy = new BinNode(null, null, start, start.getValue(), start.getIndex(), flCopy,0, start.getStartPositionInR());
+            BinNode copy = new BinNode(null, null, start, start.getLength(), start.getIndex(), flCopy,0, start.getStartPositionInR());
             BinNode insert = new BinNode(null, null, start, b.getLength(), index, flInsert,0, b.getPos());
             start.setRight(insert);
             start.setLeft(copy);
@@ -410,7 +414,7 @@ public class BinaryTree {
         // Case 1: The current binary tree is full tree (characterized by no free layers)
         else if (start.getRight().getFreeLayers() == 0 && start.getLeft().getFreeLayers() == 0) {
             //Split the root downwards to the left and insert the new node to the right.
-            BinNode copy = new BinNode(start, null, null, start.getValue(), -1, -1,0, -1);
+            BinNode copy = new BinNode(start, null, null, start.getLength(), -1, -1,0, -1);
             this.height += 1;
             //copy.setLeft(start);
             copy.setRight((new BinNode(null, null, copy, b.getLength(), index, this.height - (depth + 1),0, b.getPos())));
@@ -421,7 +425,7 @@ public class BinaryTree {
         // Case 2: Subtree starting at current node as root is full (characterized by the same amount of
         //         free layers)
         else if (start.getRight().getFreeLayers() == start.getLeft().getFreeLayers()){
-            BinNode copy = new BinNode(start, null, null, start.getValue(), -1, -1,0,-1);
+            BinNode copy = new BinNode(start, null, null, start.getLength(), -1, -1,0,-1);
             start.getParent().setRight(copy);
             copy.setParent(start.getParent());
             start.setParent(copy);
@@ -444,7 +448,7 @@ public class BinaryTree {
     */
     private void updatePath(BinNode start, int length) {
         //Increment sum and freelayers
-        start.setValue(start.getValue() + length);
+        start.setLength(start.getLength() + length);
         start.setFreeLayers(Math.max(start.getLeft().getFreeLayers(), start.getRight().getFreeLayers()));
         //stop when the methods hits the root.
         if(!(start.isRoot())) {
@@ -471,7 +475,7 @@ public class BinaryTree {
         BinNode right = start.getRight();
         String repeated = new String(new char[depth*5]).replace("\0"," ");
         //System.out.println(repeated + start.getValue());
-        System.out.println(repeated + start.getValue() + " Lenght:" + start.getValue());
+        System.out.println(repeated + start.getLength() + " Lenght:" + start.getLength());
         if(left == null && right == null) { return; }
 
         System.out.print(" right");

@@ -343,7 +343,6 @@ public class CompressorTest extends GroovyTestCase {
 
         //delete tests of final string
         assertEquals("aaa",decodedS1);
-        assertEquals("aabcb",decodedS1);
         assertEquals("bacaabcbc",decodedS2);
         assertEquals("bacaaabcb",decodedS3);
         assertEquals("bcaaabcbc",decodedS4);

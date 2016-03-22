@@ -5,18 +5,18 @@ public class BinNode {
     private BinNode left;
     private BinNode right;
     private BinNode parent;
-    private int value;
+    private int length;
     private int index; //not needed when build methods is fixed
     private int freeLayers; //not needed when build methods is fixed
     private int leafsUnder;
     private int startPositionInR;
 
     //Constructor
-    public BinNode (BinNode left, BinNode right, BinNode parent, int value, int index, int freeLayers, int leafsUnder, int startPositionInR) {
+    public BinNode (BinNode left, BinNode right, BinNode parent, int length, int index, int freeLayers, int leafsUnder, int startPositionInR) {
         this.left = left;
         this.right = right;
         this.parent = parent;
-        this.value = value;
+        this.length = length;
         this.index = index;
         this.freeLayers = freeLayers;
         this.leafsUnder = leafsUnder;
@@ -34,8 +34,8 @@ public class BinNode {
 
     public void setParent(BinNode parent) { this.parent = parent; }
 
-    public void setValue(int value) {
-        this.value = value;
+    public void setLength(int length) {
+        this.length = length;
     }
 
     public void setIndex(int index) {
@@ -53,11 +53,9 @@ public class BinNode {
 
     public BinNode getRight() { return this.right; }
 
-    public BinNode getParent() {
-        return this.parent;
-    }
+    public BinNode getParent() {return this.parent; }
 
-    public int getValue() { return this.value; }
+    public int getLength() { return this.length; }
 
     public int getIndex() { return this.index; }
 
@@ -66,6 +64,7 @@ public class BinNode {
     public int getLeafsUnder() { return this.leafsUnder;}
 
     public int getStartPositionInR() {return this.startPositionInR;}
+
 
 
     //PUBLIC BOOLEAN METHODS
