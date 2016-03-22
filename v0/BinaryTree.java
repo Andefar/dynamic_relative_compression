@@ -257,10 +257,10 @@ public class BinaryTree {
         //Continue in left subtree if the index we search for is less how many leaf there are below
         if(index < start.getLeft().getLeafsUnder() || index == 0 ) {
             //Turn left
-            updateHelp(start.getLeft(),index,newPos);
+            updateSIRHelp(start.getLeft(),index,newPos);
         } else {
             //Turn right and subtract the offset of the index
-            updateHelp(start.getRight(),index-Math.max(start.getLeft().getLeafsUnder(),1),newPos);
+            updateSIRHelp(start.getRight(),index-Math.max(start.getLeft().getLeafsUnder(),1),newPos);
         }
     }
 

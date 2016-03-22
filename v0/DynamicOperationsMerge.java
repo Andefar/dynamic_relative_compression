@@ -211,10 +211,11 @@ public class DynamicOperationsMerge extends DynamicOperations {
             Block preBlock = new Block(p, l - 1);
             this.C.add(blockNum, preBlock);
         }
-        //replace with a single char
+        //delete a single char
         else if (l == 1) {
+            //TODO: delete
             restoreMax((Math.max(blockNum - 1, 0)), (Math.min(blockNum + 4, (this.C.size() - 1))));
-            return;
+            //return;
         } else {
             throw new IllegalArgumentException("Case not covered");
         }

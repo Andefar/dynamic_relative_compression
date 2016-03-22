@@ -29,16 +29,89 @@ public class DynamicOperationsDPS extends DynamicOperations {
     // Return character S[i]
     // Index out of bound exception
     public char access(int index) throws IndexOutOfBoundsException {
+
+        //get all positions and distances
         int[] BS = this.dps.searchReturnIndexSIR(index);
-        int startPosInR = BS[1]; //BS[0] is the block holding the index - p is the start position of that block in R
-        int startPosInS = this.dps.sum(BS[0]); //B[1] is the starting position of block BS[0] in S (the original string)
+
+        int nodeIndex = BS[0]; //BS[0] index of the node/block in which the index is contained
+        int startPosInR = BS[1]; //start position in R of the node/block containing index
+
+        int startPosInS;
+        if (nodeIndex == 0) startPosInS = 0;
+        else startPosInS = this.dps.sum(nodeIndex - 1);
+
         return this.cmp.RA[startPosInR + (index - startPosInS)];
     }
-
     public void replace(int index, char sub) {
-    }
 
-    ;
+
+        int indexOfReplacingCharInR = this.cmp.indexOf(new char[]{sub});
+
+
+        //get all positions and distances
+        int[] BS = this.dps.searchReturnIndexSIR(index);
+
+        int nodeIndex = BS[0]; //index of the node/block in which the index is contained
+        int startPosInR = BS[1]; //start position in R of the node/block containing index
+        int length = BS[2]; //length of the node/block containing index
+
+        int startPosInS; //start position in S of the node/block containing index
+        if (nodeIndex == 0) startPosInS = 0;
+        else startPosInS = this.dps.sum(nodeIndex - 1);
+
+        //offset in Ref string
+        int offsetInR = (index - startPosInS);
+
+        //return if the char to be is replaced is the same as the one substituting it.
+        char charToReplace = this.cmp.RA[startPosInR + (index - startPosInS)];
+        if (charToReplace == sub) return;
+
+
+        //case 1
+        //when block can be split in 3, i is in the middle
+        //i not first in block, i not the last in block, length is 3 or more
+        if (offsetInR > 0 && offsetInR != (length - 1) && length >= 3) {
+
+            int divValue;
+            if (offsetInR == 1) divValue = 1;
+            else divValue = offsetInR - 1;
+
+
+            this.dps.divide(nodeIndex,divValue);
+            this.dps.divide(nodeIndex+1,1);
+            this.dps.updateSIR(nodeIndex+1,indexOfReplacingCharInR);
+
+        }
+        //case 2
+        //i is the first in the block and length is at least 2
+        else if (offsetInR == 0 && length >= 2) {
+
+            this.dps.divide(nodeIndex,1);
+            this.dps.updateSIR(nodeIndex,indexOfReplacingCharInR);
+
+        }
+        //case 3
+        //i is the last index and length is at least 2
+        else if (offsetInR == (length - 1) && length >= 2) {
+
+            this.dps.divide(nodeIndex,length-1);
+            this.dps.updateSIR(nodeIndex+1,indexOfReplacingCharInR);
+
+        }
+        //case 4
+        //replace with a single char
+        else if (length == 1) {
+
+            this.dps.updateSIR(nodeIndex,indexOfReplacingCharInR);
+
+        } else {
+            throw new IllegalArgumentException("Case not covered");
+        }
+
+        //restoreMax((Math.max(nodeIndex - 1, 0)), (Math.min(nodeIndex + 4, (this.dps.getTotalLeafs() - 1))));
+
+
+    }
 
     public void insert(int index, char c) {
 
@@ -240,4 +313,3 @@ public class DynamicOperationsDPS extends DynamicOperations {
         }
     }
 }
-
