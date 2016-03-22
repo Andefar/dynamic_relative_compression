@@ -83,7 +83,7 @@ public class CompressorNaive extends Compressor{
 
     // Decode a compressed representation, D,  of string S with reference to R
     // Evt ikke
-    public String decode(ArrayList<Block> C){
+    public String decodeArrayList(ArrayList<Block> C){
         StringBuilder sb = new StringBuilder();
         //String S = "";
         int p;
@@ -94,6 +94,23 @@ public class CompressorNaive extends Compressor{
             l = b.getLength();
             sb.append(new String((Arrays.copyOfRange(RA, p, p+l))));
 
+        }
+
+        return sb.toString();
+    }
+
+    // Decode a representation of S compressed using partial sums binary tree
+    public String decodeBinTree(BinaryTree B) {
+        StringBuilder sb = new StringBuilder();
+        //String S = "";
+        int[] BS;
+
+
+        for (int i = 0; i < B.getTotalLeafs(); i++) {
+            BS = B.find(i); // BS[0] = startPositionInR, BS[1] = length
+            sb.append(new String((Arrays.copyOfRange(RA, BS[0], BS[0] + BS[1]))));
+            //S += (Arrays.copyOfRange(RA, p, p+l)).toString();
+            //System.out.println((Arrays.copyOfRange(RA, p, p+l)));
         }
 
         return sb.toString();

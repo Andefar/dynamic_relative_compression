@@ -31,16 +31,16 @@ public class CompressorTest extends GroovyTestCase {
 
     @Test
     public void testCompressionDecompression() {
-        String results0 = cmp0.decode(encodedS0);
-        String results1 = cmp1.decode(encodedS1);
+        String results0 = cmp0.decodeArrayList(encodedS0);
+        String results1 = cmp1.decodeArrayList(encodedS1);
         assertEquals(S0, results0);
         assertEquals(S1, results1);
     }
 
     @Test
     public void testCompressionDecompressionSuffix() {
-        String results2 = cmp2.decode(encodedS2);
-        String results3 = cmp3.decode(encodedS3);
+        String results2 = cmp2.decodeArrayList(encodedS2);
+        String results3 = cmp3.decodeArrayList(encodedS3);
         assertEquals(S0, results2);
         assertEquals(S1, results3);
     }
@@ -52,7 +52,7 @@ public class CompressorTest extends GroovyTestCase {
         String R = f.readFromFileLine("/Users/AndreasLauritzen/dynamic_relative_compression/DNA_R");
         CompressorSuffix cmp = new CompressorSuffix(R);
         ArrayList<Block> encodedS = cmp.encode(S);
-        String resultS = cmp.decode(encodedS);
+        String resultS = cmp.decodeArrayList(encodedS);
 
         assertEquals(S, resultS);
 
@@ -77,14 +77,14 @@ public class CompressorTest extends GroovyTestCase {
         ops6.delete(5);
         ops7.delete(9);
         ops8.delete(1);
-        String decodedS1 = cmp0.decode(ops1.getC());
-        String decodedS2 = cmp0.decode(ops2.getC());
-        String decodedS3 = cmp0.decode(ops3.getC());
-        String decodedS4 = cmp0.decode(ops4.getC());
-        String decodedS5 = cmp0.decode(ops5.getC());
-        String decodedS6 = cmp0.decode(ops6.getC());
-        String decodedS7 = cmp0.decode(ops7.getC());
-        String decodedS8 = cmp0.decode(ops8.getC());
+        String decodedS1 = cmp0.decodeArrayList(ops1.getC());
+        String decodedS2 = cmp0.decodeArrayList(ops2.getC());
+        String decodedS3 = cmp0.decodeArrayList(ops3.getC());
+        String decodedS4 = cmp0.decodeArrayList(ops4.getC());
+        String decodedS5 = cmp0.decodeArrayList(ops5.getC());
+        String decodedS6 = cmp0.decodeArrayList(ops6.getC());
+        String decodedS7 = cmp0.decodeArrayList(ops7.getC());
+        String decodedS8 = cmp0.decodeArrayList(ops8.getC());
 
         //replace tests
         assertEquals("baccaabcbc",decodedS1);
@@ -110,10 +110,10 @@ public class CompressorTest extends GroovyTestCase {
         ops2.insert(5,(char) 'b');
         ops3.insert(10,(char) 'a');
         ops4.insert(0,(char) 'c');
-        String decodedS1 = cmp0.decode(ops1.getC());
-        String decodedS2 = cmp0.decode(ops2.getC());
-        String decodedS3 = cmp0.decode(ops3.getC());
-        String decodedS4 = cmp0.decode(ops4.getC());
+        String decodedS1 = cmp0.decodeArrayList(ops1.getC());
+        String decodedS2 = cmp0.decodeArrayList(ops2.getC());
+        String decodedS3 = cmp0.decodeArrayList(ops3.getC());
+        String decodedS4 = cmp0.decodeArrayList(ops4.getC());
 
         //insert tests
         assertEquals("baccaaabcbc",decodedS1);
@@ -146,15 +146,15 @@ public class CompressorTest extends GroovyTestCase {
         ops8.delete(1);
         ops9.delete(0);
 
-        String decodedS1 = cmp0.decode(ops1.getC());
-        String decodedS2 = cmp0.decode(ops2.getC());
-        String decodedS3 = cmp0.decode(ops3.getC());
-        String decodedS4 = cmp0.decode(ops4.getC());
-        String decodedS5 = cmp0.decode(ops5.getC());
-        String decodedS6 = cmp0.decode(ops6.getC());
-        String decodedS7 = cmp0.decode(ops7.getC());
-        String decodedS8 = cmp0.decode(ops8.getC());
-        String decodedS9 = cmp0.decode(ops9.getC());
+        String decodedS1 = cmp0.decodeArrayList(ops1.getC());
+        String decodedS2 = cmp0.decodeArrayList(ops2.getC());
+        String decodedS3 = cmp0.decodeArrayList(ops3.getC());
+        String decodedS4 = cmp0.decodeArrayList(ops4.getC());
+        String decodedS5 = cmp0.decodeArrayList(ops5.getC());
+        String decodedS6 = cmp0.decodeArrayList(ops6.getC());
+        String decodedS7 = cmp0.decodeArrayList(ops7.getC());
+        String decodedS8 = cmp0.decodeArrayList(ops8.getC());
+        String decodedS9 = cmp0.decodeArrayList(ops9.getC());
 
 
 
@@ -197,10 +197,10 @@ public class CompressorTest extends GroovyTestCase {
         ops2.insert(5,(char) 'b');
         ops3.insert(10,(char) 'a');
         ops4.insert(0,(char) 'c');
-        String decodedS1 = cmp0.decode(ops1.getC());
-        String decodedS2 = cmp0.decode(ops2.getC());
-        String decodedS3 = cmp0.decode(ops3.getC());
-        String decodedS4 = cmp0.decode(ops4.getC());
+        String decodedS1 = cmp0.decodeArrayList(ops1.getC());
+        String decodedS2 = cmp0.decodeArrayList(ops2.getC());
+        String decodedS3 = cmp0.decodeArrayList(ops3.getC());
+        String decodedS4 = cmp0.decodeArrayList(ops4.getC());
 
         //insert tests of final string
         assertEquals("baccaaabcbc",decodedS1);
@@ -417,8 +417,8 @@ public class CompressorTest extends GroovyTestCase {
         try { fromFile = fh.read("compressed.cmp");}
         catch (IOException e) { e.printStackTrace();}
 
-        String orig = cmp1.decode(encodedS1);
-        String res = cmp1.decode(fromFile);
+        String orig = cmp1.decodeArrayList(encodedS1);
+        String res = cmp1.decodeArrayList(fromFile);
         assertEquals(orig,S1,res);
 
     }
