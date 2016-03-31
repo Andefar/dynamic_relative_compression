@@ -13,7 +13,7 @@ public class RunningTime {
     //protected String S, R;
     protected DynamicOperations dop;
 
-    public RunningTime(DynamicOperations dop) throws IOException {
+    public RunningTime(DynamicOperations dop){
 
             //this.f = new FileHandler();
             //this.S = this.f.readFromFileLine(pathS);
