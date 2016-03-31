@@ -74,7 +74,7 @@ public class DynamicOperationsDPS extends DynamicOperations {
 
             int divValue;
             if (offsetInR == 1) divValue = 1;
-            else divValue = offsetInR - 1;
+            else divValue = offsetInR ;
 
 
             this.dps.divide(nodeIndex,divValue);

@@ -62,29 +62,6 @@ public class CompressorTest extends GroovyTestCase {
     CompressorDPS DPSCompressorFile = new CompressorDPS(R_file);
     ArrayList<Block> DPSEncodedFile = DPSCompressorFile.encode(S_file);
 
-    /**
-     * Naive Dynamic Operations
-     */
-
-
-
-    /**
-     * Suffix Dynamic Operations
-     */
-
-    DynamicOperationsMerge mergeDynamicOperationsShort = new DynamicOperationsMerge(DPSEncodedShort,DPSCompressorShort);
-    DynamicOperationsMerge mergeDynamicOperationsLong = new DynamicOperationsMerge(DPSEncodedLong,DPSCompressorLong);
-    DynamicOperationsMerge mergeDynamicOperationsFile = new DynamicOperationsMerge(DPSEncodedFile,DPSCompressorFile);
-
-    /**
-     * DPS Dynamic Operations
-     */
-
-    DynamicOperationsDPS DPSDynamicOperationsShort = new DynamicOperationsDPS(DPSEncodedShort,DPSCompressorShort);
-    DynamicOperationsDPS DPSDynamicOperationsLong = new DynamicOperationsDPS(DPSEncodedLong,DPSCompressorLong);
-    DynamicOperationsDPS DPSDynamicOperationsFile = new DynamicOperationsDPS(DPSEncodedFile,DPSCompressorFile);
-
-
 
     // ==== TESTS ====
 
@@ -209,6 +186,8 @@ public class CompressorTest extends GroovyTestCase {
     @Test
     public void testNaiveOperationsDelete () {
 
+
+
     }
 
     //Merge operations tests
@@ -312,7 +291,7 @@ public class CompressorTest extends GroovyTestCase {
         DynamicOperationsDPS DPSDynamicOperationsFile = new DynamicOperationsDPS(DPSEncodedFile,DPSCompressorFile);
 
         DPSDynamicOperationsShort.insert(0,(char) 'a');
-        //DPSDynamicOperationsLong.insert(0,(char) 'a');
+        DPSDynamicOperationsLong.insert(0,(char) 'a');
         DPSDynamicOperationsFile.insert(0,(char) 'A');
         DPSDynamicOperationsShort.insert(2,(char) 'b');
         DPSDynamicOperationsLong.insert(2,(char) 'b');
@@ -323,8 +302,7 @@ public class CompressorTest extends GroovyTestCase {
 
         assertEquals("abbacaaabccbc",DPSCompressorShort.decodeBinTree(DPSDynamicOperationsShort.getDPS()));
         assertEquals("aabaabcbccbcbcababacbbabcacbacbabcbaabcbabcaabcabcabcbcbcbcbcccabababaabcbcbcbcbacacabacbacbacccccccababaaaaaabbcbcbcbababc",DPSCompressorLong.decodeBinTree(DPSDynamicOperationsLong.getDPS()));
-//        assertEquals("AGGATCAATCGAGGTGGACACCAGAGGCGGGGACTTGTAAATAACACTGGGCTGTAGGAGTGATGGGGTTCACCTCTAATTCTAAGATGGCTAGATAATGCATCTTTCAGGGTTGTGCTTCTATCTAGAAGGTAGAGCTGTGGTCGTTCAATAAAAGTCCTCAAGAGGTTGGTTAATACGCATGTTTAATAGTACAGTATGGTGACTATAGTCAACAATAATTTATTGTACATTTTTAAATAGCTAGAAGAAAAGCATTGGGAAGTTTCCAACATGAAGAAAAGATAAATGGTCAAGGGAATGGATATCCTAATTACCCTGATTTGATCATTATGCATTATATACATGAATCAAAATATCACACATACCTTCAAACTATGTACAAATATTATATACCAATAAAAAATCATCATCATCATCTCCATCATCACCACCCTCCTCCTCATCACCACCAGCATCACCACCATCATCACCACCACCATCATCACCACCACCACTGCCATCATCATCACCACCACTGTGCCATCATCATCACCACCACTGTCATTATCACCACCACCATCATCACCAACACCACTGCCATCGTCATCACCACCACTGTCATTATCACCACCACCATCACCAACATCACCACCACCATTATCACCACCATCAACACCACCACCCCCATCATCATCATCACTACTACCATCATTACCAGCACCACCACCACTATCACCACCACCACCACAATCACCATCACCACTATCATCAACATCATCACTACCACCATCACCAACACCACCATCATTATCACCACCACCACCATCACCAACATCACCACCATCATCATCACCACCATCACCAAGACCATCATCATCACCATCACCACCAACATCACCACCATCACCAACACCACCATCACCACCACCACCACCATCATCACCACCACCACCATCATCATCACCACCACCGCCATCATCATCGCCACCACCATGACCACCACCATCACAACCATCACCACCATCACAACCACCATCATCACTATCGCTATCACCACCATCACCATTACCACCACCATTACTACAACCATGACCATCACCACCATCACCACCACCATCACAACGATCACCATCACAGCCACCATCATCACCACCACCACCACCACCATCACCATCAAACCATCGGCATTATTATTTTTTTAGAATTTTGTTGGGATTCAGTATCTGCCAAGATACCCATTCTTAAAACATGAAAAAGCAGCTGACCCTCCTGTGGCCCCCTTTTTGGGCAGTCATTGCAGGACCTCATCCCCAAGCAGCAGCTCTGGTGGCATACAGGCAACCCACCACCAAGGTAGAGGGTAATTGAGCAGAAAAGCCACTTCCTCCAGCAGTTCCCTGTCTGAGCTGCTGTCCTTGGACTTGAAGAAGCTTCTGGAACATGCTGGGGAGGAAGGAAGACATTTCACTTATTGAGTGGCCTGATGCAGAACAGAGACCCAGCTGGTTCACTCTAGTTCGGACTAAAACTCACCCCTGTCTATAAGCATCAGCCTCGGCAGGATGCATTTCACATTTGTGATCTCATTTAACCTCCACAAAGACCCAGAAGGGTTGGTAACATTATCATACCTAGGCCTACTATTTTAAAAATCTAACACCCATGCAGCCCGGGCACTGAAGTGGAGGCTGGCCACGGAGAGAGCCAGGCAATCACTGGCTTTTCCTTAGACAGAGAGCTGGTTCCTAGGAGAAGAAGCTCCAGGCTGGGGTCCAGGCTATGACCCAACTGTTCAGTTTTGCAACATCCAGCATGGCTGCCTGATCAGGGGTGCATATGTCAGAGGAGCCTTCAGCTGGGAAGTGCTGACAAATGACCCAGACCTGACCTGCCCGATGCCAAGGCCTCCTTTAGTACATCCCATGGAGGACACTTGAGACAAAGTCACAGCTCAGCCCGTTGATTTCCCATGCTCTGACTGTGCGGTGCAGCAGGACCCCTAGCAGGCAGCATGTGTTCAAGGCAGCGATATCCAAATGCTATGAATTGCTGTCCTGATGGTTATTTTCCTGCATACAGTAGAGCTGATCC",DPSCompressorFile.decodeBinTree(DPSDynamicOperationsFile.getDPS()));
-
+        assertEquals("AGGATCAATCGAGGTGGA",DPSCompressorFile.decodeBinTree(DPSDynamicOperationsFile.getDPS()).substring(0,18));
 
     }
 
@@ -339,12 +317,14 @@ public class CompressorTest extends GroovyTestCase {
         DPSDynamicOperationsShort.replace(1,(char) 'b');
         DPSDynamicOperationsLong.replace(1,(char) 'b');
         DPSDynamicOperationsFile.replace(1,(char) 'G');
-        DPSDynamicOperationsShort.replace(3,(char) 'c');//TODO: fix this!
+
+        DPSDynamicOperationsShort.replace(3,(char) 'c');
         DPSDynamicOperationsLong.replace(3,(char) 'c');
-        DPSDynamicOperationsFile.replace(3,(char) 'A');//TODO: fix this!
+        DPSDynamicOperationsFile.replace(3,(char) 'A');
+
         DPSDynamicOperationsShort.replace(7,(char) 'a');
-        DPSDynamicOperationsLong.replace(7,(char) 'a');//TODO: fix this!
-        DPSDynamicOperationsFile.replace(7,(char) 'A');//TODO: fix this!
+        DPSDynamicOperationsLong.replace(7,(char) 'a');
+        DPSDynamicOperationsFile.replace(7,(char) 'A');
 
         assertEquals("bbccaababc",DPSCompressorShort.decodeBinTree(DPSDynamicOperationsShort.getDPS()));
         assertEquals("abaccbcacbcababacbbabcacbacbabcbaabcbabcaabcabcabcbcbcbcbcccabababaabcbcbcbcbacacabacbacbacccccccababaaaaaabbcbcbcbababc",DPSCompressorLong.decodeBinTree(DPSDynamicOperationsLong.getDPS()));
@@ -353,6 +333,8 @@ public class CompressorTest extends GroovyTestCase {
     }
     @Test
     public void testDPSOperationsDelete () {
+
+
 
     }
 
