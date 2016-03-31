@@ -154,7 +154,7 @@ public class DynamicOperationsMerge extends DynamicOperations {
             this.C.add(blockNo, new Block(startPosInR, length));
             this.C.add(blockNo, new Block(indexOfR, 1));
 
-        } else if (index == startPosInS + length - 1) { //insert at the end of block
+        } else if (index == startPosInS + length ) { //insert at the end of block
 
             this.C.remove(blockNo);
             this.C.add(blockNo, new Block(indexOfR, 1));
