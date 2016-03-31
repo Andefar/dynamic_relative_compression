@@ -186,6 +186,24 @@ public class CompressorTest extends GroovyTestCase {
     @Test
     public void testNaiveOperationsDelete () {
 
+        DynamicOperationsNaive naiveDynamicOperationsShort = new DynamicOperationsNaive(naiveEncodedShort,naiveCompressorShort);
+        DynamicOperationsNaive naiveDynamicOperationsLong = new DynamicOperationsNaive(naiveEncodedLong,naiveCompressorLong);
+        DynamicOperationsNaive naiveDynamicOperationsFile = new DynamicOperationsNaive(naiveEncodedFile,naiveCompressorFile);
+
+        naiveDynamicOperationsShort.delete(4);
+        naiveDynamicOperationsLong.delete(4);
+        naiveDynamicOperationsFile.delete(4);
+        naiveDynamicOperationsShort.delete(6);
+        naiveDynamicOperationsLong.delete(6);
+        naiveDynamicOperationsFile.delete(6);
+        naiveDynamicOperationsShort.delete(1);
+        naiveDynamicOperationsLong.delete(1);
+        naiveDynamicOperationsFile.delete(1);
+
+        assertEquals("bcaabbc",naiveCompressorShort.decodeArrayList(naiveDynamicOperationsShort.getC()));
+        assertEquals("aabbccbcababacbbabcacbacbabcbaabcbabcaabcabcabcbcbcbcbcccabababaabcbcbcbcbacacabacbacbacccccccababaaaaaabbcbcbcbababc",naiveCompressorLong.decodeArrayList(naiveDynamicOperationsLong.getC()));
+        assertEquals("GTCATAGGTGGACACC",naiveCompressorFile.decodeArrayList(naiveDynamicOperationsFile.getC()).substring(0,16));
+
 
 
     }
@@ -261,6 +279,24 @@ public class CompressorTest extends GroovyTestCase {
     @Test
     public void testMergeOperationsDelete () {
 
+        DynamicOperationsMerge mergeDynamicOperationsShort = new DynamicOperationsMerge(naiveEncodedShort,naiveCompressorShort);
+        DynamicOperationsMerge mergeDynamicOperationsLong = new DynamicOperationsMerge(naiveEncodedLong,naiveCompressorLong);
+        DynamicOperationsMerge mergeDynamicOperationsFile = new DynamicOperationsMerge(naiveEncodedFile,naiveCompressorFile);
+
+        mergeDynamicOperationsShort.delete(4);
+        mergeDynamicOperationsLong.delete(4);
+        mergeDynamicOperationsFile.delete(4);
+        mergeDynamicOperationsShort.delete(6);
+        mergeDynamicOperationsLong.delete(6);
+        mergeDynamicOperationsFile.delete(6);
+        mergeDynamicOperationsShort.delete(1);
+        mergeDynamicOperationsLong.delete(1);
+        mergeDynamicOperationsFile.delete(1);
+
+        assertEquals("bcaabbc",naiveCompressorShort.decodeArrayList(mergeDynamicOperationsShort.getC()));
+        assertEquals("aabbccbcababacbbabcacbacbabcbaabcbabcaabcabcabcbcbcbcbcccabababaabcbcbcbcbacacabacbacbacccccccababaaaaaabbcbcbcbababc",naiveCompressorLong.decodeArrayList(mergeDynamicOperationsLong.getC()));
+        assertEquals("GTCATAGGTGGACACC",naiveCompressorFile.decodeArrayList(mergeDynamicOperationsFile.getC()).substring(0,16));
+
     }
 
     //DPS operations tests
@@ -335,6 +371,23 @@ public class CompressorTest extends GroovyTestCase {
     public void testDPSOperationsDelete () {
 
 
+        DynamicOperationsDPS DPSDynamicOperationsShort = new DynamicOperationsDPS(DPSEncodedShort,DPSCompressorShort);
+        DynamicOperationsDPS DPSDynamicOperationsLong = new DynamicOperationsDPS(DPSEncodedLong,DPSCompressorLong);
+        DynamicOperationsDPS DPSDynamicOperationsFile = new DynamicOperationsDPS(DPSEncodedFile,DPSCompressorFile);
+
+        DPSDynamicOperationsShort.delete(4);
+        DPSDynamicOperationsLong.delete(4);
+        DPSDynamicOperationsFile.delete(4);
+        DPSDynamicOperationsShort.delete(6);
+        DPSDynamicOperationsLong.delete(6);
+        DPSDynamicOperationsFile.delete(6);
+        DPSDynamicOperationsShort.delete(1);
+        DPSDynamicOperationsLong.delete(1);
+        DPSDynamicOperationsFile.delete(1);
+
+        assertEquals("bcaabbc",DPSCompressorShort.decodeBinTree(DPSDynamicOperationsShort.getDPS()));
+        assertEquals("aabbccbcababacbbabcacbacbabcbaabcbabcaabcabcabcbcbcbcbcccabababaabcbcbcbcbacacabacbacbacccccccababaaaaaabbcbcbcbababc",DPSCompressorLong.decodeBinTree(DPSDynamicOperationsLong.getDPS()));
+        assertEquals("GTCATAGGTGGACACC",DPSCompressorFile.decodeBinTree(DPSDynamicOperationsFile.getDPS()).substring(0,16));
 
     }
 
