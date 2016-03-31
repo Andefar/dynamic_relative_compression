@@ -482,7 +482,21 @@ public class BinaryTree {
         prettyPrintBinary(right,depth+1);
         System.out.print(" left ");
         prettyPrintBinary(left,depth+1);
+    }
 
+    public int getMaxHeight() {
+        return getMaxHeightAux(this.root);
+    }
+
+    private int getMaxHeightAux(BinNode start) {
+        if (start == null) {
+            return 0;
+        }
+        int left = 1 + getMaxHeightAux(start.getLeft());
+        int right = 1 + getMaxHeightAux(start.getLeft());
+
+        return Math.max(left, right);
 
     }
+
 }

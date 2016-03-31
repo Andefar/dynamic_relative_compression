@@ -14,7 +14,6 @@ public class DynamicOperationsDPS extends DynamicOperations {
         this.dps = new BinaryTree(C);
     }
 
-    //TODO: Hvor bruger vi getC??
     //getter for C - bruges i test
     public ArrayList<Block> getC() {
         return this.C;
