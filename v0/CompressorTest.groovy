@@ -10,8 +10,10 @@ public class CompressorTest extends GroovyTestCase {
     /**
      * Path to DNA test files - TODO: CHANGE THIS TO YOUR OWN PATH
      */
-    String S_file_path = "/Users/Josefinetusindfryd/Desktop/dynamic_relative_compression/DNA_S";
-    String R_file_path = "/Users/Josefinetusindfryd/Desktop/dynamic_relative_compression/DNA_R";
+    //String S_file_path = "/Users/Josefinetusindfryd/Desktop/dynamic_relative_compression/DNA_S";
+    //String R_file_path = "/Users/Josefinetusindfryd/Desktop/dynamic_relative_compression/DNA_R";
+    String S_file_path = "/Users/AndreasLauritzen/dynamic_relative_compression/DNA_S";
+    String R_file_path = "/Users/AndreasLauritzen/dynamic_relative_compression/DNA_R";
 
     /**
      * Test strings
@@ -240,10 +242,10 @@ public class CompressorTest extends GroovyTestCase {
         mergeDynamicOperationsLong.insert(0,(char) 'a');
         mergeDynamicOperationsFile.insert(0,(char) 'A');
         mergeDynamicOperationsShort.insert(2,(char) 'b');
-        mergeDynamicOperationsLong.insert(2,(char) 'b');//TODO: fix this!!
+        mergeDynamicOperationsLong.insert(2,(char) 'b');
         mergeDynamicOperationsFile.insert(2,(char) 'G');
         mergeDynamicOperationsShort.insert(9,(char) 'c');
-        mergeDynamicOperationsLong.insert(9,(char) 'c');//TODO: fix this!!
+        mergeDynamicOperationsLong.insert(9,(char) 'c');
         mergeDynamicOperationsFile.insert(9,(char) 'C');
 
         assertEquals("abbacaaabccbc",naiveCompressorShort.decodeArrayList(mergeDynamicOperationsShort.getC()));
@@ -391,11 +393,11 @@ public class CompressorTest extends GroovyTestCase {
 
     }
 
-/*
+
     @Test
     public void testFileHandlerSaveAndRead() {
 
-        ArrayList<Block> toSave = encodedS1;
+        ArrayList<Block> toSave = suffixEncodedFile;
         FileHandler fh = new FileHandler();
         fh.toFile(toSave,"compressed.cmp");
         ArrayList<Block> fromFile = new ArrayList<>();
@@ -403,10 +405,10 @@ public class CompressorTest extends GroovyTestCase {
         try { fromFile = fh.read("compressed.cmp");}
         catch (IOException e) { e.printStackTrace();}
 
-        String orig = cmp1.decodeArrayList(encodedS1);
-        String res = cmp1.decodeArrayList(fromFile);
-        assertEquals(orig,S1,res);
+        String orig = suffixCompressorFile.decodeArrayList(suffixEncodedFile);
+        String res = suffixCompressorFile.decodeArrayList(fromFile);
+        assertEquals(orig,S_file,res);
 
-    }*/
+    }
 
 }
