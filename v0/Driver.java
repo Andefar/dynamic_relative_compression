@@ -31,8 +31,20 @@ public class Driver {
              RunningTime rtDPS = new RunningTime(dop);
 
         DynamicOperationsDPS dop1 = new DynamicOperationsDPS(cp, cmpDPS);
-        System.out.println("Create Running Time..");
-        RunningTime rtDPS1 = new RunningTime(dop1);
+
+
+        TimeAndHeightTest test = new TimeAndHeightTest(dop1);
+        System.out.println("Initial height:" + test.dop.getDPS().getMaxHeight());
+       test.dop.getDPS().prettyPrintBinary(test.dop.getDPS().getRoot(),0);
+        System.out.println("TEST: " + test.insertCharactersSingle(S, 100)[0] );
+        //System.out.println("HEIGHT: " + test.insertCharactersBlock(S, 100, 50)[0] );
+        System.out.println("final height:" + test.dop.getDPS().getMaxHeight());
+        test.dop.getDPS().prettyPrintBinary(test.dop.getDPS().getRoot(),0);
+
+        /*
+
+                System.out.println("Create Running Time..");
+       // RunningTime rtDPS1 = new RunningTime(dop1);
 
     //             long[] accessTime, replaceTime, deleteTime, insertTime;
 
@@ -65,9 +77,9 @@ public class Driver {
 
              System.out.println("INSERTING 200 CHARACTERS TOOK CPU: " + insertTime);
 
-             TimeAndHeightTest test = new TimeAndHeightTest(dop1);
+             //TimeAndHeightTest test = new TimeAndHeightTest(dop1);
 
-             System.out.println("TEST: " + test.insertCharactersSingle(S, 100)[1] );
+             //System.out.println("TEST: " + test.insertCharactersSingle(S, 100)[1] );
 
              insertTime = 0;
              // Insert block of between 1 and 50 characters
@@ -100,7 +112,15 @@ public class Driver {
 
              }
 
-             System.out.println("INSERTING 200 CHARACTERS in blocks TOOK CPU: " + insertTime);
+            System.out.println("Initial Height: " + dop.getDPS().getMaxHeight());
+            System.out.println("INSERTING 200 CHARACTERS in blocks TOOK CPU: " + insertTime);
+            System.out.println("final Height: " + dop.getDPS().getMaxHeight());*/
+
+
+
+
+
+
 
 
     }

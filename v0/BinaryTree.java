@@ -493,7 +493,7 @@ public class BinaryTree {
             return 0;
         }
         int left = 1 + getMaxHeightAux(start.getLeft());
-        int right = 1 + getMaxHeightAux(start.getLeft());
+        int right = 1 + getMaxHeightAux(start.getRight());
 
         return Math.max(left, right);
 
