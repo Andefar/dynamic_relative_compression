@@ -168,6 +168,7 @@ public class SuffixTree {
         for (Node child: startNode.getChildren()) {
 
             childLabel = child.getEdge().getLabel();
+            //can only match with one edge -> check children is constant (because alphabet in constant)
             if (C[0] != childLabel[0]) {
                 continue;
             }

@@ -61,7 +61,7 @@ public class CompressorNaive extends Compressor{
     }
 
     // Return index of beginning of C in R. If not found return -1
-// O(|R|^2) : C might be the length of R
+    // O(|R|^2) : C might be the length of R
     public int indexOf(char[] C){
         int index = -1;
 
@@ -75,7 +75,7 @@ public class CompressorNaive extends Compressor{
                     index = i;
                 }
             }
-            if (index != -1){ return index;};
+            if (index != -1){ return index;}
         }
         return -1;
     }
