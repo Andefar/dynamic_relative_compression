@@ -29,11 +29,13 @@ public class CompressorSuffix extends Compressor{
         int counter = 0;
         char c = SA[counter];
         char[] C = {};
-
+        char[] temp;
         //O(|S|) : every char is considered in S
         while (c != '$'){
             indexTemp = indexR;
-            C = Arrays.copyOf(C, C.length+1);
+            temp = new char[C.length+1];
+            System.arraycopy(C,0,temp,0,C.length);
+            C = temp;
             C[C.length-1] = c;
 
             indexR = indexOf(C);
@@ -68,27 +70,21 @@ public class CompressorSuffix extends Compressor{
     // Use suffix tree of R to search
     // O(|C|) : C might be the length of R
     public int indexOf(char[] C){
-
         return stR.search(C);
-
     }
 
     // Decode a compressed representation, D,  of string S with reference to R
     // Evt ikke
     public String decodeArrayList(ArrayList<Block> C){
         StringBuilder sb = new StringBuilder();
-        //String S = "";
-        int p;
-        int l;
-        int count = 0;
-
+        int p,l;
+        char[] temp;
         for (Block b : C ){
             p = b.getPos();
             l = b.getLength();
-            sb.append(new String((Arrays.copyOfRange(RA, p, p+l))));
-            //S += (Arrays.copyOfRange(RA, p, p+l)).toString();
-            //System.out.println((Arrays.copyOfRange(RA, p, p+l)));
-            count++;
+            temp = new char[l];
+            System.arraycopy(RA,p,temp,0,l);
+            sb.append(new String(temp));
         }
 
         return sb.toString();
@@ -100,12 +96,12 @@ public class CompressorSuffix extends Compressor{
         //String S = "";
         int[] BS;
 
-
+        char[] temp;
         for (int i = 0; i < B.getTotalLeafs(); i++ ){
             BS = B.find(i); // BS[0] = startPositionInR, BS[1] = length
-            sb.append(new String((Arrays.copyOfRange(RA, BS[0], BS[0] + BS[1]))));
-            //S += (Arrays.copyOfRange(RA, p, p+l)).toString();
-            //System.out.println((Arrays.copyOfRange(RA, p, p+l)));
+            temp = new char[BS[1]];
+            System.arraycopy(RA,BS[0],temp,0,BS[1]);
+            sb.append(new String(temp));
         }
 
         return sb.toString();

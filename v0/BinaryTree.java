@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Binary tree to solve Dynamic partial sums problem
@@ -162,13 +163,8 @@ public class BinaryTree {
             parent.setLeft(null);
 
         }
-
-
         totalLeafs --;
-
     }
-
-    //TODO: implement these
 
     public void merge(int i) {
         if (i < 0 || i >= this.totalLeafs) throw new IllegalArgumentException("Index is out of bounds");
@@ -490,7 +486,6 @@ public class BinaryTree {
         BinNode left = start.getLeft();
         BinNode right = start.getRight();
         String repeated = new String(new char[depth*5]).replace("\0"," ");
-        //System.out.println(repeated + start.getValue());
         System.out.println(repeated + start.getLength() + " Lenght:" + start.getLength());
         if(left == null && right == null) { return; }
 
@@ -525,7 +520,20 @@ public class BinaryTree {
             return 1 + left + right;
         }
         return count;
-
     }
+
+    public List<String> getListFromDPS() {
+        List<String> l = new ArrayList<>(this.getTotalLeafs());
+        int i = 0;
+        int lim = this.getTotalLeafs();
+        while(i < lim) {
+            int[] b = find(i);
+            l.add(b[0]+","+b[1]+"\n");
+            i++;
+        }
+        return l;
+    }
+
+
 
 }

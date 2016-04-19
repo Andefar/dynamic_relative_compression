@@ -11,20 +11,21 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 /**
  * Created by andl on 09/02/2016.
  */
 public class FileHandler {
 
-    public FileHandler () {
+    File fil;
 
-    }
+    public FileHandler () {}
 
     public void toFile(ArrayList<Block> blocks, String name) {
         List lines = new ArrayList<String>();
         for(int i = 0; i < blocks.size();i++) {
-            lines.add(toStringCompact(blocks.get(i)));
+            lines.add(toBlockString(blocks.get(i)));
         }
         Path file = Paths.get(name);
         try {
@@ -35,35 +36,38 @@ public class FileHandler {
 
     }
 
-    public void toFileBinary(ArrayList<Block> blocks, String name) {
-        String output = "";
-        for(int i = 0; i < blocks.size();i++) {
-            output += toStringCompact(blocks.get(i));
+    private static void write(List<String> records, Writer writer) throws IOException {
+        for (String record: records) {
+            writer.write(record);
         }
+        writer.flush();
+        writer.close();
+    }
+    public File getFile(){
+        return this.fil;
+    }
 
-        byte[] bOut = output.getBytes();
-        FileOutputStream fos = null;
+    public void stringToFile(BinaryTree bt,String name,String path) {
+
         try {
-            fos = new FileOutputStream(name);
-            fos.write(bOut);
-            fos.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            File file = File.createTempFile(name, ".cmp",new File(path));
+            this.fil = file;
+            FileWriter writer = new FileWriter(file);
+            BufferedWriter bufferedWriter = new BufferedWriter(writer, 8192);
+            List<String> records = bt.getListFromDPS();
+            write(records, bufferedWriter);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public ArrayList<Block> read(String name) throws IOException {
-        ArrayList<Block> out = new ArrayList<Block>();
-        for (String line : Files.readAllLines(Paths.get(name))) {
-            out.add(fromString(line));
-        }
+        ArrayList<Block> out = Files.readAllLines(Paths.get(name)).stream().map(this::fromString).collect(Collectors.toCollection(ArrayList::new));
         return out;
     }
 
     private Block fromString(String line) {
-        //format="p l"
+        //format="p,l"
         String[] s = line.split(",");
         int p = Integer.parseInt(s[0]);
         int l = Integer.parseInt(s[1]);
@@ -71,9 +75,9 @@ public class FileHandler {
     }
 
 
-    private String toStringCompact(Block b) {
-        //format="p l"
-        return "" + b.getPos()+ "," + b.getLength();
+    private String toBlockString(Block b) {
+        //format="p,l"
+        return b.getPos()+ "," + b.getLength();
     }
 
     public String readFromFileLine(String path) throws IOException {
@@ -81,7 +85,7 @@ public class FileHandler {
         BufferedReader bufferedReader = new BufferedReader(new FileReader(path));
 
         StringBuffer stringBuffer = new StringBuffer();
-        String line = null;
+        String line;
 
         while ((line = bufferedReader.readLine()) != null) {
             stringBuffer.append(line).append("\n");
@@ -90,32 +94,6 @@ public class FileHandler {
         return stringBuffer.toString();
     }
 
-    //reads from file character by character - since the lines in the full DNA file are to long for readline
-    public String readFromFileChar(String path) throws IOException{
-
-        FileReader fileReader = new FileReader(path);
-
-        double count = 0.0;
-        double full = 52428800.0;
-
-        String fileContents = "";
-
-        int i;
-        while ((i = fileReader.read()) != -1) {
-
-            double percent = count/full*100.0;
-            //if (((int) (percent % 5.0)) == 0 && ((int) percent) != 0) { System.out.println(percent); }
-
-            char ch = (char) i;
-            System.out.println(percent);
-
-            fileContents = fileContents + ch;
-
-            count = count + 1.0;
-        }
-
-        return fileContents;
-    }
 
 
 }

@@ -5,47 +5,39 @@ import java.util.ArrayList;
  */
 public class Node {
 
-    ArrayList<Node> children = null;
-    Node parent = null;
-    Edge in = null;
-    int id = -1;
+    private ArrayList<Node> children = null;
+    private Edge edge = null;
+    private int id = -1;
+    private Node leaf = null;
 
-    public Node(Node parent,char[] suffix,int id) {
-        this.children = new ArrayList<Node>();
-        this.in = new Edge(suffix);
-        this.parent = parent;
+    public Node(char[] suffix,int id) {
+        this.children = new ArrayList<>();
+        this.edge = new Edge(suffix);
         this.id = id;
-    }
-    public Node() {
-        this.children = new ArrayList<Node>();
     }
 
     public ArrayList<Node> getChildren() {
         return this.children;
     }
-
     public Edge getEdge() {
-        return this.in;
+        return this.edge;
     }
-
     public int getID() {return this.id;}
+    public Node getLeaf () {return this.leaf;}
 
-    public void resetID() {
-        this.id = -1;
-    }
+    public void setLeaf (Node leaf) {this.leaf = leaf;}
+
+
 
     public void addChild(Node child) {
         this.children.add(child);
     }
-
     public void removeChildren() {
-        this.children = new ArrayList<Node>();
+        this.children = new ArrayList<>();
     }
-
-    public Node findChild (Character key) {
-        return this.children.get(key);
+    public void resetID() {
+        this.id = -1;
     }
-
 
 
 }

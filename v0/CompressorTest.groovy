@@ -10,10 +10,12 @@ public class CompressorTest extends GroovyTestCase {
     /**
      * Path to DNA test files - TODO: CHANGE THIS TO YOUR OWN PATH
      */
-    String S_file_path = "/Users/Josefinetusindfryd/Desktop/dynamic_relative_compression/DNA_S";
-    String R_file_path = "/Users/Josefinetusindfryd/Desktop/dynamic_relative_compression/DNA_R";
-    //String S_file_path = "/Users/AndreasLauritzen/dynamic_relative_compression/DNA_S";
-    //String R_file_path = "/Users/AndreasLauritzen/dynamic_relative_compression/DNA_R";
+    //String S_file_path = "/Users/Josefinetusindfryd/Desktop/dynamic_relative_compression/DNA_S";
+    //String R_file_path = "/Users/Josefinetusindfryd/Desktop/dynamic_relative_compression/DNA_R";
+    //String pathSave = "/Users/Josefinetusindfryd/Desktop/dynamic_relative_compression/";
+    String S_file_path = "/Users/AndreasLauritzen/dynamic_relative_compression/DNA_S";
+    String R_file_path = "/Users/AndreasLauritzen/dynamic_relative_compression/DNA_R";
+    String pathSave = "/Users/AndreasLauritzen/dynamic_relative_compression/";
 
     /**
      * Test strings
@@ -519,6 +521,25 @@ public class CompressorTest extends GroovyTestCase {
 
         String orig = suffixCompressorFile.decodeArrayList(suffixEncodedFile);
         String res = suffixCompressorFile.decodeArrayList(fromFile);
+        assertEquals(orig,S_file,res);
+
+    }
+
+    @Test
+    public void testFileHandlerSaveAndReadDPS() {
+
+        BinaryTree btToSave = DPSEncodedFile;
+        FileHandler fh = new FileHandler();
+        fh.stringToFile(btToSave,"compressed",pathSave);
+
+        ArrayList<Block> fromFile = new ArrayList<>();
+        try {
+            fromFile = fh.read(fh.getFile().absolutePath);
+        }
+        catch (IOException e) { e.printStackTrace();}
+
+        String orig = DPSCompressorFile.decodeBinTree(btToSave);
+        String res = DPSCompressorFile.decodeArrayList(fromFile);
         assertEquals(orig,S_file,res);
 
     }

@@ -210,61 +210,6 @@ public class DynamicOperationsDPS extends DynamicOperations {
     }
 
 
-    private void mergeBlocks(int startBlock, int endBlock) {
-
-
-        ArrayList<Block> blocksC = new ArrayList<>();
-
-        for (int i = startBlock; i <= endBlock; i++) {
-            blocksC.add(this.C.get(startBlock));
-            this.C.remove(startBlock); //delete old block from compressed rep
-        }
-
-        String partOfS = cmp.decodeArrayList(blocksC);
-        blocksC.clear();
-        blocksC = cmp.encode(partOfS);
-
-        for (int i = blocksC.size() - 1; i >= 0; i--) {
-            this.C.add(startBlock, blocksC.get(i));
-        }
-    }
-
-    private void restoreMaxBLOCK(int startBlock, int endBlock) {
-        StringBuilder rest = new StringBuilder();
-        int index = -1;
-        char[] a;
-        for (int i = startBlock; i < endBlock - 1; i++) {
-            if (rest.length() == 0) {
-                a = Arrays.copyOfRange(this.cmp.RA, this.C.get(i).getPos(), this.C.get(i).getPos() + this.C.get(i).getLength());
-                char[] b = Arrays.copyOfRange(this.cmp.RA, this.C.get(i + 1).getPos(), this.C.get(i + 1).getPos() + this.C.get(i + 1).getLength());
-                rest.append(a);
-                rest.append(b);
-                index = this.cmp.indexOf(rest.toString().toCharArray());
-                if (index > -1) {
-                    this.C.get(i).setLength(rest.length());
-                    this.C.get(i).setPos(index);
-                    this.C.remove(i + 1);
-                    continue;}
-
-            } else {
-                    a = Arrays.copyOfRange(this.cmp.RA, this.C.get(i).getPos(), this.C.get(i).getPos() + this.C.get(i).getLength());
-                    rest.append(a);
-                    index = this.cmp.indexOf(rest.toString().toCharArray());
-                    if (index > -1) {
-                        this.C.get(i - 1).setLength(rest.length());
-                        this.C.get(i - 1).setPos(index);
-                        this.C.remove(i);
-                        continue;
-                    }
-
-
-                }
-                rest.setLength(0);
-
-
-        }
-    }
-
     private void restoreMax(int startNode, int endNode) {
 
         for (int i = startNode; i < endNode; i++) {
@@ -286,7 +231,6 @@ public class DynamicOperationsDPS extends DynamicOperations {
                 continue;
 
             }
-
         }
     }
 

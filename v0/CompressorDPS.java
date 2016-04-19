@@ -30,7 +30,9 @@ public class CompressorDPS extends Compressor{
         //O(|S|) : every char is considered in S
         while (c != '$'){
             indexTemp = indexR;
-            C = Arrays.copyOf(C, C.length+1);
+            char[] temp = new char[C.length+1];
+            System.arraycopy(C,0,temp,0,C.length);
+            C = temp;
             C[C.length-1] = c;
 
             indexR = indexOf(C);
@@ -74,18 +76,13 @@ public class CompressorDPS extends Compressor{
     // Evt ikke
     public String decodeArrayList(ArrayList<Block> C){
         StringBuilder sb = new StringBuilder();
-        //String S = "";
         int p;
         int l;
-        int count = 0;
 
         for (Block b : C ){
             p = b.getPos();
             l = b.getLength();
             sb.append(new String((Arrays.copyOfRange(RA, p, p+l))));
-            //S += (Arrays.copyOfRange(RA, p, p+l)).toString();
-            //System.out.println((Arrays.copyOfRange(RA, p, p+l)));
-            count++;
         }
 
         return sb.toString();
@@ -94,19 +91,17 @@ public class CompressorDPS extends Compressor{
     // Decode a representation of S compressed using partial sums binary tree
     public String decodeBinTree(BinaryTree B){
         StringBuilder sb = new StringBuilder();
-        //String S = "";
         int[] BS;
-
 
         for (int i = 0; i < B.getTotalLeafs(); i++ ){
             BS = B.find(i); // BS[0] = startPositionInR, BS[1] = length
             sb.append(new String((Arrays.copyOfRange(RA, BS[0], BS[0] + BS[1]))));
-            //S += (Arrays.copyOfRange(RA, p, p+l)).toString();
-            //System.out.println((Arrays.copyOfRange(RA, p, p+l)));
         }
 
         return sb.toString();
     }
+
+
 
 }
 
