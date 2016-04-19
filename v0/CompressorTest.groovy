@@ -10,10 +10,10 @@ public class CompressorTest extends GroovyTestCase {
     /**
      * Path to DNA test files - TODO: CHANGE THIS TO YOUR OWN PATH
      */
-    //String S_file_path = "/Users/Josefinetusindfryd/Desktop/dynamic_relative_compression/DNA_S";
-    //String R_file_path = "/Users/Josefinetusindfryd/Desktop/dynamic_relative_compression/DNA_R";
-    String S_file_path = "/Users/AndreasLauritzen/dynamic_relative_compression/DNA_S";
-    String R_file_path = "/Users/AndreasLauritzen/dynamic_relative_compression/DNA_R";
+    String S_file_path = "/Users/Josefinetusindfryd/Desktop/dynamic_relative_compression/DNA_S";
+    String R_file_path = "/Users/Josefinetusindfryd/Desktop/dynamic_relative_compression/DNA_R";
+    //String S_file_path = "/Users/AndreasLauritzen/dynamic_relative_compression/DNA_S";
+    //String R_file_path = "/Users/AndreasLauritzen/dynamic_relative_compression/DNA_R";
 
     /**
      * Test strings
@@ -31,7 +31,7 @@ public class CompressorTest extends GroovyTestCase {
     /**
      * Naive Compressors
      */
-    /*
+
     CompressorNaive naiveCompressorShort = new CompressorNaive(R_short);
     ArrayList<Block> naiveEncodedShort = naiveCompressorShort.encode(S_short);
 
@@ -40,24 +40,24 @@ public class CompressorTest extends GroovyTestCase {
 
     CompressorNaive naiveCompressorFile = new CompressorNaive(R_file);
     ArrayList<Block> naiveEncodedFile = naiveCompressorFile.encode(S_file);
-    */
+
     /**
      * Suffix Compressors
      */
-    /*
+
     CompressorSuffix suffixCompressorShort = new CompressorSuffix(R_short);
     ArrayList<Block> suffixEncodedShort = suffixCompressorShort.encode(S_short);
 
     CompressorSuffix suffixCompressorLong = new CompressorSuffix(R_long);
     ArrayList<Block> suffixEncodedLong = suffixCompressorLong.encode(S_long);
-**/
+
     CompressorSuffix suffixCompressorFile = new CompressorSuffix(R_file);
     ArrayList<Block> suffixEncodedFile = suffixCompressorFile.encode(S_file);
 
     /**
      * DPS Compressors
      */
-    /*
+
     CompressorDPS DPSCompressorShort = new CompressorDPS(R_short);
     ArrayList<Block> DPSEncodedShort = DPSCompressorShort.encode(S_short);
 
@@ -66,7 +66,20 @@ public class CompressorTest extends GroovyTestCase {
 
     CompressorDPS DPSCompressorFile = new CompressorDPS(R_file);
     ArrayList<Block> DPSEncodedFile = DPSCompressorFile.encode(S_file);
-    */
+
+    /**
+     * S Compressors
+     */
+
+    CompressorDPS SCCompressorShort = new CompressorDPS(R_short);
+    ArrayList<Block> SCEncodedShort = SCCompressorShort.encode(S_short);
+
+    CompressorDPS SCCompressorLong = new CompressorDPS(R_long);
+    ArrayList<Block> SCEncodedLong = SCCompressorLong.encode(S_long);
+
+    CompressorDPS SCCompressorFile = new CompressorDPS(R_file);
+    ArrayList<Block> SCEncodedFile = SCCompressorFile.encode(S_file);
+
 
     // ==== TESTS ====
 
@@ -393,6 +406,102 @@ public class CompressorTest extends GroovyTestCase {
         assertEquals("bcaabbc",DPSCompressorShort.decodeBinTree(DPSDynamicOperationsShort.getDPS()));
         assertEquals("aabbccbcababacbbabcacbacbabcbaabcbabcaabcabcabcbcbcbcbcccabababaabcbcbcbcbacacabacbacbacccccccababaaaaaabbcbcbcbababc",DPSCompressorLong.decodeBinTree(DPSDynamicOperationsLong.getDPS()));
         assertEquals("GTCATAGGTGGACACC",DPSCompressorFile.decodeBinTree(DPSDynamicOperationsFile.getDPS()).substring(0,16));
+
+    }
+
+    //Sustring Concatenation (SC) operations tests
+    // The DPS-version of the classes are used except for DynamicOperations.
+    @Test
+    public void testSCSOperationsAccess () {
+
+        DynamicOperationsSC SCDynamicOperationsShort = new DynamicOperationsSC(DPSEncodedShort,DPSCompressorShort);
+        DynamicOperationsSC SCDynamicOperationsLong = new DynamicOperationsSC(DPSEncodedLong,DPSCompressorLong);
+        DynamicOperationsSC SCDynamicOperationsFile = new DynamicOperationsSC(DPSEncodedFile,DPSCompressorFile);
+
+        assertEquals(SCDynamicOperationsShort.access(0),(char) 'b');
+        assertEquals(SCDynamicOperationsLong.access(0),(char) 'a');
+        assertEquals(SCDynamicOperationsFile.access(0),(char) 'G');
+        assertEquals(SCDynamicOperationsShort.access(2),(char) 'c');
+        assertEquals(SCDynamicOperationsLong.access(2),(char) 'a');
+        assertEquals(SCDynamicOperationsFile.access(2),(char) 'T');
+        assertEquals(SCDynamicOperationsShort.access(9),(char) 'c');
+        assertEquals(SCDynamicOperationsLong.access(9),(char) 'b');
+        assertEquals(SCDynamicOperationsFile.access(9),(char) 'G');
+
+    }
+
+    @Test
+    public void testSCOperationsInsert () {
+
+        DynamicOperationsSC SCDynamicOperationsShort = new DynamicOperationsSC(SCEncodedShort,SCCompressorShort);
+        DynamicOperationsSC SCDynamicOperationsLong = new DynamicOperationsSC(SCEncodedLong,SCCompressorLong);
+        DynamicOperationsSC SCDynamicOperationsFile = new DynamicOperationsSC(SCEncodedFile,SCCompressorFile);
+
+        SCDynamicOperationsShort.insert(0,(char) 'a');
+        SCDynamicOperationsLong.insert(0,(char) 'a');
+        SCDynamicOperationsFile.insert(0,(char) 'A');
+        SCDynamicOperationsShort.insert(2,(char) 'b');
+        SCDynamicOperationsLong.insert(2,(char) 'b');
+        SCDynamicOperationsFile.insert(2,(char) 'G');
+        SCDynamicOperationsShort.insert(9,(char) 'c');
+        SCDynamicOperationsLong.insert(9,(char) 'c');
+        SCDynamicOperationsFile.insert(9,(char) 'C');
+
+        assertEquals("abbacaaabccbc",SCCompressorShort.decodeBinTree(SCDynamicOperationsShort.getDPS()));
+        assertEquals("aabaabcbccbcbcababacbbabcacbacbabcbaabcbabcaabcabcabcbcbcbcbcccabababaabcbcbcbcbacacabacbacbacccccccababaaaaaabbcbcbcbababc",SCCompressorLong.decodeBinTree(SCDynamicOperationsLong.getDPS()));
+        assertEquals("AGGATCAATCGAGGTGGA",SCCompressorFile.decodeBinTree(SCDynamicOperationsFile.getDPS()).substring(0,18));
+
+    }
+
+
+    @Test
+    public void testSCOperationsReplace () {
+
+
+        DynamicOperationsSC SCDynamicOperationsShort = new DynamicOperationsSC(SCEncodedShort,SCCompressorShort);
+        DynamicOperationsSC SCDynamicOperationsLong = new DynamicOperationsSC(SCEncodedLong,SCCompressorLong);
+        DynamicOperationsSC SCDynamicOperationsFile = new DynamicOperationsSC(SCEncodedFile,SCCompressorFile);
+
+        SCDynamicOperationsShort.replace(1,(char) 'b');
+        SCDynamicOperationsLong.replace(1,(char) 'b');
+        SCDynamicOperationsFile.replace(1,(char) 'G');
+
+        SCDynamicOperationsShort.replace(3,(char) 'c');
+        SCDynamicOperationsLong.replace(3,(char) 'c');
+        SCDynamicOperationsFile.replace(3,(char) 'A');
+
+        SCDynamicOperationsShort.replace(7,(char) 'a');
+        SCDynamicOperationsLong.replace(7,(char) 'a');
+        SCDynamicOperationsFile.replace(7,(char) 'A');
+
+        assertEquals("bbccaababc",SCCompressorShort.decodeBinTree(SCDynamicOperationsShort.getDPS()));
+        assertEquals("abaccbcacbcababacbbabcacbacbabcbaabcbabcaabcabcabcbcbcbcbcccabababaabcbcbcbcbacacabacbacbacccccccababaaaaaabbcbcbcbababc",SCCompressorLong.decodeBinTree(SCDynamicOperationsLong.getDPS()));
+        assertEquals("GGTAAATAAGG",SCCompressorFile.decodeBinTree(SCDynamicOperationsFile.getDPS()).substring(0,11));
+
+    }
+
+
+    @Test
+    public void testSCOperationsDelete () {
+
+
+        DynamicOperationsSC SCDynamicOperationsShort = new DynamicOperationsSC(SCEncodedShort,SCCompressorShort);
+        DynamicOperationsSC SCDynamicOperationsLong = new DynamicOperationsSC(SCEncodedLong,SCCompressorLong);
+        DynamicOperationsSC SCDynamicOperationsFile = new DynamicOperationsSC(SCEncodedFile,SCCompressorFile);
+
+        SCDynamicOperationsShort.delete(4);
+        SCDynamicOperationsLong.delete(4);
+        SCDynamicOperationsFile.delete(4);
+        SCDynamicOperationsShort.delete(6);
+        SCDynamicOperationsLong.delete(6);
+        SCDynamicOperationsFile.delete(6);
+        SCDynamicOperationsShort.delete(1);
+        SCDynamicOperationsLong.delete(1);
+        SCDynamicOperationsFile.delete(1);
+
+        assertEquals("bcaabbc",SCCompressorShort.decodeBinTree(SCDynamicOperationsShort.getDPS()));
+        assertEquals("aabbccbcababacbbabcacbacbabcbaabcbabcaabcabcabcbcbcbcbcccabababaabcbcbcbcbacacabacbacbacccccccababaaaaaabbcbcbcbababc",SCCompressorLong.decodeBinTree(SCDynamicOperationsLong.getDPS()));
+        assertEquals("GTCATAGGTGGACACC",SCCompressorFile.decodeBinTree(SCDynamicOperationsFile.getDPS()).substring(0,16));
 
     }
 
