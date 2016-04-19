@@ -242,6 +242,28 @@ public class DynamicOperationsMerge extends DynamicOperations {
     }
 
     private void restoreMax(int startBlock, int endBlock) {
+
+        for (int i = startBlock; i < endBlock; i++) {
+            Block a = this.C.get(i);
+            Block b = this.C.get(i+1);
+            char[] ab = new char[a.getLength() + b.getLength()];
+            System.arraycopy(this.cmp.RA, a.getPos(), ab, 0, a.getLength());
+            System.arraycopy(this.cmp.RA, b.getPos(), ab, a.getLength(), b.getLength());
+
+            int index = this.cmp.indexOf(ab);
+
+            if (index > -1) {// yes can be merged.
+                this.C.get(i).setLength(ab.length);
+                this.C.get(i).setPos(index);
+                this.C.remove(i + 1);
+                endBlock --; //  endBlock must be decremented (since there is now one less node to look at)
+                i--; // stay at same i value - must try to merge with the following block
+                continue;
+
+            }
+
+        }
+        /* // OLD VERSION
         StringBuilder rest = new StringBuilder();
         int index = -1;
         char[] a;
@@ -273,6 +295,6 @@ public class DynamicOperationsMerge extends DynamicOperations {
                 rest.setLength(0);
 
             }
-        }
+        }*/
     }
 }

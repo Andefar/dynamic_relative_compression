@@ -266,6 +266,32 @@ public class DynamicOperationsDPS extends DynamicOperations {
     }
 
     private void restoreMax(int startNode, int endNode) {
+
+        for (int i = startNode; i < endNode; i++) {
+
+            int[] aBS = this.dps.find(i);
+            int[] bBS = this.dps.find(i + 1);
+            char [] ab = new char[aBS[1] + bBS[1]];
+
+            System.arraycopy(this.cmp.RA, aBS[0], ab, 0, aBS[1]);
+            System.arraycopy(this.cmp.RA, bBS[0], ab, aBS[1], bBS[1]);
+
+            int index = this.cmp.indexOf(ab);
+
+            if (index > -1) {// yes can be merged.
+                this.dps.merge(i);
+                this.dps.updateSIR(i, index);
+                endNode--; //  endNode must be decremented (since there is now one less node to look at)
+                i--; // stay at same i value - must try to merge with the following node
+                continue;
+
+            }
+
+        }
+    }
+
+/*
+    private void restoreMax(int startNode, int endNode) {
         StringBuilder rest = new StringBuilder();
         int index = -1;
         int[] aBS;
@@ -316,4 +342,5 @@ public class DynamicOperationsDPS extends DynamicOperations {
 
         }
     }
+    */
 }

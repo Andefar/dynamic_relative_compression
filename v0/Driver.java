@@ -8,7 +8,39 @@ import java.lang.management.*;
 public class Driver {
     public static void main(String[] args) {
 
-        String S = "ccabcbaabccba";
+        ArrayList<Block> C = new ArrayList<Block>();
+        String pathS = "/Users/JosefineTusindfryd/Desktop/dynamic_relative_compression/data/dna.100mb";
+        String pathR = "/Users/JosefineTusindfryd/Desktop/dynamic_relative_compression/DNA_R";
+        //String pathS = "/Users/AndreasLauritzen/dynamic_relative_compression/dna.100mb";
+        //String pathR = "/Users/AndreasLauritzen/dynamic_relative_compression/DNA_S2";
+
+        String S=null, R=null;
+        FileHandler f = new FileHandler();
+
+        //System.out.println("Reading file..");
+        try {
+            S = f.readFromFileLine(pathS);
+            R = f.readFromFileLine(pathR);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        //S = "abnabnabnabnabnbnabnababababbababbbaananananbanabanabananbananababanabnnanabnanabababana";
+        //R = "banana";
+        //System.out.println("Compressing..");
+        // INSERT COMPRESSORTYPE
+        long t0 = System.nanoTime();
+        Compressor cmpDPS = new CompressorDPS(R);
+        long time0 = System.nanoTime() - t0;
+        System.out.println("Created suffix tree in\t\t\t " + time0/1000000000.0 +" seconds");
+
+        long t1 = System.nanoTime();
+        ArrayList<Block> cp = cmpDPS.encode(S);
+        long time1 = System.nanoTime() - t1;
+        System.out.println("Encoded string in\t\t\t " + time1/1000000000.0 +" seconds");
+
+       /* String S = "ccabcbaabccba";
         String R = "cbaaaccba";
         Compressor cmpDPS = new CompressorDPS(R);
         ArrayList<Block> cp = cmpDPS.encode(S);
@@ -18,6 +50,7 @@ public class Driver {
         dop.getDPS().prettyPrintBinary(dop.getDPS().getRoot(),0);
 
         System.out.println(dop.cmp.decodeBinTree(dop.getDPS()));
+        */
 
 /*
         // only for test purposes;

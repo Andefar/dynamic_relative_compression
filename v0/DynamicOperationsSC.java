@@ -213,8 +213,6 @@ public class DynamicOperationsSC extends DynamicOperations {
     }
 
     private void restoreMax(int startNode, int endNode) {
-        this.dps.prettyPrintBinary(this.dps.getRoot(), 0);
-
         int index = -1;
         char[] a;
         char[] b;
