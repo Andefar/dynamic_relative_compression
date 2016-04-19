@@ -45,6 +45,7 @@ public class TimeAndHeightTest {
         int remainingLength = l;
         int insertNumber;
 
+
         // Insert block of between 1 and blockSize characters until all of the substring is inserted
 
         while (remainingLength > 0) {

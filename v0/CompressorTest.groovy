@@ -10,10 +10,10 @@ public class CompressorTest extends GroovyTestCase {
     /**
      * Path to DNA test files - TODO: CHANGE THIS TO YOUR OWN PATH
      */
-    String S_file_path = "/Users/Josefinetusindfryd/Desktop/dynamic_relative_compression/DNA_S";
-    String R_file_path = "/Users/Josefinetusindfryd/Desktop/dynamic_relative_compression/DNA_R";
-    //String S_file_path = "/Users/AndreasLauritzen/dynamic_relative_compression/DNA_S";
-    //String R_file_path = "/Users/AndreasLauritzen/dynamic_relative_compression/DNA_R";
+    //String S_file_path = "/Users/Josefinetusindfryd/Desktop/dynamic_relative_compression/DNA_S";
+    //String R_file_path = "/Users/Josefinetusindfryd/Desktop/dynamic_relative_compression/DNA_R";
+    String S_file_path = "/Users/AndreasLauritzen/dynamic_relative_compression/DNA_S";
+    String R_file_path = "/Users/AndreasLauritzen/dynamic_relative_compression/DNA_R";
 
     /**
      * Test strings
@@ -31,6 +31,7 @@ public class CompressorTest extends GroovyTestCase {
     /**
      * Naive Compressors
      */
+    /*
     CompressorNaive naiveCompressorShort = new CompressorNaive(R_short);
     ArrayList<Block> naiveEncodedShort = naiveCompressorShort.encode(S_short);
 
@@ -39,22 +40,24 @@ public class CompressorTest extends GroovyTestCase {
 
     CompressorNaive naiveCompressorFile = new CompressorNaive(R_file);
     ArrayList<Block> naiveEncodedFile = naiveCompressorFile.encode(S_file);
-
+    */
     /**
      * Suffix Compressors
      */
+    /*
     CompressorSuffix suffixCompressorShort = new CompressorSuffix(R_short);
     ArrayList<Block> suffixEncodedShort = suffixCompressorShort.encode(S_short);
 
     CompressorSuffix suffixCompressorLong = new CompressorSuffix(R_long);
     ArrayList<Block> suffixEncodedLong = suffixCompressorLong.encode(S_long);
-
+**/
     CompressorSuffix suffixCompressorFile = new CompressorSuffix(R_file);
     ArrayList<Block> suffixEncodedFile = suffixCompressorFile.encode(S_file);
 
     /**
      * DPS Compressors
      */
+    /*
     CompressorDPS DPSCompressorShort = new CompressorDPS(R_short);
     ArrayList<Block> DPSEncodedShort = DPSCompressorShort.encode(S_short);
 
@@ -63,7 +66,7 @@ public class CompressorTest extends GroovyTestCase {
 
     CompressorDPS DPSCompressorFile = new CompressorDPS(R_file);
     ArrayList<Block> DPSEncodedFile = DPSCompressorFile.encode(S_file);
-
+    */
 
     // ==== TESTS ====
 

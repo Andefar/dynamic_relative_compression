@@ -515,4 +515,17 @@ public class BinaryTree {
 
     }
 
+    public int getNumberOfNodes() {return getNumberOfNodesAux(this.root);}
+
+    private int getNumberOfNodesAux(BinNode start) {
+        int count = 0;
+        if (start != null) {
+            int left = getNumberOfNodesAux(start.getLeft());
+            int right = getNumberOfNodesAux(start.getRight());
+            return 1 + left + right;
+        }
+        return count;
+
+    }
+
 }
