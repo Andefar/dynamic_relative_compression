@@ -43,11 +43,12 @@ public class DynamicOperationsDPS extends DynamicOperations {
     }
     public void replace(int index, char sub) {
 
-
+        // O(|R|)
         int indexOfReplacingCharInR = this.cmp.indexOf(new char[]{sub});
 
 
         //get all positions and distances
+        // O(logn)
         int[] BS = this.dps.searchReturnIndexSIR(index);
 
         int nodeIndex = BS[0]; //index of the node/block in which the index is contained
@@ -56,6 +57,7 @@ public class DynamicOperationsDPS extends DynamicOperations {
 
         int startPosInS; //start position in S of the node/block containing index
         if (nodeIndex == 0) startPosInS = 0;
+        //O(logn)
         else startPosInS = this.dps.sum(nodeIndex - 1);
 
         //offset in Ref string

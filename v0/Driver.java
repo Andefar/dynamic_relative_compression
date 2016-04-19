@@ -8,7 +8,36 @@ import java.lang.management.*;
 public class Driver {
     public static void main(String[] args) {
 
+        String S = "ccabcbaabccba";
+        String R = "cbaaaccba";
+        Compressor cmpDPS = new CompressorDPS(R);
+        ArrayList<Block> cp = cmpDPS.encode(S);
+        DynamicOperationsSC dop = new DynamicOperationsSC(cp, cmpDPS);
+        dop.getDPS().prettyPrintBinary(dop.getDPS().getRoot(),0);
+        dop.replace(7, (char) 'b');
+        dop.getDPS().prettyPrintBinary(dop.getDPS().getRoot(),0);
 
+        System.out.println(dop.cmp.decodeBinTree(dop.getDPS()));
+
+/*
+        // only for test purposes;
+            KMPAlgo stm = new KMPAlgo();
+            // pattern
+            char[] ptrn1 = "abca".toCharArray();
+            char[] ptrn2= "bdabc".toCharArray();
+
+
+            char[] text = "abcabdabcabeabcabdabcabd".toCharArray();
+            System.out.print(" ");
+            for (char c : text) {
+                System.out.print(c + "   ");
+            }
+            System.out.println();
+            // search for pattern in the string
+            stm.searchSubStringS(text, ptrn1, ptrn2);
+
+*/
+        /*
          ArrayList<Block> C = new ArrayList<Block>();
          String pathS = "/Users/JosefineTusindfryd/Desktop/dynamic_relative_compression/data/dna.50MB";
          String pathR = "/Users/JosefineTusindfryd/Desktop/dynamic_relative_compression/DNA_R";
@@ -40,7 +69,7 @@ public class Driver {
         //System.out.println("HEIGHT: " + test.insertCharactersBlock(S, 100, 50)[0] );
         System.out.println("final height:" + test.dop.getDPS().getMaxHeight());
         test.dop.getDPS().prettyPrintBinary(test.dop.getDPS().getRoot(),0);
-
+        */
         /*
 
                 System.out.println("Create Running Time..");

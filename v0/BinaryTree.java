@@ -179,20 +179,36 @@ public class BinaryTree {
         // DELETE THE FOUND NODE
         BinNode parent = deleted.getParent();
 
-        deleted.getSibling().setParent(parent.getParent());
+        if (parent.isRoot()) {
 
-        if (parent.isLeftChild()){
-            parent.getParent().setLeft(deleted.getSibling());
+            if(deleted.isRightChild()) {
+                this.root = parent.getLeft();
+                parent.getLeft().setParent(null);
+                parent.setLeft(null);
+
+            } else {
+                this.root = parent.getRight();
+                parent.getRight().setParent(null);
+                parent.setRight(null);
+            }
+
         } else {
-            parent.getParent().setRight(deleted.getSibling());
+
+            deleted.getSibling().setParent(parent.getParent());
+
+            if (parent.isLeftChild()) {
+                parent.getParent().setLeft(deleted.getSibling());
+            } else {
+                parent.getParent().setRight(deleted.getSibling());
+            }
+
+            updatePath(parent.getParent(), -deleted.getLength());
+
+            parent.setParent(null);
+            parent.setRight(null);
+            parent.setLeft(null);
+
         }
-
-        updatePath(parent.getParent(), - deleted.getLength());
-
-        parent.setParent(null);
-        parent.setRight(null);
-        parent.setLeft(null);
-
         // DELETION COMPLETED
 
         // FIND THE NODE TO UPDATE

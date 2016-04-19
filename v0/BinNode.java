@@ -69,11 +69,13 @@ public class BinNode {
 
     //PUBLIC BOOLEAN METHODS
     public boolean isRightChild() {
-        return this.getParent().getRight() == this;
+        if (this.isRoot()) {return false;}
+        else {return this.getParent().getRight() == this;}
     }
 
     public boolean isLeftChild() {
-        return this.getParent().getLeft() == this;
+        if (this.isRoot()) {return false;}
+        else {return this.getParent().getLeft() == this;}
     }
 
     public boolean isLeaf() { return (this.getLeft() == null && this.getRight() == null);}
