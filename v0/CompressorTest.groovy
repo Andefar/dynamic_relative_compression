@@ -416,9 +416,9 @@ public class CompressorTest extends GroovyTestCase {
     @Test
     public void testSCSOperationsAccess () {
 
-        DynamicOperationsSC SCDynamicOperationsShort = new DynamicOperationsSC(DPSEncodedShort,DPSCompressorShort);
-        DynamicOperationsSC SCDynamicOperationsLong = new DynamicOperationsSC(DPSEncodedLong,DPSCompressorLong);
-        DynamicOperationsSC SCDynamicOperationsFile = new DynamicOperationsSC(DPSEncodedFile,DPSCompressorFile);
+        DynamicOperationsKMP SCDynamicOperationsShort = new DynamicOperationsKMP(DPSEncodedShort,DPSCompressorShort);
+        DynamicOperationsKMP SCDynamicOperationsLong = new DynamicOperationsKMP(DPSEncodedLong,DPSCompressorLong);
+        DynamicOperationsKMP SCDynamicOperationsFile = new DynamicOperationsKMP(DPSEncodedFile,DPSCompressorFile);
 
         assertEquals(SCDynamicOperationsShort.access(0),(char) 'b');
         assertEquals(SCDynamicOperationsLong.access(0),(char) 'a');
@@ -435,9 +435,9 @@ public class CompressorTest extends GroovyTestCase {
     @Test
     public void testSCOperationsInsert () {
 
-        DynamicOperationsSC SCDynamicOperationsShort = new DynamicOperationsSC(SCEncodedShort,SCCompressorShort);
-        DynamicOperationsSC SCDynamicOperationsLong = new DynamicOperationsSC(SCEncodedLong,SCCompressorLong);
-        DynamicOperationsSC SCDynamicOperationsFile = new DynamicOperationsSC(SCEncodedFile,SCCompressorFile);
+        DynamicOperationsKMP SCDynamicOperationsShort = new DynamicOperationsKMP(SCEncodedShort,SCCompressorShort);
+        DynamicOperationsKMP SCDynamicOperationsLong = new DynamicOperationsKMP(SCEncodedLong,SCCompressorLong);
+        DynamicOperationsKMP SCDynamicOperationsFile = new DynamicOperationsKMP(SCEncodedFile,SCCompressorFile);
 
         SCDynamicOperationsShort.insert(0,(char) 'a');
         SCDynamicOperationsLong.insert(0,(char) 'a');
@@ -460,9 +460,9 @@ public class CompressorTest extends GroovyTestCase {
     public void testSCOperationsReplace () {
 
 
-        DynamicOperationsSC SCDynamicOperationsShort = new DynamicOperationsSC(SCEncodedShort,SCCompressorShort);
-        DynamicOperationsSC SCDynamicOperationsLong = new DynamicOperationsSC(SCEncodedLong,SCCompressorLong);
-        DynamicOperationsSC SCDynamicOperationsFile = new DynamicOperationsSC(SCEncodedFile,SCCompressorFile);
+        DynamicOperationsKMP SCDynamicOperationsShort = new DynamicOperationsKMP(SCEncodedShort,SCCompressorShort);
+        DynamicOperationsKMP SCDynamicOperationsLong = new DynamicOperationsKMP(SCEncodedLong,SCCompressorLong);
+        DynamicOperationsKMP SCDynamicOperationsFile = new DynamicOperationsKMP(SCEncodedFile,SCCompressorFile);
 
         SCDynamicOperationsShort.replace(1,(char) 'b');
         SCDynamicOperationsLong.replace(1,(char) 'b');
@@ -487,9 +487,9 @@ public class CompressorTest extends GroovyTestCase {
     public void testSCOperationsDelete () {
 
 
-        DynamicOperationsSC SCDynamicOperationsShort = new DynamicOperationsSC(SCEncodedShort,SCCompressorShort);
-        DynamicOperationsSC SCDynamicOperationsLong = new DynamicOperationsSC(SCEncodedLong,SCCompressorLong);
-        DynamicOperationsSC SCDynamicOperationsFile = new DynamicOperationsSC(SCEncodedFile,SCCompressorFile);
+        DynamicOperationsKMP SCDynamicOperationsShort = new DynamicOperationsKMP(SCEncodedShort,SCCompressorShort);
+        DynamicOperationsKMP SCDynamicOperationsLong = new DynamicOperationsKMP(SCEncodedLong,SCCompressorLong);
+        DynamicOperationsKMP SCDynamicOperationsFile = new DynamicOperationsKMP(SCEncodedFile,SCCompressorFile);
 
         SCDynamicOperationsShort.delete(4);
         SCDynamicOperationsLong.delete(4);

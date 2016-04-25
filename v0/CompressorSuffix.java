@@ -5,7 +5,7 @@ import java.util.Arrays;
  * Created by Josefinetusindfryd on 14/02/16.
  */
 
-//Initial version of string compression - naive
+//Version of string compression using suffix tree representation of R
 
 
 public class CompressorSuffix extends Compressor{

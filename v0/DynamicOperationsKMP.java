@@ -4,13 +4,13 @@ import java.util.Arrays;
 /**
  * Created by Josefinetusindfryd on 18/04/16.
  */
-public class DynamicOperationsSC extends DynamicOperations {
+public class DynamicOperationsKMP extends DynamicOperations {
 
     BinaryTree dps;
     KMPAlgo KMP;
 
     //constructor
-    public DynamicOperationsSC(ArrayList<Block> C, Compressor cmp) {
+    public DynamicOperationsKMP(ArrayList<Block> C, Compressor cmp) {
         super(C, cmp);
         this.dps = new BinaryTree(C);
         this.KMP = new KMPAlgo();
