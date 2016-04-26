@@ -1,8 +1,4 @@
 
-
-import com.sun.org.apache.xml.internal.utils.StringBufferPool;
-import com.sun.tools.javac.util.ArrayUtils;
-
 import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -10,7 +6,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 import java.util.stream.Collectors;
 
 /**
@@ -20,7 +15,7 @@ public class FileHandler {
 
     File fil;
 
-    public FileHandler () {}
+    public FileHandler() {}
 
     public void toFile(ArrayList<Block> blocks, String name) {
         List lines = new ArrayList<String>();

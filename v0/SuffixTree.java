@@ -1,20 +1,20 @@
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Map;
 
 /**
  * Created by andl on 11/02/2016.
  */
 public class SuffixTree {
 
-
     Node root;
-
+    Node state;
+    int labalOffset;
 
     public SuffixTree (String S) {
+
         //create root node.
         this.root = new Node((new char[0]),-1);
+        this.state = this.root;
+        this.labalOffset = 0;
 
         char[] SA = S.toCharArray();
         for(int i = 0; i < SA.length; i++) {
@@ -32,7 +32,7 @@ public class SuffixTree {
     }
     private Node findLeftmostNode(Node start) {
         //if leaf -> return
-        if(start.getChildren().size() == 0) {
+        if(start.isLeaf()) {
             return start;
         }
         return findLeftmostNode(start.getChildren().get(0));
@@ -211,7 +211,26 @@ public class SuffixTree {
         }
     }
 
-
+    public int streamSearch(boolean reset, char c) {
+        if(reset) { this.state = this.root; this.labalOffset = 0;}
+        char[] label = state.getEdge().getLabel();
+        if(this.labalOffset == 0 || this.labalOffset == label.length) {
+            for (int i = 0; i < state.getChildren().size(); i++) {
+                Node child = state.getChildren().get(i);
+                if (child.getEdge().getLabel()[0] == c) {
+                    this.state = child;
+                    labalOffset = 1;
+                    return child.getLeaf().getID();
+                }
+            }
+            return -1;
+        }
+        if(label[this.labalOffset] == c) {
+            this.labalOffset++;
+            return state.getLeaf().getID();
+        }
+        return -1;
+    }
 
     // Search for string in the suffixtree
     // return the index in R at which the string starts

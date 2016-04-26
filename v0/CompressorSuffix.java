@@ -20,48 +20,27 @@ public class CompressorSuffix extends Compressor{
 
     //O(|S|^2*|R|) :Iterate through string S and foreach character use indexOf
     public ArrayList<Block> encode(String S){
-        S += "$";
-        char[] SA = S.toCharArray();
-        ArrayList compressed = new ArrayList<Block>();
-
-        int indexR = -1;
-        int indexTemp = -1;
+        int sLen = S.length();
+        ArrayList<Block> compressed = new ArrayList<>();
         int counter = 0;
-        char c = SA[counter];
-        char[] C = {};
-        char[] temp;
-        //O(|S|) : every char is considered in S
-        while (c != '$'){
-            indexTemp = indexR;
-            temp = new char[C.length+1];
-            System.arraycopy(C,0,temp,0,C.length);
-            C = temp;
-            C[C.length-1] = c;
-
-            indexR = indexOf(C);
-
-            if (indexR == -1 || c == '$'){
-                if (C.length == 1){
-
-                    C = new char[0];
-                    counter += 1;
-                    c = SA[counter];
-                } else {
-                    compressed.add((new Block(indexTemp, C.length-1)));
-
-                    C = new char[0];
+        while (counter < sLen) {
+            char c = S.charAt(counter);
+            int lastValidIndex = -1;
+            int length = 0;
+            int result = this.stR.streamSearch(true, c);
+            while (result != -1) {
+                length++;
+                counter++;
+                lastValidIndex = result;
+                if(counter >= sLen) {
+                    compressed.add(new Block(lastValidIndex, length));
+                    return compressed;
                 }
-            } else {
-                counter += 1;
-                c = SA[counter];
-                if (c == '$'){
-                    compressed.add((new Block(indexR, C.length)));
-
-                }
+                c = S.charAt(counter);
+                result = this.stR.streamSearch(false, c);
             }
-
+            compressed.add(new Block(lastValidIndex, length));
         }
-
         return compressed;
     }
 

@@ -30,6 +30,7 @@ public class CompressorTest extends GroovyTestCase {
     String S_file = fileHandler.readFromFileLine(S_file_path);
     String R_file = fileHandler.readFromFileLine(R_file_path);
 
+
     /**
      * Naive Compressors
      */
@@ -84,10 +85,11 @@ public class CompressorTest extends GroovyTestCase {
 
 
     // ==== TESTS ====
-
     /**
      * Decompression tests on all three test strings. File read/write also included.
      */
+
+
     @Test
     public void testNaiveCompressionDecompression() {
         String resultShort = naiveCompressorShort.decodeArrayList(naiveEncodedShort);
@@ -543,5 +545,38 @@ public class CompressorTest extends GroovyTestCase {
         assertEquals(orig,S_file,res);
 
     }
+
+    @Test
+    public void testTest() {
+        //String pathS = "/Users/JosefineTusindfryd/Desktop/dynamic_relative_compression/data/dna.50MB";
+        //String pathR = "/Users/JosefineTusindfryd/Desktop/dynamic_relative_compression/DNA_R";
+        //String pathSave = "/Users/JosefineTusindfryd/Desktop/dynamic_relative_compression/";
+        String pathS = "/Users/AndreasLauritzen/dynamic_relative_compression/dna_clean.10mb";
+        String pathR = "/Users/AndreasLauritzen/dynamic_relative_compression/R2000.txt";
+
+        //Read the source file
+        String S=null, R=null;
+        FileHandler f = new FileHandler();
+        try {
+            S = f.readFromFileLine(pathS);
+            R = f.readFromFileLine(pathR);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Compressor cmpDPS = new CompressorDPS(R);
+        ArrayList<Block> cp = cmpDPS.encode(S);
+
+        DynamicOperationsDPS dop1 = new DynamicOperationsDPS(cp, cmpDPS);
+
+
+        BinaryTree bt = dop1.getDPS();
+        ArrayList<Block> al = dop1.getC();
+        String decodedBin = cmpDPS.decodeBinTree(bt);
+        String decodedAL = cmpDPS.decodeArrayList(al);
+
+        assertEquals(S,decodedBin,decodedBin);
+    }
+
 
 }
