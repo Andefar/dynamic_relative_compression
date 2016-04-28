@@ -56,16 +56,13 @@ public class CompressorSuffix extends Compressor{
     // Evt ikke
     public String decodeArrayList(ArrayList<Block> C){
         StringBuilder sb = new StringBuilder();
-        int p,l;
-        char[] temp;
         for (Block b : C ){
-            p = b.getPos();
-            l = b.getLength();
-            temp = new char[l];
+            int p = b.getPos();
+            int l = b.getLength();
+            char[] temp = new char[l];
             System.arraycopy(RA,p,temp,0,l);
             sb.append(new String(temp));
         }
-
         return sb.toString();
     }
 

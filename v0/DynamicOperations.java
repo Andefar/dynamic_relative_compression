@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 /**
  * Created by andl on 09/02/2016.
@@ -10,10 +11,7 @@ abstract class DynamicOperations {
 
     public DynamicOperations(ArrayList<Block> C, Compressor cmp){
         this.C = new ArrayList();
-        for (Block b : C) {
-            this.C.add(new Block(b.getPos(),b.getLength()));
-            //this.C.add(b);
-        }
+        this.C.addAll(C.stream().map(b -> new Block(b.getPos(), b.getLength())).collect(Collectors.toList()));
         this.cmp = cmp;
     }
 

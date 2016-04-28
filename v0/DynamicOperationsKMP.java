@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * Created by Josefinetusindfryd on 18/04/16.
@@ -213,21 +212,16 @@ public class DynamicOperationsKMP extends DynamicOperations {
     }
 
     private void restoreMax(int startNode, int endNode) {
-        int index = -1;
-        char[] a;
-        char[] b;
-        int[] aBS;
-        int[] bBS;
 
         for (int i = startNode; i < endNode; i++) {
-            aBS = this.dps.find(i);
-            bBS = this.dps.find(i + 1);
-            a = new char[aBS[1]];
-            b = new char[bBS[1]];
+            int[] aBS = this.dps.find(i);
+            int[] bBS = this.dps.find(i + 1);
+            char[] a = new char[aBS[1]];
+            char[] b = new char[bBS[1]];
             System.arraycopy(this.cmp.RA, aBS[0], a, 0, aBS[1]);
             System.arraycopy(this.cmp.RA, bBS[0], b, 0, bBS[1]);
 
-            index = this.KMP.searchSubStringS(this.cmp.RA,a, b);
+            int index = this.KMP.searchSubStringS(this.cmp.RA,a, b);
 
             if (index > -1) {// yes can be merged.
                 this.dps.merge(i);
@@ -237,7 +231,6 @@ public class DynamicOperationsKMP extends DynamicOperations {
                 continue;
 
             }
-
         }
     }
 
