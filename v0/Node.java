@@ -16,16 +16,10 @@ public class Node {
         this.id = id;
     }
 
-    public Node(char[] suffix,int start, int end, int id) {
-        this.children = new ArrayList<>();
-        this.edge = new Edge(suffix);
-        this.id = id;
-    }
-
     public ArrayList<Node> getChildren() {
         return this.children;
     }
-    public boolean isLeaf() { return this.getChildren().size() == 0;}
+
     public Edge getEdge() {
         return this.edge;
     }

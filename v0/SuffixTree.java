@@ -209,11 +209,15 @@ public class SuffixTree {
 
     public int streamSearch(boolean reset, char c) {
         if(reset) { this.state = this.root; this.labalOffset = 0;}
-        char[] label = state.getEdge().getLabel();
+        char[] label = new char[state.getEdge().getLength()];
+        System.arraycopy(this.RA,state.getEdge().getStartR(), label,0, label.length);
+
         if(this.labalOffset == 0 || this.labalOffset == label.length) {
             for (int i = 0; i < state.getChildren().size(); i++) {
                 Node child = state.getChildren().get(i);
-                if (child.getEdge().getLabel()[0] == c) {
+                char[] child_label = new char[child.getEdge().getLength()];
+                System.arraycopy(this.RA,child.getEdge().getStartR(), child_label,0, child_label.length);
+                if (child_label.length != 0 && child_label[0] == c) {
                     this.state = child;
                     labalOffset = 1;
                     return child.getLeaf().getID();
