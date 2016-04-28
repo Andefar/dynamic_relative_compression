@@ -551,8 +551,8 @@ public class CompressorTest extends GroovyTestCase {
         //String pathS = "/Users/JosefineTusindfryd/Desktop/dynamic_relative_compression/data/dna.50MB";
         //String pathR = "/Users/JosefineTusindfryd/Desktop/dynamic_relative_compression/DNA_R";
         //String pathSave = "/Users/JosefineTusindfryd/Desktop/dynamic_relative_compression/";
-        String pathS = "/Users/AndreasLauritzen/dynamic_relative_compression/dna_clean.10mb";
-        String pathR = "/Users/AndreasLauritzen/dynamic_relative_compression/R2000.txt";
+        String pathS = "data/dna_clean.10mb";
+        String pathR = "data/R2000.txt";
 
         //Read the source file
         String S=null, R=null;

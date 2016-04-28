@@ -13,31 +13,31 @@ public class Driver {
         //String pathSave = "/Users/JosefineTusindfryd/Desktop/dynamic_relative_compression/";
 
         List<String> Spaths = new ArrayList<>();
-        Spaths.add("/Users/AndreasLauritzen/dynamic_relative_compression/dna_clean.1mb");
-        Spaths.add("/Users/AndreasLauritzen/dynamic_relative_compression/dna_clean.5mb");
-        Spaths.add("/Users/AndreasLauritzen/dynamic_relative_compression/dna_clean.10mb");
-        Spaths.add("/Users/AndreasLauritzen/dynamic_relative_compression/dna_clean.50mb");
-        Spaths.add("/Users/AndreasLauritzen/dynamic_relative_compression/dna_clean.100mb");
-        Spaths.add("/Users/AndreasLauritzen/dynamic_relative_compression/dna_clean.200mb");
-        Spaths.add("/Users/AndreasLauritzen/dynamic_relative_compression/dna_clean.400mb");
+        //Spaths.add("data/dna_clean.1mb");
+        //Spaths.add("data/dna_clean.5mb");
+        //Spaths.add("data/dna_clean.10mb");
+        //Spaths.add("data/dna_clean.50mb");
+        Spaths.add("data/dna_clean.100mb");
+        //Spaths.add("data/dna_clean.200mb");
+        //Spaths.add("data/dna_clean.400mb");
 
         List<String> refs = new ArrayList<>();
-        refs.add("/Users/AndreasLauritzen/dynamic_relative_compression/R2000.txt");
-        refs.add("/Users/AndreasLauritzen/dynamic_relative_compression/R4500.txt");
-        refs.add("/Users/AndreasLauritzen/dynamic_relative_compression/R9990.txt");
-        refs.add("/Users/AndreasLauritzen/dynamic_relative_compression/R20000.txt");
-        refs.add("/Users/AndreasLauritzen/dynamic_relative_compression/R29850.txt");
-        refs.add("/Users/AndreasLauritzen/dynamic_relative_compression/R49750.txt");
+        //refs.add("data/R2000.txt");
+        //refs.add("data/R4500.txt");
+        //refs.add("data/R9990.txt");
+        refs.add("data/R20000.txt");
+        //refs.add("data/R29850.txt");
+        //refs.add("data/R49750.txt");
 
         List<String> comps = new ArrayList<>();
-        comps.add("Naive");
-        comps.add("Suffix");
+        //comps.add("Naive");
+        //comps.add("Suffix");
         comps.add("DPS");
 
         List<String> dops = new ArrayList<>();
-        dops.add("Naive");
-        dops.add("KMP");
-        dops.add("DPS");
+        //dops.add("Naive");
+        //dops.add("KMP");
+        //dops.add("DPS");
 
         FileHandler f = new FileHandler();
         for (String cmp : comps) {
@@ -70,10 +70,10 @@ public class Driver {
                             //System.out.println("Created suffix-tree in\t\t" + time01 / 1000000000.0 + " seconds");
                             break;
                         case "DPS":
-                            //long t02 = System.nanoTime();
+                            long t02 = System.nanoTime();
                             compressor = new CompressorDPS(R);
-                            //long time02 = System.nanoTime() - t02;
-                            //System.out.println("Created suffix-tree in\t\t" + time02 / 1000000000.0 + " seconds");
+                            long time02 = System.nanoTime() - t02;
+                            System.out.println("Created suffix-tree in\t\t" + time02 / 1000000000.0 + " seconds");
                             break;
                         default:
                             throw new IllegalArgumentException("Wrong compressor!");
@@ -81,10 +81,10 @@ public class Driver {
 
                     //Encode
                     ArrayList<Block> cp;
-                    //long t1 = System.nanoTime();
+                    long t1 = System.nanoTime();
                     cp = compressor.encode(S);
-                    //long time1 = System.nanoTime() - t1;
-                    //System.out.println("Encoded string in\t\t\t\t" + time1 / 1000000000.0 + " seconds");
+                    long time1 = System.nanoTime() - t1;
+                    System.out.println("Encoded string in\t\t\t\t" + time1 / 1000000000.0 + " seconds");
 
                     int totalLen = 10000;
                     int steps = 100;
