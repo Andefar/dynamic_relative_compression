@@ -75,30 +75,31 @@ public class SuffixTree {
         // Case 1B
         for (Node child : children) {
 
-            char[] label_arr = new char[child.getEdge().getLength()];
-            System.arraycopy(this.RA,child.getEdge().getStartR(), label_arr,0, label_arr.length);
+            //int child_label_length = child.getEdge().getLength();
+            //char[] label_arr = new char[child.getEdge().getLength()];
+            //System.arraycopy(this.RA,child.getEdge().getStartR(), label_arr,0, label_arr.length);
 
             // can only match one child and the label of the child should not be empty
-            if(label_arr.length == 0 || suffix[0] != label_arr[0]) {
+            if(child.getEdge().getLength() == 0 || suffix[0] != RA[child.getEdge().getStartR()]) {
                 continue;
             }
 
-            int min = Math.min(label_arr.length, suffix.length);
+            int min = Math.min(child.getEdge().getLength(), suffix.length);
 
-            if(label_arr.length == 1 && suffix.length == 1) {
+            if(child.getEdge().getLength() == 1 && suffix.length == 1) {
 
                 Node l1 = new Node(id, 0,0);
                 child.addChild(l1);
                 inserted = true;
 
-            } else if(suffix.length == 1 && label_arr.length > 1) {
+            } else if(suffix.length == 1 && child.getEdge().getLength() > 1) {
                 //split
 
                 // Containing the matching caracter
                 child.getEdge().setLength(1);
 
                 // containing the rest of the original label
-                Node l1 = new Node(child.getID(), child.getEdge().getStartR() + 1, label_arr.length-1);
+                Node l1 = new Node(child.getID(), child.getEdge().getStartR() + 1, child.getEdge().getLength()-1);
 
                 // child is now intermediate node -> must have ID -1
                 child.resetID();
@@ -123,12 +124,12 @@ public class SuffixTree {
             for(int k = 1; k < min; k++) {
 
                 // Case 1B.1
-                if(suffix[k] != label_arr[k]) {
+                if(suffix[k] != RA[child.getEdge().getStartR()+k]) {
                     //change length of existing label before split to the part matching - can just keep the old start index in R
                     child.getEdge().setLength(k);
 
                     //create node to represent the rest of the old label
-                    Node l1 = new Node(child.getID(), child.getEdge().getStartR()+k , label_arr.length-k);
+                    Node l1 = new Node(child.getID(), child.getEdge().getStartR()+k , child.getEdge().getLength()-k);
 
                     // child is now intermediate node -> must have ID -1
                     child.resetID();
@@ -156,7 +157,7 @@ public class SuffixTree {
                     child.getEdge().setLength(k+1); // the start in R can just be kept
 
                     //create node to represent the rest of the old label
-                    Node l1 = new Node(child.getID(), child.getEdge().getStartR() + k+1, label_arr.length-(k+1) );
+                    Node l1 = new Node(child.getID(), child.getEdge().getStartR() + k+1, child.getEdge().getLength()-(k+1) );
 
                     // child is now intermediate node -> must have ID -1
                     child.resetID();
@@ -180,7 +181,7 @@ public class SuffixTree {
             if(inserted) {
                 break;
                 // Case 2C
-            } else if(label_arr.length == 1) {
+            } else if(child.getEdge().getLength() == 1) {
                 // Case 2C.1
                 if(suffix.length > 1) {
                     // if all of the suffix is not inserted yet the remaining part must be inserted starting from the child node
