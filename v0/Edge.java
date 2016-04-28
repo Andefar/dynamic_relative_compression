@@ -7,7 +7,6 @@ public class Edge {
     //Fields
     private int startR;
     private int length;
-    //private char[] label;
 
     public Edge(int startR, int length){
         this.startR = startR;

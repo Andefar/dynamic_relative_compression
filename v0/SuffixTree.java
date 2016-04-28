@@ -73,10 +73,6 @@ public class SuffixTree {
         // Case 1B
         for (Node child : children) {
 
-            //int child_label_length = child.getEdge().getLength();
-            //char[] label_arr = new char[child.getEdge().getLength()];
-            //System.arraycopy(this.RA,child.getEdge().getStartR(), label_arr,0, label_arr.length);
-
             // can only match one child and the label of the child should not be empty
             if(child.getEdge().getLength() == 0 || this.RA[startR] != RA[child.getEdge().getStartR()]) {
                 continue;
@@ -237,12 +233,8 @@ public class SuffixTree {
 
 
     private int searchHelp(Node startNode, char[] C){
-  //      char[] childLabel;
 
         for (Node child: startNode.getChildren()) {
-
-            //char[] childLabel = new char[child.getEdge().getLength()];
-            //System.arraycopy(this.RA, child.getEdge().getStartR(), childLabel, 0,  child.getEdge().getLength() );
 
             // label of the current child is empty move to next child
             //can only match with one edge -> check children is constant (because alphabet in constant)
