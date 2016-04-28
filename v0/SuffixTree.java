@@ -191,7 +191,6 @@ public class SuffixTree {
                     Node leaf = new Node(id, 0,0);
                     child.addChild(leaf);
                     inserted = true;
-
                 }
             }
 
@@ -206,15 +205,11 @@ public class SuffixTree {
 
     public int streamSearch(boolean reset, char c) {
         if(reset) { this.state = this.root; this.labalOffset = 0;}
-        char[] label = new char[state.getEdge().getLength()];
-        System.arraycopy(this.RA,state.getEdge().getStartR(), label,0, label.length);
 
-        if(this.labalOffset == 0 || this.labalOffset == label.length) {
+        if(this.labalOffset == 0 || this.labalOffset == state.getEdge().getLength()) {
             for (int i = 0; i < state.getChildren().size(); i++) {
                 Node child = state.getChildren().get(i);
-                char[] child_label = new char[child.getEdge().getLength()];
-                System.arraycopy(this.RA,child.getEdge().getStartR(), child_label,0, child_label.length);
-                if (child_label.length != 0 && child_label[0] == c) {
+                if (child.getEdge().getLength() != 0 && this.RA[child.getEdge().getStartR()] == c) {
                     this.state = child;
                     labalOffset = 1;
                     return child.getLeaf().getID();
@@ -222,9 +217,9 @@ public class SuffixTree {
             }
             return -1;
         }
-        if(label[this.labalOffset] == c) {
+        if(this.RA[this.state.getEdge().getStartR() + this.labalOffset] == c) {
             this.labalOffset++;
-            return state.getLeaf().getID();
+            return this.state.getLeaf().getID();
         }
         return -1;
     }

@@ -67,7 +67,6 @@ public class DynamicOperationsDPS extends DynamicOperations {
         char charToReplace = this.cmp.RA[startPosInR + (index - startPosInS)];
         if (charToReplace == sub) return;
 
-
         //case 1
         //when block can be split in 3, i is in the middle
         //i not first in block, i not the last in block, length is 3 or more
@@ -76,7 +75,6 @@ public class DynamicOperationsDPS extends DynamicOperations {
             int divValue;
             if (offsetInR == 1) divValue = 1;
             else divValue = offsetInR ;
-
 
             this.dps.divide(nodeIndex,divValue);
             this.dps.divide(nodeIndex+1,1);

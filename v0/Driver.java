@@ -8,6 +8,13 @@ import java.util.List;
 public class Driver {
     public static void main(String[] args) {
 
+        boolean debugDPS = true;
+        boolean debugKMP = false;
+        boolean debugNaive = false;
+        boolean debugCmpTime = false;
+        boolean debugEncodeTime = true;
+        boolean decodeS = true;
+
         //String pathS = "/Users/JosefineTusindfryd/Desktop/dynamic_relative_compression/data/dna.50MB";
         //String pathR = "/Users/JosefineTusindfryd/Desktop/dynamic_relative_compression/DNA_R";
         //String pathSave = "/Users/JosefineTusindfryd/Desktop/dynamic_relative_compression/";
@@ -24,8 +31,8 @@ public class Driver {
         List<String> refs = new ArrayList<>();
         //refs.add("data/R2000.txt");
         //refs.add("data/R4500.txt");
-        //refs.add("data/R9990.txt");
-        refs.add("data/R20000.txt");
+        refs.add("data/R9990.txt");
+        //refs.add("data/R20000.txt");
         //refs.add("data/R29850.txt");
         //refs.add("data/R49750.txt");
 
@@ -37,7 +44,7 @@ public class Driver {
         List<String> dops = new ArrayList<>();
         //dops.add("Naive");
         //dops.add("KMP");
-        //dops.add("DPS");
+        dops.add("DPS");
 
         FileHandler f = new FileHandler();
         for (String cmp : comps) {
@@ -58,22 +65,22 @@ public class Driver {
                     Compressor compressor;
                     switch (cmp) {
                         case "Naive":
-                            //long t00 = System.nanoTime();
+                            long tc00 = System.nanoTime();
                             compressor = new CompressorNaive(R);
-                            //long time00 = System.nanoTime() - t00;
-                            //System.out.println("Created naive-compressor in\t\t" + time00 / 1000000000.0 + " seconds");
+                            long timec00 = System.nanoTime() - tc00;
+                            if(debugCmpTime) System.out.println("Created naive-compressor in\t\t" + timec00 / 1000000000.0 + " seconds");
                             break;
                         case "Suffix":
-                            //long t01 = System.nanoTime();
+                            long tc01 = System.nanoTime();
                             compressor = new CompressorSuffix(R);
-                            //long time01 = System.nanoTime() - t01;
-                            //System.out.println("Created suffix-tree in\t\t" + time01 / 1000000000.0 + " seconds");
+                            long timec01 = System.nanoTime() - tc01;
+                            if(debugCmpTime) System.out.println("Created suffix-tree in\t\t" + timec01 / 1000000000.0 + " seconds");
                             break;
                         case "DPS":
-                            long t02 = System.nanoTime();
+                            long tc02 = System.nanoTime();
                             compressor = new CompressorDPS(R);
-                            long time02 = System.nanoTime() - t02;
-                            System.out.println("Created suffix-tree in\t\t" + time02 / 1000000000.0 + " seconds");
+                            long timec02 = System.nanoTime() - tc02;
+                            if(debugCmpTime) System.out.println("Created suffix-tree in\t\t" + timec02 / 1000000000.0 + " seconds");
                             break;
                         default:
                             throw new IllegalArgumentException("Wrong compressor!");
@@ -84,7 +91,7 @@ public class Driver {
                     long t1 = System.nanoTime();
                     cp = compressor.encode(S);
                     long time1 = System.nanoTime() - t1;
-                    System.out.println("Encoded string in\t\t\t\t" + time1 / 1000000000.0 + " seconds");
+                    if(debugEncodeTime) System.out.println("Encoded string in\t\t\t\t" + time1 / 1000000000.0 + " seconds");
 
                     int totalLen = 10000;
                     int steps = 100;
@@ -93,24 +100,63 @@ public class Driver {
                         switch (dopString) {
                             case "DPS":
                                 //Create DynamicOperationsDPS
-                                //long t20 = System.nanoTime();
-                                dop = new DynamicOperationsDPS(cp, compressor);
-                                //long time20 = System.nanoTime() - t20;
-                                //System.out.println("Created DPS structure in\t\t" + time20 / 1000000000.0 + " seconds");
+                                long t00 = System.nanoTime();
+                                DynamicOperationsDPS dopDPS = new DynamicOperationsDPS(cp, compressor);
+                                long time00 = System.nanoTime() - t00;
+                                if(debugDPS) System.out.println("Created DPS structure in\t\t" + time00 / 1000000000.0 + " seconds");
+                                if(decodeS) {
+                                    //Decode DPS
+                                    String decoded0;
+                                    BinaryTree bt = dopDPS.getDPS();
+                                    long t01 = System.nanoTime();
+                                    decoded0 = compressor.decodeBinTree(bt);
+                                    long time01 = System.nanoTime() - t01;
+                                    if (debugDPS) {
+                                        System.out.println("Decoded (DPS) string in\t\t\t" + time01 / 1000000000.0 + " seconds");
+                                        System.out.println(decoded0.equals(S) ? "OK (DPS)" : "FAILED (DPS)");
+                                    }
+                                }
+                                dop = dopDPS;
                                 break;
                             case "KMP":
                                 //Create DynamicOperationsKMP
-                                //long t20 = System.nanoTime();
-                                dop = new DynamicOperationsKMP(cp, compressor);
-                                //long time20 = System.nanoTime() - t20;
-                                //System.out.println("Created DPS structure in\t\t" + time20 / 1000000000.0 + " seconds");
+                                long t10 = System.nanoTime();
+                                DynamicOperationsKMP dopKMP = new DynamicOperationsKMP(cp, compressor);
+                                long time10 = System.nanoTime() - t10;
+                                if(debugKMP) System.out.println("Created DPS structure in\t\t" + time10 / 1000000000.0 + " seconds");
+                                if(decodeS) {
+                                    //Decode KMP
+                                    String decoded1;
+                                    ArrayList compressionList = dopKMP.getC();
+                                    long t11 = System.nanoTime();
+                                    decoded1 = compressor.decodeArrayList(compressionList);
+                                    long time11 = System.nanoTime() - t11;
+                                    if (debugKMP) {
+                                        System.out.println("Decoded (Naive) string in\t\t" + time11 / 1000000000.0 + " seconds");
+                                        System.out.println(decoded1.equals(S) ? "OK (KMP)" : "FAILED (KMP)");
+                                    }
+                                }
+                                dop = dopKMP;
                                 break;
                             case "Naive":
                                 //Create DynamicOperationsNaive
-                                //long t21 = System.nanoTime();
-                                dop = new DynamicOperationsNaive(cp, compressor);
-                                //long time21 = System.nanoTime() - t21;
-                                //System.out.println("Created Naive structure in\t\t" + time21 / 1000000000.0 + " seconds");
+                                long t20 = System.nanoTime();
+                                DynamicOperationsNaive dopNaive = new DynamicOperationsNaive(cp, compressor);
+                                long time20 = System.nanoTime() - t20;
+                                if(debugNaive) System.out.println("Created Naive structure in\t\t" + time20 / 1000000000.0 + " seconds");
+                                if(decodeS) {
+                                    //Decode Naive
+                                    String decoded2;
+                                    ArrayList cList = dopNaive.getC();
+                                    long t21 = System.nanoTime();
+                                    decoded2 = compressor.decodeArrayList(cList);
+                                    long time21 = System.nanoTime() - t21;
+                                    if (debugNaive) {
+                                        System.out.println("Decoded (Naive) string in\t\t" + time21 / 1000000000.0 + " seconds");
+                                        System.out.println(decoded2.equals(S) ? "OK (Naive)" : "FAILED (Naive)");
+                                    }
+                                }
+                                dop = dopNaive;
                                 break;
                             default:
                                 throw new IllegalArgumentException("Wrong DOP!");
@@ -125,43 +171,9 @@ public class Driver {
                                         " \t Data: \n");
                         TimeTest test = new TimeTest(dop);
                         System.out.println(Arrays.toString(test.insertCharactersSingleBatch(S.length(), totalLen, steps)));
-                        System.out.println();
+                        System.out.println("\n");
+
                     }
-
-                    /*
-                    //Decode Naive
-                    String decoded0;
-                    ArrayList cList = dop.getC();
-                    long t30 = System.nanoTime();
-                    decoded0 = compressor.decodeArrayList(cList);
-                    long time30 = System.nanoTime() - t30;
-                    System.out.println("Decoded (Naive) string in\t\t" + time30 / 1000000000.0 + " seconds");
-
-                    //Decode KMP
-                    String decoded1;
-                    ArrayList compressionList = dop1.getC();
-                    long t31 = System.nanoTime();
-                    decoded1 = compressor.decodeArrayList(compressionList);
-                    long time31 = System.nanoTime() - t31;
-                    System.out.println("Decoded (Naive) string in\t\t" + time31 / 1000000000.0 + " seconds");
-
-                    //Decode DPS
-                    String decoded2;
-                    BinaryTree bt = dop2.getDPS();
-                    long t32 = System.nanoTime();
-                    decoded2 = compressor.decodeBinTree(bt);
-                    long time32 = System.nanoTime() - t32;
-                    System.out.println("Decoded (DPS) string in\t\t\t" + time32 / 1000000000.0 + " seconds");
-
-
-
-                    //Check the decompression was equal to the source string
-                    System.out.println(decoded0.equals(S) ? "OK (Naive)" : "FAILED (Naive)");
-                    System.out.println(decoded1.equals(S) ? "OK (KMP)" : "FAILED (KMP)");
-                    System.out.println(decoded2.equals(S) ? "OK (DPS)" : "FAILED (DPS)");
-                    System.out.println("\n");
-                    */
-
                 }
             }
         }
