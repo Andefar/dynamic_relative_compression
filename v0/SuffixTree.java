@@ -19,9 +19,7 @@ public class SuffixTree {
         this.labalOffset = 0;
 
         for(int i = 0; i < R.length-1; i++) { //subtracting 1 from the length each time to remove the $ end character
-            char[] temp = new char[R.length-1-i];
-            System.arraycopy(R,i,temp,0,R.length-1-i);
-            addSuffixNaive(this.root,temp,i, i);
+            addSuffixNaive(this.root, R.length-1-i,i, i);
         }
         fixPointersToLeafs(this.root);
     }
@@ -59,13 +57,13 @@ public class SuffixTree {
     // insert a suffix starting from start
     // id = the index of the original suffix in R inserted from the root
     // startR is the start position in R of the suffix to be inserted
-    public void addSuffixNaive(Node start, char[] suffix, int id, int startR) {
+    public void addSuffixNaive(Node start, int length, int id, int startR) {
 
         ArrayList<Node> children = start.getChildren();
 
         // Case 1A
         if(children.size() == 0) {
-            Node leaf = new Node(id, startR, suffix.length);
+            Node leaf = new Node(id, startR, length);
             start.addChild(leaf);
             return;
         }
@@ -80,19 +78,19 @@ public class SuffixTree {
             //System.arraycopy(this.RA,child.getEdge().getStartR(), label_arr,0, label_arr.length);
 
             // can only match one child and the label of the child should not be empty
-            if(child.getEdge().getLength() == 0 || suffix[0] != RA[child.getEdge().getStartR()]) {
+            if(child.getEdge().getLength() == 0 || this.RA[startR] != RA[child.getEdge().getStartR()]) {
                 continue;
             }
 
-            int min = Math.min(child.getEdge().getLength(), suffix.length);
+            int min = Math.min(child.getEdge().getLength(), length);
 
-            if(child.getEdge().getLength() == 1 && suffix.length == 1) {
+            if(child.getEdge().getLength() == 1 && length == 1) {
 
                 Node l1 = new Node(id, 0,0);
                 child.addChild(l1);
                 inserted = true;
 
-            } else if(suffix.length == 1 && child.getEdge().getLength() > 1) {
+            } else if(length == 1 && child.getEdge().getLength() > 1) {
                 //split
 
                 // Containing the matching caracter
@@ -124,7 +122,7 @@ public class SuffixTree {
             for(int k = 1; k < min; k++) {
 
                 // Case 1B.1
-                if(suffix[k] != RA[child.getEdge().getStartR()+k]) {
+                if(this.RA[startR + k] != RA[child.getEdge().getStartR()+k]) {
                     //change length of existing label before split to the part matching - can just keep the old start index in R
                     child.getEdge().setLength(k);
 
@@ -141,7 +139,7 @@ public class SuffixTree {
                     }
 
                     //create node to represent new suffix.
-                    Node l2 = new Node(id, startR + k, suffix.length-k);
+                    Node l2 = new Node(id, startR + k, length-k);
 
                     //add new nodes as children to parent (named child here)
                     child.addChild(l1);
@@ -150,7 +148,7 @@ public class SuffixTree {
                     break;
 
                     // case 1B.2
-                } else if(k == suffix.length-1) {
+                } else if(k == length-1) {
                     //split
 
                     //change length of existing label before split to the part matching - can just keep the old start index in R
@@ -183,11 +181,9 @@ public class SuffixTree {
                 // Case 2C
             } else if(child.getEdge().getLength() == 1) {
                 // Case 2C.1
-                if(suffix.length > 1) {
+                if(length > 1) {
                     // if all of the suffix is not inserted yet the remaining part must be inserted starting from the child node
-                    char[] temp = new char[suffix.length-1];
-                    System.arraycopy(suffix,1,temp,0,suffix.length-1);
-                    addSuffixNaive(child,temp,id, startR+1);
+                    addSuffixNaive(child,length-1,id, startR+1);
                     inserted = true;
                     // Case 2C.2
                 } else {
@@ -203,7 +199,7 @@ public class SuffixTree {
         // Case 3A
         if (!inserted) {
             // No match in any of the children - the suffix is just inserted as child of the start-node
-            Node leaf = new Node(id, startR, suffix.length);
+            Node leaf = new Node(id, startR, length);
             start.addChild(leaf);
         }
     }
@@ -250,21 +246,21 @@ public class SuffixTree {
 
         for (Node child: startNode.getChildren()) {
 
-            char[] childLabel = new char[child.getEdge().getLength()];
-            System.arraycopy(this.RA, child.getEdge().getStartR(), childLabel, 0,  child.getEdge().getLength() );
+            //char[] childLabel = new char[child.getEdge().getLength()];
+            //System.arraycopy(this.RA, child.getEdge().getStartR(), childLabel, 0,  child.getEdge().getLength() );
 
             // label of the current child is empty move to next child
             //can only match with one edge -> check children is constant (because alphabet in constant)
-            if (childLabel.length == 0 || C[0] != childLabel[0]) {
+            if (child.getEdge().getLength() == 0 || C[0] != this.RA[child.getEdge().getStartR()]) {
                 continue;
             }
 
             for (int i = 1; i < C.length; i++) {
-                if (i == childLabel.length) {
+                if (i == child.getEdge().getLength()) {
                     char[] temp = new char[C.length-i];
                     System.arraycopy(C,i,temp,0,C.length-i);
                     return searchHelp(child, temp);
-                } else if (C[i] != childLabel[i]) {
+                } else if (C[i] != this.RA[child.getEdge().getStartR()+i]) {
                     return -1;
                 }
             }
