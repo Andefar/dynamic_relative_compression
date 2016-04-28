@@ -5,15 +5,21 @@
 public class Edge {
 
     //Fields
-    private char[] label;
+    private int startR;
+    private int length;
+    //private char[] label;
 
-    public Edge(char[] label){
-        this.label = label;
+    public Edge(int startR, int length){
+        this.startR = startR;
+        this.length= length;
     }
 
     //Getters
-    public char[] getLabel() { return this.label;}
+    public int getStartR() { return this.startR;}
+    public int getLength() {return this.length; }
+    //public int getEndR() { return this.endR;}
 
     //Setters
-    public void setLabel(char[] label) { this.label = label;}
+    public void setStartR(int startR) { this.startR = startR;}
+    public void setLength(int length) { this.length = length;}
 }

@@ -10,20 +10,19 @@ public class SuffixTree {
 
 
     Node root;
+    char[] RA;
 
-
-    public SuffixTree (String S) {
+    public SuffixTree (char[] R) {
         //create root node.
-        this.root = new Node((new char[0]),-1);
+        this.root = new Node(-1, 0, 0);
+        this.RA = R;
 
-        char[] SA = S.toCharArray();
-        for(int i = 0; i < SA.length; i++) {
-            char[] temp = new char[SA.length-i];
-            System.arraycopy(SA,i,temp,0,SA.length-i);
-            addSuffixNaive(this.root,temp,i);
+        for(int i = 0; i < R.length-1; i++) { //subtracting 1 from the length each time to remove the $ end character
+            char[] temp = new char[R.length-1-i];
+            System.arraycopy(R,i,temp,0,R.length-1-i);
+            addSuffixNaive(this.root,temp,i, i);
         }
         fixPointersToLeafs(this.root);
-        //prettyPrint(this.root,0);
     }
 
     private void fixPointersToLeafs(Node start) {
@@ -47,22 +46,25 @@ public class SuffixTree {
 
         for( Node child : children) {
             String repeated = new String(new char[depth*5]).replace("\0"," ");
-            System.out.println(repeated + new String(child.getEdge().getLabel()) + " id: " + child.getID() + " => " +  child.getLeaf().getID());
+            char[] label = new char[child.getEdge().getLength()];
+            System.arraycopy(label, 0, this.RA, child.getEdge().getStartR(), child.getEdge().getLength());
+
+            System.out.println(repeated + new String(label) + " id: " + child.getID() + " => " +  child.getLeaf().getID());
             prettyPrint(child,depth+1);
         }
 
     }
 
-    public void addSuffixNaive(Node start, char[] suffix, int i) {
+    // insert a suffix starting from start
+    // id = the index of the original suffix in R inserted from the root
+    // startR is the start position in R of the suffix to be inserted
+    public void addSuffixNaive(Node start, char[] suffix, int id, int startR) {
 
         ArrayList<Node> children = start.getChildren();
 
         // Case 1A
         if(children.size() == 0) {
-            char[] temp = new char[suffix.length+1];
-            System.arraycopy(suffix,0,temp,0,suffix.length);
-            temp[temp.length-1] = '$';
-            Node leaf = new Node(temp,i);
+            Node leaf = new Node(id, startR, suffix.length);
             start.addChild(leaf);
             return;
         }
@@ -72,9 +74,11 @@ public class SuffixTree {
         // Case 1B
         for (Node child : children) {
 
-            char[] label_arr = child.getEdge().getLabel();
-            // can only match one child
-            if(suffix[0] != label_arr[0]) {
+            char[] label_arr = new char[child.getEdge().getLength()];
+            System.arraycopy(this.RA,child.getEdge().getStartR(), label_arr,0, label_arr.length);
+
+            // can only match one child and the label of the child should not be empty
+            if(label_arr.length == 0 || suffix[0] != label_arr[0]) {
                 continue;
             }
 
@@ -82,31 +86,31 @@ public class SuffixTree {
 
             if(label_arr.length == 1 && suffix.length == 1) {
 
-                Node l1 = new Node("$".toCharArray(),i);
+                Node l1 = new Node(id, 0,0);
                 child.addChild(l1);
                 inserted = true;
 
             } else if(suffix.length == 1 && label_arr.length > 1) {
                 //split
 
-                child.getEdge().setLabel(new char[]{suffix[0]});
+                // Containing the matching caracter
+                child.getEdge().setLength(1);
 
-                char[] temp = new char[label_arr.length-(1)];
-                System.arraycopy(label_arr,1,temp,0,label_arr.length-(1));
-                Node l1 = new Node(temp,child.getID());
-
+                // containing the rest of the original label
+                Node l1 = new Node(child.getID(), child.getEdge().getStartR() + 1, label_arr.length-1);
 
                 // child is now intermediate node -> must have ID -1
                 child.resetID();
 
-                //create node to represent new suffix. Just '$' in this case.
+                // move child's children to new node
+                if (!child.isLeaf()) {
+                    child.getChildren().forEach(l1::addChild);
+                    child.removeChildren();
+                }
 
-                child.getChildren().forEach(l1::addChild);
-                child.removeChildren();
+                //create node to represent new suffix. With label (0,0) in this case
+                Node l2 = new Node(id, 0, 0);
 
-                char[] l2suffix = {'$'};
-
-                Node l2 = new Node(l2suffix,i);
                 //add new nodes as children to parent (named child here)
                 child.addChild(l1);
                 child.addChild(l2);
@@ -119,81 +123,74 @@ public class SuffixTree {
 
                 // Case 1B.1
                 if(suffix[k] != label_arr[k]) {
-                    //change existing label before split
-                    char[] temp = new char[k];
-                    System.arraycopy(suffix,0,temp,0,k);
-                    child.getEdge().setLabel(temp);
-                    //create node to represent existing suffix
+                    //change length of existing label before split to the part matching - can just keep the old start index in R
+                    child.getEdge().setLength(k);
 
-                    temp = new char[label_arr.length-k];
-                    System.arraycopy(label_arr,k,temp,0,label_arr.length-k);
-
-                    Node l1 = new Node(temp,child.getID());
+                    //create node to represent the rest of the old label
+                    Node l1 = new Node(child.getID(), child.getEdge().getStartR()+k , label_arr.length-k);
 
                     // child is now intermediate node -> must have ID -1
                     child.resetID();
 
-                    child.getChildren().forEach(l1::addChild);
-                    child.removeChildren();
+                    // move child's children to new node
+                    if (!child.isLeaf())  {
+                        child.getChildren().forEach(l1::addChild);
+                        child.removeChildren();
+                    }
 
-                    //create node to represent new suffix. Increase length of suffix array by 1 to contain '$'
-                    temp = new char[suffix.length-k+1];
-                    System.arraycopy(suffix,k,temp,0,suffix.length-k);
-                    temp[temp.length-1] = '$';
-                    Node l2 = new Node(temp,i);
+                    //create node to represent new suffix.
+                    Node l2 = new Node(id, startR + k, suffix.length-k);
 
                     //add new nodes as children to parent (named child here)
                     child.addChild(l1);
                     child.addChild(l2);
                     inserted = true;
                     break;
+
                     // case 1B.2
                 } else if(k == suffix.length-1) {
                     //split
-                    char[] temp = new char[k+1];
-                    System.arraycopy(suffix,0,temp,0,k+1);
-                    child.getEdge().setLabel(temp);
 
-                    temp = new char[label_arr.length-(k+1)];
-                    System.arraycopy(label_arr,k+1,temp,0,label_arr.length-(k+1));
-                    Node l1 = new Node(temp,child.getID());
+                    //change length of existing label before split to the part matching - can just keep the old start index in R
+                    child.getEdge().setLength(k+1); // the start in R can just be kept
 
+                    //create node to represent the rest of the old label
+                    Node l1 = new Node(child.getID(), child.getEdge().getStartR() + k+1, label_arr.length-(k+1) );
 
                     // child is now intermediate node -> must have ID -1
                     child.resetID();
 
-                    //create node to represent new suffix. Just '$' in this case.
+                    //add new nodes as children to parent (named child here)
+                    if (!child.isLeaf()) {
+                        child.getChildren().forEach(l1::addChild);
+                        child.removeChildren();
+                    }
 
-                    child.getChildren().forEach(l1::addChild);
-                    child.removeChildren();
-
-                    char[] l2suffix = {'$'};
-
-                    Node l2 = new Node(l2suffix,i);
+                    //create node to represent new suffix. With label (0,0) in this case
+                    Node l2 = new Node(id, 0, 0);
                     //add new nodes as children to parent (named child here)
                     child.addChild(l1);
                     child.addChild(l2);
                     inserted = true;
                     break;
                 }
-
             }
+
             if(inserted) {
                 break;
                 // Case 2C
             } else if(label_arr.length == 1) {
                 // Case 2C.1
                 if(suffix.length > 1) {
+                    // if all of the suffix is not inserted yet the remaining part must be inserted starting from the child node
                     char[] temp = new char[suffix.length-1];
                     System.arraycopy(suffix,1,temp,0,suffix.length-1);
-                    addSuffixNaive(child,temp,i);
+                    addSuffixNaive(child,temp,id, startR+1);
                     inserted = true;
                     // Case 2C.2
                 } else {
-
-                    char[] temp = new char[suffix.length+1-1];
-                    System.arraycopy(suffix,1,temp,0,suffix.length-1+1);
-                    Node leaf = new Node(temp,i);
+                    // The label of child and the suffix is the same - the new suffix are just represented as a new node with edge (0,0)
+                    Node leaf = new Node(id, 0,0);
                     child.addChild(leaf);
                     inserted = true;
 
@@ -203,10 +200,8 @@ public class SuffixTree {
         }
         // Case 3A
         if (!inserted) {
-            char[] temp = new char[suffix.length+1];
-            System.arraycopy(suffix,0,temp,0,suffix.length);
-            temp[temp.length-1] = '$';
-            Node leaf = new Node(temp, i);
+            // No match in any of the children - the suffix is just inserted as child of the start-node
+            Node leaf = new Node(id, startR, suffix.length);
             start.addChild(leaf);
         }
     }
@@ -230,10 +225,12 @@ public class SuffixTree {
 
         for (Node child: startNode.getChildren()) {
 
-            char[] childLabel = child.getEdge().getLabel();
+            char[] childLabel = new char[child.getEdge().getLength()];
+            System.arraycopy(this.RA, child.getEdge().getStartR(), childLabel, 0,  child.getEdge().getLength() );
 
+            // label of the current child is empty move to next child
             //can only match with one edge -> check children is constant (because alphabet in constant)
-            if (C[0] != childLabel[0]) {
+            if (childLabel.length == 0 || C[0] != childLabel[0]) {
                 continue;
             }
 

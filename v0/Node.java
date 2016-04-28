@@ -10,15 +10,16 @@ public class Node {
     private int id = -1;
     private Node leaf = null;
 
-    public Node(char[] suffix,int id) {
+    public Node(int id, int startR, int length) {
         this.children = new ArrayList<>();
-        this.edge = new Edge(suffix);
+        this.edge = new Edge(startR, length);
         this.id = id;
     }
 
     public ArrayList<Node> getChildren() {
         return this.children;
     }
+    public boolean isLeaf() { return this.getChildren().size() == 0;}
     public Edge getEdge() {
         return this.edge;
     }

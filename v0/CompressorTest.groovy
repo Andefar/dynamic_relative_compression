@@ -10,12 +10,12 @@ public class CompressorTest extends GroovyTestCase {
     /**
      * Path to DNA test files - TODO: CHANGE THIS TO YOUR OWN PATH
      */
-    //String S_file_path = "/Users/Josefinetusindfryd/Desktop/dynamic_relative_compression/DNA_S";
-    //String R_file_path = "/Users/Josefinetusindfryd/Desktop/dynamic_relative_compression/DNA_R";
-    //String pathSave = "/Users/Josefinetusindfryd/Desktop/dynamic_relative_compression/";
-    String S_file_path = "/Users/AndreasLauritzen/dynamic_relative_compression/DNA_S";
-    String R_file_path = "/Users/AndreasLauritzen/dynamic_relative_compression/DNA_R";
-    String pathSave = "/Users/AndreasLauritzen/dynamic_relative_compression/";
+    String S_file_path = "/Users/Josefinetusindfryd/Desktop/dynamic_relative_compression/DNA_S";
+    String R_file_path = "/Users/Josefinetusindfryd/Desktop/dynamic_relative_compression/DNA_R";
+    String pathSave = "/Users/Josefinetusindfryd/Desktop/dynamic_relative_compression/";
+    //String S_file_path = "/Users/AndreasLauritzen/dynamic_relative_compression/DNA_S";
+    //String R_file_path = "/Users/AndreasLauritzen/dynamic_relative_compression/DNA_R";
+    //String pathSave = "/Users/AndreasLauritzen/dynamic_relative_compression/";
 
     /**
      * Test strings
