@@ -2,11 +2,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
- * Created by Josefinetusindfryd on 15/03/16.
+ * Created by Josefinetusindfryd on 14/02/16.
  */
 
-
 //Version of string compression using suffix tree representation of R
+
 
 public class CompressorSuffix extends Compressor{
 
@@ -52,23 +52,23 @@ public class CompressorSuffix extends Compressor{
         return this.stR.search(C);
     }
 
-
     // Decode a compressed representation, D,  of string S with reference to R
     // Evt ikke
     public String decodeArrayList(ArrayList<Block> C){
         StringBuilder sb = new StringBuilder();
-        int p;
-        int l;
 
         for (Block b : C ){
             p = b.getPos();
             l = b.getLength();
             char[] temp = new char[l];
+            int p = b.getPos();
+            int l = b.getLength();
+            char[] temp = new char[l];
             System.arraycopy(RA,p,temp,0,l);
             sb.append(temp);
             //sb.append(new String((Arrays.copyOfRange(RA, p, p+l))));
-        }
 
+        }
         return sb.toString();
     }
 
@@ -82,10 +82,8 @@ public class CompressorSuffix extends Compressor{
             sb.append(temp);
             //sb.append(new String((Arrays.copyOfRange(RA, BS[0], BS[0] + BS[1]))));
         }
+
         return sb.toString();
     }
 
-
-
 }
-
