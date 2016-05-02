@@ -58,9 +58,6 @@ public class CompressorSuffix extends Compressor{
         StringBuilder sb = new StringBuilder();
 
         for (Block b : C ){
-            p = b.getPos();
-            l = b.getLength();
-            char[] temp = new char[l];
             int p = b.getPos();
             int l = b.getLength();
             char[] temp = new char[l];
