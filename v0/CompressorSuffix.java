@@ -2,11 +2,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
- * Created by Josefinetusindfryd on 14/02/16.
+ * Created by Josefinetusindfryd on 15/03/16.
  */
 
-//Version of string compression using suffix tree representation of R
 
+//Version of string compression using suffix tree representation of R
 
 public class CompressorSuffix extends Compressor{
 
@@ -18,7 +18,7 @@ public class CompressorSuffix extends Compressor{
     }
 
 
-    //O(|S|^2*|R|) :Iterate through string S and foreach character use indexOf
+    //O(|S|) :Iterate through string S and foreach character use indexOf
     public ArrayList<Block> encode(String S){
         int sLen = S.length();
         ArrayList<Block> compressed = new ArrayList<>();
@@ -49,21 +49,24 @@ public class CompressorSuffix extends Compressor{
     // Use suffix tree of R to search
     // O(|C|) : C might be the length of R
     public int indexOf(char[] C){
-        return stR.search(C);
+        return this.stR.search(C);
     }
+
 
     // Decode a compressed representation, D,  of string S with reference to R
     // Evt ikke
     public String decodeArrayList(ArrayList<Block> C){
         StringBuilder sb = new StringBuilder();
-        int p,l;
-        char[] temp;
+        int p;
+        int l;
+
         for (Block b : C ){
             p = b.getPos();
             l = b.getLength();
-            temp = new char[l];
+            char[] temp = new char[l];
             System.arraycopy(RA,p,temp,0,l);
-            sb.append(new String(temp));
+            sb.append(temp);
+            //sb.append(new String((Arrays.copyOfRange(RA, p, p+l))));
         }
 
         return sb.toString();
@@ -72,18 +75,17 @@ public class CompressorSuffix extends Compressor{
     // Decode a representation of S compressed using partial sums binary tree
     public String decodeBinTree(BinaryTree B){
         StringBuilder sb = new StringBuilder();
-        //String S = "";
-        int[] BS;
-
-        char[] temp;
-        for (int i = 0; i < B.getTotalLeafs(); i++ ){
-            BS = B.find(i); // BS[0] = startPositionInR, BS[1] = length
-            temp = new char[BS[1]];
+        for (int i = 0; i < B.getTotalLeafs(); i++){
+            int[] BS = B.find(i); // BS[0] = startPositionInR, BS[1] = length
+            char[] temp = new char[BS[1]];
             System.arraycopy(RA,BS[0],temp,0,BS[1]);
-            sb.append(new String(temp));
+            sb.append(temp);
+            //sb.append(new String((Arrays.copyOfRange(RA, BS[0], BS[0] + BS[1]))));
         }
-
         return sb.toString();
     }
 
+
+
 }
+

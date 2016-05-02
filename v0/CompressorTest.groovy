@@ -61,26 +61,26 @@ public class CompressorTest extends GroovyTestCase {
      * DPS Compressors
      */
 
-    CompressorDPS DPSCompressorShort = new CompressorDPS(R_short);
+    CompressorSuffix DPSCompressorShort = new CompressorSuffix(R_short);
     ArrayList<Block> DPSEncodedShort = DPSCompressorShort.encode(S_short);
 
-    CompressorDPS DPSCompressorLong = new CompressorDPS(R_long);
+    CompressorSuffix DPSCompressorLong = new CompressorSuffix(R_long);
     ArrayList<Block> DPSEncodedLong = DPSCompressorLong.encode(S_long);
 
-    CompressorDPS DPSCompressorFile = new CompressorDPS(R_file);
+    CompressorSuffix DPSCompressorFile = new CompressorSuffix(R_file);
     ArrayList<Block> DPSEncodedFile = DPSCompressorFile.encode(S_file);
 
     /**
      * S Compressors
      */
 
-    CompressorDPS SCCompressorShort = new CompressorDPS(R_short);
+    CompressorSuffix SCCompressorShort = new CompressorSuffix(R_short);
     ArrayList<Block> SCEncodedShort = SCCompressorShort.encode(S_short);
 
-    CompressorDPS SCCompressorLong = new CompressorDPS(R_long);
+    CompressorSuffix SCCompressorLong = new CompressorSuffix(R_long);
     ArrayList<Block> SCEncodedLong = SCCompressorLong.encode(S_long);
 
-    CompressorDPS SCCompressorFile = new CompressorDPS(R_file);
+    CompressorSuffix SCCompressorFile = new CompressorSuffix(R_file);
     ArrayList<Block> SCEncodedFile = SCCompressorFile.encode(S_file);
 
 
@@ -551,8 +551,8 @@ public class CompressorTest extends GroovyTestCase {
         //String pathS = "/Users/JosefineTusindfryd/Desktop/dynamic_relative_compression/data/dna.50MB";
         //String pathR = "/Users/JosefineTusindfryd/Desktop/dynamic_relative_compression/DNA_R";
         //String pathSave = "/Users/JosefineTusindfryd/Desktop/dynamic_relative_compression/";
-        String pathS = "data/dna_clean.10mb";
-        String pathR = "data/R2000.txt";
+        String pathS = "data/DNA_filer/dna_clean.10mb";
+        String pathR = "data/DNA_filer/R2000.txt";
 
         //Read the source file
         String S=null, R=null;
@@ -564,7 +564,7 @@ public class CompressorTest extends GroovyTestCase {
             e.printStackTrace();
         }
 
-        Compressor cmpDPS = new CompressorDPS(R);
+        Compressor cmpDPS = new CompressorSuffix(R);
         ArrayList<Block> cp = cmpDPS.encode(S);
 
         DynamicOperationsDPS dop1 = new DynamicOperationsDPS(cp, cmpDPS);

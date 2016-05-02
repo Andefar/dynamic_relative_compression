@@ -78,7 +78,7 @@ public class Driver {
                             break;
                         case "DPS":
                             long tc02 = System.nanoTime();
-                            compressor = new CompressorDPS(R);
+                            compressor = new CompressorSuffix(R);
                             long timec02 = System.nanoTime() - tc02;
                             if(debugCmpTime) System.out.println("Created suffix-tree in\t\t" + timec02 / 1000000000.0 + " seconds");
                             break;
