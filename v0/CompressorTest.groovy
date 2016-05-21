@@ -551,8 +551,8 @@ public class CompressorTest extends GroovyTestCase {
         //String pathS = "/Users/JosefineTusindfryd/Desktop/dynamic_relative_compression/data/dna.50MB";
         //String pathR = "/Users/JosefineTusindfryd/Desktop/dynamic_relative_compression/DNA_R";
         //String pathSave = "/Users/JosefineTusindfryd/Desktop/dynamic_relative_compression/";
-        String pathS = "data/DNA_filer/dna_clean.10mb";
-        String pathR = "data/DNA_filer/R2000.txt";
+        String pathS = "data/dna_clean.10mb";
+        String pathR = "data/R2000.txt";
 
         //Read the source file
         String S=null, R=null;
@@ -571,9 +571,7 @@ public class CompressorTest extends GroovyTestCase {
 
 
         BinaryTree bt = dop1.getDPS();
-        ArrayList<Block> al = dop1.getC();
         String decodedBin = cmpDPS.decodeBinTree(bt);
-        String decodedAL = cmpDPS.decodeArrayList(al);
 
         assertEquals(S,decodedBin,decodedBin);
     }

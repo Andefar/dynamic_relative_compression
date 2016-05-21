@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 /**
  * Created by andl on 08/02/2016.
@@ -6,13 +7,17 @@ import java.util.ArrayList;
 
 public class DynamicOperationsNaive extends DynamicOperations {
     //constructor
+    ArrayList<Block> C;
     public DynamicOperationsNaive(ArrayList<Block> C, Compressor cmp){
-        super(C, cmp);
+
+        super(cmp);
+        this.C = new ArrayList<>();
+        this.C.addAll(C.stream().map(b -> new Block(b.getPos(), b.getLength())).collect(Collectors.toList()));
+
     }
 
     //getter for Compressed
     public ArrayList<Block> getC() { return this.C; }
-
 
     // Return character S[i]
     // Index out of bound exception
@@ -65,12 +70,7 @@ public class DynamicOperationsNaive extends DynamicOperations {
         if(charToReplace == sub) { return;}
 
         //find the occurrence of sub char in RA
-        int subPosInRA = -1;
-        for (int k = 0; k < this.cmp.RA.length; k++) {
-            if (this.cmp.RA[k] == sub) {
-                subPosInRA = k;
-            }
-        }
+        int subPosInRA = this.cmp.indexOf(new char[]{sub});
         //remove the old block
         this.C.remove(blockNum);
 
@@ -115,19 +115,7 @@ public class DynamicOperationsNaive extends DynamicOperations {
 
     }
     public void insert(int index, char c) {
-        int indexOfR = -1;
-        for (int i = 0; i < this.cmp.RA.length; i++){
-            if (this.cmp.RA[i] == c) {
-                indexOfR = i;
-                break;
-            }
-        }
-
-        // insert at the end of string
-        if (index == super.getSLength()){
-            this.C.add(new Block(indexOfR, 1));
-            return;
-        }
+        int indexOfR = this.cmp.indexOf(new char[]{c});
 
         int[] BS = this.getBlockandStartPos(index);
         int blockNo = BS[0];
@@ -205,6 +193,10 @@ public class DynamicOperationsNaive extends DynamicOperations {
             throw new IllegalArgumentException("Case not covered");
         }
 
+    }
+    @Override
+    public int getBlocksCount() {
+        return this.C.size();
     }
 
 

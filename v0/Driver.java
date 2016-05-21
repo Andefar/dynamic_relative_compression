@@ -8,83 +8,80 @@ import java.util.List;
 public class Driver {
     public static void main(String[] args) {
 
-        boolean debugDPS = true;
+        boolean debugDPS = false;
         boolean debugKMP = false;
         boolean debugNaive = false;
         boolean debugCmpTime = false;
-        boolean debugEncodeTime = true;
-        boolean decodeS = true;
+        boolean debugEncodeTime = false;
+        boolean decodeS = false;
 
         //String pathS = "/Users/JosefineTusindfryd/Desktop/dynamic_relative_compression/data/dna.50MB";
         //String pathR = "/Users/JosefineTusindfryd/Desktop/dynamic_relative_compression/DNA_R";
         //String pathSave = "/Users/JosefineTusindfryd/Desktop/dynamic_relative_compression/";
 
         List<String> Spaths = new ArrayList<>();
-        //Spaths.add("data/dna_clean.1mb");
-        //Spaths.add("data/dna_clean.5mb");
-        //Spaths.add("data/dna_clean.10mb");
-        //Spaths.add("data/dna_clean.50mb");
+        Spaths.add("data/dna_clean.1mb");
+        Spaths.add("data/dna_clean.5mb");
+        Spaths.add("data/dna_clean.10mb");
+        Spaths.add("data/dna_clean.50mb");
         Spaths.add("data/dna_clean.100mb");
-        //Spaths.add("data/dna_clean.200mb");
-        //Spaths.add("data/dna_clean.400mb");
+        Spaths.add("data/dna_clean.200mb");
+        Spaths.add("data/dna_clean.400mb");
 
         List<String> refs = new ArrayList<>();
-        //refs.add("data/R2000.txt");
-        //refs.add("data/R4500.txt");
+        refs.add("data/R2000.txt");
+        refs.add("data/R4500.txt");
         refs.add("data/R9990.txt");
-        //refs.add("data/R20000.txt");
-        //refs.add("data/R29850.txt");
-        //refs.add("data/R49750.txt");
+        refs.add("data/R20000.txt");
+        refs.add("data/R29850.txt");
+        refs.add("data/R49750.txt");
 
         List<String> comps = new ArrayList<>();
-        //comps.add("Naive");
-        //comps.add("Suffix");
-        comps.add("DPS");
+        comps.add("Suffix");
+        comps.add("Naive");
 
         List<String> dops = new ArrayList<>();
-        //dops.add("Naive");
-        //dops.add("KMP");
         dops.add("DPS");
-
+        dops.add("KMP");
+        dops.add("Naive");
+        
         FileHandler f = new FileHandler();
         for (String cmp : comps) {
             for(String ref : refs) {
+
+                String R = null;
+                try {
+                    R = f.readFromFileLine(ref);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                //Creating the compressor
+                Compressor compressor;
+                switch (cmp) {
+                    case "Naive":
+                        long tc00 = System.nanoTime();
+                        compressor = new CompressorNaive(R);
+                        long timec00 = System.nanoTime() - tc00;
+                        if(debugCmpTime) System.out.println("Created naive-compressor in\t\t" + timec00 / 1000000000.0 + " seconds");
+                        break;
+                    case "Suffix":
+                        long tc01 = System.nanoTime();
+                        compressor = new CompressorSuffix(R);
+                        long timec01 = System.nanoTime() - tc01;
+                        if(debugCmpTime) System.out.println("Created suffix-tree in\t\t" + timec01 / 1000000000.0 + " seconds");
+                        break;
+                    default:
+                        throw new IllegalArgumentException("Wrong compressor!");
+                }
+
                 for (String Spath : Spaths) {
-                    String R = null, S = null;
-                    try {
-                        S = f.readFromFileLine(Spath);
-                        R = f.readFromFileLine(ref);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    System.out.println("============================ TEST! ============================\n" +
-                            "Parameters: |S| = " + S.length() + "\t|R| = " + (R.length()-1) + "\t Compressor = " + cmp );
-                    System.out.println("---------------------------------------------------------------");
+                    String S = null;
+                    try { S = f.readFromFileLine(Spath); }
+                    catch (IOException e) { e.printStackTrace(); }
+
+                    System.out.println("============================ "+cmp+" test ============================\n");
                     System.out.println();
-                    //Creating the compressor
-                    Compressor compressor;
-                    switch (cmp) {
-                        case "Naive":
-                            long tc00 = System.nanoTime();
-                            compressor = new CompressorNaive(R);
-                            long timec00 = System.nanoTime() - tc00;
-                            if(debugCmpTime) System.out.println("Created naive-compressor in\t\t" + timec00 / 1000000000.0 + " seconds");
-                            break;
-                        case "Suffix":
-                            long tc01 = System.nanoTime();
-                            compressor = new CompressorSuffix(R);
-                            long timec01 = System.nanoTime() - tc01;
-                            if(debugCmpTime) System.out.println("Created suffix-tree in\t\t" + timec01 / 1000000000.0 + " seconds");
-                            break;
-                        case "DPS":
-                            long tc02 = System.nanoTime();
-                            compressor = new CompressorSuffix(R);
-                            long timec02 = System.nanoTime() - tc02;
-                            if(debugCmpTime) System.out.println("Created suffix-tree in\t\t" + timec02 / 1000000000.0 + " seconds");
-                            break;
-                        default:
-                            throw new IllegalArgumentException("Wrong compressor!");
-                    }
 
                     //Encode
                     ArrayList<Block> cp;
@@ -97,6 +94,7 @@ public class Driver {
                     int steps = 100;
                     for(String dopString : dops) {
                         DynamicOperations dop;
+                        int blocks = 0;
                         switch (dopString) {
                             case "DPS":
                                 //Create DynamicOperationsDPS
@@ -104,6 +102,7 @@ public class Driver {
                                 DynamicOperationsDPS dopDPS = new DynamicOperationsDPS(cp, compressor);
                                 long time00 = System.nanoTime() - t00;
                                 if(debugDPS) System.out.println("Created DPS structure in\t\t" + time00 / 1000000000.0 + " seconds");
+                                blocks = dopDPS.getDPS().getTotalLeafs();
                                 if(decodeS) {
                                     //Decode DPS
                                     String decoded0;
@@ -124,15 +123,16 @@ public class Driver {
                                 DynamicOperationsKMP dopKMP = new DynamicOperationsKMP(cp, compressor);
                                 long time10 = System.nanoTime() - t10;
                                 if(debugKMP) System.out.println("Created DPS structure in\t\t" + time10 / 1000000000.0 + " seconds");
+                                blocks = dopKMP.getDPS().getTotalLeafs();
                                 if(decodeS) {
                                     //Decode KMP
                                     String decoded1;
-                                    ArrayList compressionList = dopKMP.getC();
+                                    BinaryTree compressionBin = dopKMP.getDPS();
                                     long t11 = System.nanoTime();
-                                    decoded1 = compressor.decodeArrayList(compressionList);
+                                    decoded1 = compressor.decodeBinTree(compressionBin);
                                     long time11 = System.nanoTime() - t11;
                                     if (debugKMP) {
-                                        System.out.println("Decoded (Naive) string in\t\t" + time11 / 1000000000.0 + " seconds");
+                                        System.out.println("Decoded (KMP) string in\t\t" + time11 / 1000000000.0 + " seconds");
                                         System.out.println(decoded1.equals(S) ? "OK (KMP)" : "FAILED (KMP)");
                                     }
                                 }
@@ -144,6 +144,7 @@ public class Driver {
                                 DynamicOperationsNaive dopNaive = new DynamicOperationsNaive(cp, compressor);
                                 long time20 = System.nanoTime() - t20;
                                 if(debugNaive) System.out.println("Created Naive structure in\t\t" + time20 / 1000000000.0 + " seconds");
+                                blocks = dopNaive.getC().size();
                                 if(decodeS) {
                                     //Decode Naive
                                     String decoded2;
@@ -164,15 +165,19 @@ public class Driver {
 
                         System.out.println(
                                 "DynamicOperation = " + dopString  +
-                                        " \t Opertation = " + "insert " +
                                         " \t Length = " + totalLen +
+                                        " \t |R| = " + (R.length()-1) +
+                                        " \t |S| = " + S.length() +
+                                        " \t |C| (initial) = " + blocks +
+                                        " \t Opertation = " + "delete " +
                                         " \t Steps = " + steps +
-                                        " \t Timescale = Seconds(per " + steps + " operation)" +
-                                        " \t Data: \n");
+                                        " \t Timescale = Seconds(per " + steps + " operation)");
                         TimeTest test = new TimeTest(dop);
-                        System.out.println(Arrays.toString(test.insertCharactersSingleBatch(S.length(), totalLen, steps)));
-                        System.out.println("\n");
+                        System.out.println(Arrays.toString(test.deleteCharactersSingleBatch(S.length(), totalLen, steps)));
+                        System.out.println("|C| after test = " + dop.getBlocksCount());
+                        System.out.println("Delta |C| = " + (dop.getBlocksCount()-blocks));
 
+                        System.out.println("\n");
                     }
                 }
             }

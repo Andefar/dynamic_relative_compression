@@ -1,3 +1,5 @@
+import javax.swing.plaf.SliderUI;
+
 /**
  * Created by Josefinetusindfryd on 31/03/16.
  */
@@ -83,7 +85,7 @@ public class TimeTest {
         int index = 0;
         for (int i = 0; i < l; i++){
 
-            insertIndex = (int) (Math.random() * (double) SLength);
+            insertIndex = (int) (Math.random() * ((double) SLength-1));
             c = choose[ (int) (Math.random() * ((double) 4))];
             CpuTimeStart= this.rt.getCpuTime();
             this.dop.insert(insertIndex, c);
@@ -109,7 +111,7 @@ public class TimeTest {
         int index = 0;
         for (int i = 0; i < l; i++){
 
-            insertIndex = (int) (Math.random() * (double) SLength);
+            insertIndex = (int) (Math.random() * ((double) SLength-1));
             c = choose[ (int) (Math.random() * ((double) 4))];
             CpuTimeStart= this.rt.getCpuTime();
             this.dop.replace(insertIndex, c);
@@ -128,14 +130,16 @@ public class TimeTest {
     public double[] deleteCharactersSingleBatch(int SLength,int l, int steps){
         int insertIndex;
         long CpuTimeStart;
+        int SLengthCur = SLength;
         long intermediateTime = 0;
         double[] output = new double[l/steps];
         int index = 0;
         for (int i = 0; i < l; i++){
 
-            insertIndex = (int) (Math.random() * (double) SLength);
+            insertIndex = ((int) (Math.random() * (double) (SLengthCur-1)));
             CpuTimeStart= this.rt.getCpuTime();
             this.dop.delete(insertIndex);
+            SLengthCur--;
             long time = this.rt.getCpuTime();
             intermediateTime += (time - CpuTimeStart);
 
@@ -147,6 +151,4 @@ public class TimeTest {
         }
         return output;
     }
-
-
 }

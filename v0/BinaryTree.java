@@ -46,7 +46,6 @@ public class BinaryTree {
             start.setLeafsUnder(tot);
             return tot;
         }
-
     }
 
     //TODO: fjern denne her senere. Brugt i tests

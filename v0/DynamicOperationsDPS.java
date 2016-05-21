@@ -10,15 +10,15 @@ public class DynamicOperationsDPS extends DynamicOperations {
 
     //constructor
     public DynamicOperationsDPS(ArrayList<Block> C, Compressor cmp) {
-        super(C, cmp);
+        super(cmp);
         this.dps = new BinaryTree(C);
     }
-
+    /*
     //getter for C - bruges i test
     public ArrayList<Block> getC() {
         return this.C;
     }
-
+    */
     //getter for dps - bruges i test
     public BinaryTree getDPS() {
         return this.dps;
@@ -45,6 +45,7 @@ public class DynamicOperationsDPS extends DynamicOperations {
 
         // O(|R|)
         int indexOfReplacingCharInR = this.cmp.indexOf(new char[]{sub});
+        if (indexOfReplacingCharInR == -1) throw new IllegalArgumentException("character is not in the reference string");
 
 
         //get all positions and distances
@@ -114,10 +115,9 @@ public class DynamicOperationsDPS extends DynamicOperations {
 
     public void insert(int index, char c) {
 
-
         int indexOfR = this.cmp.indexOf(new char[]{c});
         if (indexOfR == -1) throw new IllegalArgumentException("character is not in the reference string");
-
+        /*
         // insert at the end of string
         if (index == super.getSLength()) {
             this.dps.insert(this.dps.getTotalLeafs(), 1, indexOfR);
@@ -125,13 +125,14 @@ public class DynamicOperationsDPS extends DynamicOperations {
             restoreMax((this.dps.getTotalLeafs()-2), (this.dps.getTotalLeafs() - 1));
             return;
         }
+        */
 
         //get all positions and distances
-        int[] BS = this.dps.searchReturnIndexSIR(index);
-        int startPosInR = BS[1]; //B[1] is the starting position of block BS[0] in R
-        int nodeIndex = BS[0]; //BS[0] is index of the node holding the index
+        //int[] BS = this.dps.searchReturnIndexSIR(index);
+        //int startPosInR = BS[1]; //B[1] is the starting position of block BS[0] in R
+        int nodeIndex = this.dps.searchReturnIndexSIR(index)[0]; //BS[0] is index of the node holding the index
         int startPosInS = (nodeIndex == 0) ? 0 : this.dps.sum(nodeIndex - 1);
-        int length = BS[2]; // B[2] is the length of the node holding the index
+        //int length = BS[2]; // B[2] is the length of the node holding the index
         int offSet = index - startPosInS;
         //int offsetInR = startPosInR + (index - startPosInS);
 
@@ -153,11 +154,16 @@ public class DynamicOperationsDPS extends DynamicOperations {
         restoreMax((Math.max(nodeIndex - 1, 0)), (Math.min(nodeIndex + 4, (this.dps.getTotalLeafs() - 1))));
     }
 
+    @Override
+    public int getBlocksCount() {
+        return this.getDPS().getTotalLeafs();
+    }
+
     public void delete(int index) {
 
         //get all positions and distances
         int[] BS = this.dps.searchReturnIndexSIR(index);
-        int startPosInR = BS[1]; //B[1] is the starting position of node BS[0] in R
+        //int startPosInR = BS[1]; //B[1] is the starting position of node BS[0] in R
         int nodeIndex = BS[0]; //BS[0] is index of the node holding the index
         int startPosInS = (nodeIndex == 0) ? 0 : this.dps.sum(nodeIndex - 1);
         int length = BS[2]; // B[2] is the length of the node holding the index
@@ -232,57 +238,4 @@ public class DynamicOperationsDPS extends DynamicOperations {
         }
     }
 
-/*
-    private void restoreMax(int startNode, int endNode) {
-        StringBuilder rest = new StringBuilder();
-        int index = -1;
-        int[] aBS;
-        int[] bBS;
-        char[] a;
-        for (int i = startNode; i < endNode - 1; i++) {
-            // the current node could not be merged with the earlier one - rest is now empty
-            // so look at the two next nodes
-            if (rest.length() == 0) {
-                aBS = this.dps.find(i);
-                a = Arrays.copyOfRange(this.cmp.RA, aBS[0], aBS[0] + aBS[1]);
-                bBS = this.dps.find(i + 1);
-                char[] b = Arrays.copyOfRange(this.cmp.RA, bBS[0], bBS[0] + bBS[1]);
-                rest.append(a);
-                rest.append(b);
-                index = this.cmp.indexOf(rest.toString().toCharArray());
-
-                if (index > -1) {// yes can be merged. endNode must be decremented (since there is now one less node to look at)
-                    this.dps.merge(i);
-                    this.dps.updateSIR(i, index);
-                    endNode--;
-                    //this.C.get(i).setLength(rest.length());
-                    //this.C.get(i).setPos(index);
-                    //this.C.remove(i + 1);
-                    continue;
-                }
-            } else { // The nodes before could be merged (is now at index i-1) - test if the current node can also be merged with these
-                     // again endNode must be decremented (since there is now one less node to look at)
-                aBS = this.dps.find(i);
-                a = Arrays.copyOfRange(this.cmp.RA, aBS[0], aBS[0] + aBS[1]);
-                rest.append(a);
-                index = this.cmp.indexOf(rest.toString().toCharArray());
-                if (index > -1) {
-                    this.dps.merge(i - 1);
-                    this.dps.updateSIR(i-1, index);
-                    i --;
-                    endNode --;
-                    //this.C.get(i - 1).setLength(rest.length());
-                    //this.C.get(i - 1).setPos(index);
-                    //this.C.remove(i);
-                    continue;
-                }
-                // must look at the current node once more with the consecutive node
-                i --;
-            }
-            // if the nodes could not be merges (no continue is reached) the rest must be emptied before moving on to next node
-            rest.setLength(0);
-
-        }
-    }
-    */
 }
